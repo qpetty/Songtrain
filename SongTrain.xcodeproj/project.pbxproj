@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 691FDE141890CB0F00DD83D6 /* SingleCellButton.m */; };
+		691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 691FDE171890D1A500DD83D6 /* GrayTableView.m */; };
+		691FDE1A1890D64E00DD83D6 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 691FDE191890D64E00DD83D6 /* MultipeerConnectivity.framework */; };
 		69327DAB188F0F16001AB7F5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DAA188F0F16001AB7F5 /* Foundation.framework */; };
 		69327DAD188F0F16001AB7F5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DAC188F0F16001AB7F5 /* CoreGraphics.framework */; };
 		69327DAF188F0F16001AB7F5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DAE188F0F16001AB7F5 /* UIKit.framework */; };
@@ -36,6 +39,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		691FDE131890CB0F00DD83D6 /* SingleCellButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleCellButton.h; sourceTree = "<group>"; };
+		691FDE141890CB0F00DD83D6 /* SingleCellButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleCellButton.m; sourceTree = "<group>"; };
+		691FDE161890D1A500DD83D6 /* GrayTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrayTableView.h; sourceTree = "<group>"; };
+		691FDE171890D1A500DD83D6 /* GrayTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrayTableView.m; sourceTree = "<group>"; };
+		691FDE191890D64E00DD83D6 /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
 		69327DA7188F0F16001AB7F5 /* SongTrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SongTrain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69327DAA188F0F16001AB7F5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		69327DAC188F0F16001AB7F5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				691FDE1A1890D64E00DD83D6 /* MultipeerConnectivity.framework in Frameworks */,
 				69327DE3188F167F001AB7F5 /* MediaPlayer.framework in Frameworks */,
 				69327DAD188F0F16001AB7F5 /* CoreGraphics.framework in Frameworks */,
 				69327DAF188F0F16001AB7F5 /* UIKit.framework in Frameworks */,
@@ -107,6 +116,7 @@
 		69327DA9188F0F16001AB7F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				691FDE191890D64E00DD83D6 /* MultipeerConnectivity.framework */,
 				69327DE2188F167F001AB7F5 /* MediaPlayer.framework */,
 				69327DAA188F0F16001AB7F5 /* Foundation.framework */,
 				69327DAC188F0F16001AB7F5 /* CoreGraphics.framework */,
@@ -124,6 +134,10 @@
 				69327DBC188F0F16001AB7F5 /* Main.storyboard */,
 				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
 				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
+				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
+				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
+				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
+				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
 				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
 				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
@@ -269,6 +283,8 @@
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
 				69327DBB188F0F16001AB7F5 /* AppDelegate.m in Sources */,
+				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
+				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
 				69327DB7188F0F16001AB7F5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

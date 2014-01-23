@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import "CurrentSongView.h"
+#import "SingleCellButton.h"
+#import "GrayTableView.h"
 
 #ifndef HEX_COLOR
 #define HEX_COLOR
@@ -17,14 +20,21 @@
 
 #define ARTWORK_HEIGHT 138.0
 
-@interface MainViewController : UIViewController <CurrentSongViewDelegate>{
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate>{
     MPMusicPlayerController *musicPlayer;
     MPMediaItem *currentSong;
     NSTimer *progressTimer;
+    UILabel *label;
+    GrayTableView *mainTableView;
+    
+    MCSession *session;
+    MCNearbyServiceBrowser *browse;
+    MCPeerID *pid;
+    NSString *service;
+    
+    NSMutableArray *peerArray;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
-@property (strong, nonatomic) UILabel *songTitle;
-@property (strong, nonatomic) UILabel *songArtist;
-
+@property (strong, nonatomic) SingleCellButton *createTrainButton;
 
 @end
