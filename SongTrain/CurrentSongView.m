@@ -9,6 +9,7 @@
 #import "CurrentSongView.h"
 
 #define SPACE_BETWEEN_BUTTONS 8
+#define BUTTON_SIZE 30
 
 @implementation CurrentSongView
 
@@ -20,6 +21,7 @@
         self.userInteractionEnabled = YES;
         
         self.tintColor = UIColorFromRGB(0x797979);
+        self.backgroundColor = UIColorFromRGB(0x464646);
         
         //Song Title
         songTitle = [[UILabel alloc] init];
@@ -54,50 +56,40 @@
                                         songArtist.frame.origin.y + songArtist.frame.size.height * 1.5,
                                         songArtist.superview.frame.size.width - 2 * songArtist.frame.origin.x,
                                         30);
-        songProgress.progress = 0.5;
+        
+        [self setProgressTimer];
         
         //Add buttons
         //Info Button
-        infoButton = [[UIButton alloc] initWithFrame:CGRectMake(songTitle.frame.origin.x + songTitle.frame.size.width,
+        infoButton = [[UIButton alloc] initWithFrame:CGRectMake(songProgress.frame.origin.x + songProgress.frame.size.width - BUTTON_SIZE,
                                                                 songTitle.frame.origin.y + songTitle.frame.size.height * 0.4,
-                                                                30,
-                                                                30)];
+                                                                BUTTON_SIZE,
+                                                                BUTTON_SIZE)];
         infoButton.tag = InfoButton;
         [infoButton setImage:[UIImage imageNamed:@"infoButton"] forState:UIControlStateNormal];
         [infoButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:infoButton];
         
-        //Favorite Button
-        favoriteButton = [[UIButton alloc] initWithFrame:CGRectMake(infoButton.frame.origin.x + infoButton.frame.size.width + SPACE_BETWEEN_BUTTONS,
-                                                                    infoButton.frame.origin.y,
-                                                                    infoButton.frame.size.width,
-                                                                    infoButton.frame.size.height)];
-        favoriteButton.tag = FavoriteButton;
-        [favoriteButton setImage:[UIImage imageNamed:@"favoriteButton"] forState:UIControlStateNormal];
-        [favoriteButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
-        [self addSubview:favoriteButton];
-        
-        //Mute Button
-        muteButton = [[UIButton alloc] initWithFrame:CGRectMake(favoriteButton.frame.origin.x + favoriteButton.frame.size.width + SPACE_BETWEEN_BUTTONS,
-                                                                favoriteButton.frame.origin.y,
-                                                                favoriteButton.frame.size.width,
-                                                                favoriteButton.frame.size.height)];
-        muteButton.tag = MuteButton;
-        [muteButton setImage:[UIImage imageNamed:@"muteButton-white"] forState:UIControlStateNormal];
-        [muteButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
-        [self addSubview:muteButton];
     }
     return self;
 }
 
-- (id)initWithSong:(MPMediaItem*)song andFrame:(CGRect)frame
+- (id)initWithPlayer:(MPMusicPlayerController*)player andFrame:(CGRect)frame
 {
     self = [self initWithFrame:frame];
     if (self) {
-        currentSong = song;
-    
+        musicPlayer = player;
+        currentSong = [musicPlayer nowPlayingItem];
+        self.showArtwork = YES;
+        
         //Get Song info
-        [self updateSongInfo:song];
+        [self updateSongInfo:currentSong];
+        
+        //Subscribe to changes of the musicPlayer to update song info
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(nowPlayingItemChanged:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:musicPlayer];
+        [notificationCenter addObserver:self selector:@selector(playbackStateChanged:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:musicPlayer];
+        [musicPlayer beginGeneratingPlaybackNotifications];
     }
     
     return self;
@@ -108,12 +100,61 @@
     currentSong = song;
     songTitle.text = [currentSong valueForProperty:MPMediaItemPropertyTitle];
     songArtist.text = [currentSong valueForProperty:MPMediaItemPropertyArtist];
-    self.image = [self getAlbumImage];
+    if (self.showArtwork)
+        self.image = [self getAlbumImage];
+    else
+        self.image = nil;
 }
 
-- (void)updateProgressBar:(NSTimeInterval)time
+- (void)updateProgressBar
 {
-    songProgress.progress = time / [[currentSong valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue];
+    songProgress.progress = musicPlayer.currentPlaybackTime / [[currentSong valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue];
+}
+
+- (void)setIsShowArtwork:(BOOL)show
+{
+    if (show)
+        self.image = [self getAlbumImage];
+    else
+        self.image = nil;
+    _showArtwork = show;
+}
+
+- (void)setIsShowInfoButton:(BOOL)show
+{
+    if (show)
+        infoButton.hidden = NO;
+    else
+        infoButton.hidden = YES;
+    _showInfoButton = show;
+}
+
+
+- (void)setProgressTimer{
+    progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateProgressBar) userInfo:nil repeats:YES];
+}
+
+- (void)nowPlayingItemChanged:(id)sender
+{
+    [self updateSongInfo:[musicPlayer nowPlayingItem]];
+    [self updateProgressBar];
+}
+
+- (void)playbackStateChanged:(id)sender
+{
+    
+    MPMusicPlaybackState playbackState = [musicPlayer playbackState];
+    
+    
+    if (playbackState == MPMusicPlaybackStatePlaying){
+        if (!progressTimer) {
+            [self setProgressTimer];
+        }
+    }
+    else{
+        [progressTimer invalidate];
+        progressTimer = nil;
+    }
 }
 
 - (UIImage*)getAlbumImage

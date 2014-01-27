@@ -27,35 +27,22 @@
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xebebeb), NSForegroundColorAttributeName, nil];
     [self setTitle:@"Songtrain"];
     
-    //Get current playing song
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    currentSong = [musicPlayer nowPlayingItem];
-    
     //Insert Song View in the created CGRect
     CGRect location = CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
                                      self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
                                      self.view.bounds.size.width,
                                      ARTWORK_HEIGHT);
+    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
     
-    self.albumArtwork = [[CurrentSongView alloc] initWithSong:currentSong andFrame:location];
+    self.albumArtwork = [[CurrentSongView alloc] initWithPlayer:musicPlayer andFrame:location];
     self.albumArtwork.delegate = self;
     [self.view addSubview:self.albumArtwork];
-    [self progressUpdate];
-    
-    
-    //Subscribe to changes of the musicPlayer to update song info
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self selector:@selector(nowPlayingItemChanged:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:musicPlayer];
-    [notificationCenter addObserver:self selector:@selector(playbackStateChanged:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:musicPlayer];
-    [musicPlayer beginGeneratingPlaybackNotifications];
-    
-    [self setProgressTimer];
     
     //Setup create train button
     location = CGRectMake(self.view.bounds.origin.x,
-                                       location.origin.y + location.size.height + 40,
-                                       self.view.bounds.size.width,
-                                       50);
+                          location.origin.y + location.size.height + 40,
+                          self.view.bounds.size.width,
+                          50);
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
@@ -109,7 +96,7 @@
 {
     [super viewDidAppear:animated];
     NSLog(@"View did appear...\n");
-    [self.albumArtwork updateSongInfo:[musicPlayer nowPlayingItem]];
+    //[self.albumArtwork updateSongInfo:[musicPlayer nowPlayingItem]];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -123,8 +110,8 @@
 {
     [super viewDidDisappear:animated];
     NSLog(@"View did Disappear...\n");
-    [progressTimer invalidate];
-    progressTimer = nil;
+    //[progressTimer invalidate];
+    //progressTimer = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -133,47 +120,20 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setProgressTimer{
-    progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(progressUpdate) userInfo:nil repeats:YES];
-}
-
-- (void)progressUpdate
-{
-    [self.albumArtwork updateProgressBar:musicPlayer.currentPlaybackTime];
-}
-
-- (void)nowPlayingItemChanged:(id)sender
-{
-    [self.albumArtwork updateSongInfo:[musicPlayer nowPlayingItem]];
-    [self progressUpdate];
-}
-
-- (void)playbackStateChanged:(id)sender
-{
-
-    MPMusicPlaybackState playbackState = [musicPlayer playbackState];
-    
-    
-    if (playbackState == MPMusicPlaybackStatePlaying){
-        if (!progressTimer) {
-            [self setProgressTimer];
-        }
-    }
-    else{
-        [progressTimer invalidate];
-        progressTimer = nil;
-    }
-}
-
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
+    //[self.navigationController presentViewController:[[MPMediaPickerController alloc] init] animated: YES completion:nil];
+    [self.navigationController pushViewController:[[PlaylistViewController alloc] init] animated:YES];
 }
 
 - (void)buttonPressed:(UIButton*)sender
 {
     if (sender.tag == InfoButton) {
         NSLog(@"Info Button pressed\n");
+        //TODO: Memory allocation, only want one InfoViewController
+        infoView = [[InfoViewController alloc] initWithPlayer:musicPlayer];
+        [self.navigationController pushViewController:infoView animated:YES];
     }
     else if (sender.tag == FavoriteButton) {
         NSLog(@"Favorite Button pressed\n");

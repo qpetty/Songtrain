@@ -40,8 +40,12 @@
         newHeight += self.rowHeight * [self numberOfRowsInSection:i];
     }
     
-    if (newHeight > maxHeight)
+    if (newHeight > maxHeight){
         newHeight = maxHeight;
+        self.scrollEnabled = YES;
+    }
+    else
+        self.scrollEnabled = NO;
     
     newFrame.size.height = newHeight;
     self.frame = newFrame;

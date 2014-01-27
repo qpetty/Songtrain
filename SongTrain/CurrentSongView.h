@@ -8,11 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-
-#ifndef HEX_COLOR
-#define HEX_COLOR
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-#endif
+#import "UsefulFunctions.h"
 
 enum ButtonNames : NSInteger {
     InfoButton = 1,
@@ -27,6 +23,7 @@ enum ButtonNames : NSInteger {
 @end
 
 @interface CurrentSongView : UIImageView{
+    MPMusicPlayerController *musicPlayer;
     MPMediaItem *currentSong;
     UILabel *songTitle;
     UILabel *songArtist;
@@ -36,12 +33,19 @@ enum ButtonNames : NSInteger {
     UIButton *muteButton;
 
     UIProgressView *songProgress;
+    NSTimer *progressTimer;
 }
 
 @property (weak, nonatomic) id <CurrentSongViewDelegate> delegate;
+@property (nonatomic, assign, setter = setIsShowArtwork:) BOOL showArtwork;
+@property (nonatomic, assign, setter = setIsShowInfoButton:) BOOL showInfoButton;
 
-- (id)initWithSong:(MPMediaItem*)song andFrame:(CGRect)frame;
+- (id)initWithPlayer:(MPMusicPlayerController*)player andFrame:(CGRect)frame;
 - (void)updateSongInfo:(MPMediaItem*)song;
-- (void)updateProgressBar:(NSTimeInterval)time;
+- (void)setIsShowArtwork:(BOOL)show;
+- (void)setIsShowInfoButton:(BOOL)show;
+
+- (void)nowPlayingItemChanged:(id)sender;
+- (void)playbackStateChanged:(id)sender;
 
 @end
