@@ -45,6 +45,7 @@ enum ButtonNames : NSInteger {
 - (void)setIsShowArtwork:(BOOL)show;
 - (void)setIsShowInfoButton:(BOOL)show;
 
+- (void)addPlayer:(MPMusicPlayerController*)player;
 - (void)nowPlayingItemChanged:(id)sender;
 - (void)playbackStateChanged:(id)sender;
 

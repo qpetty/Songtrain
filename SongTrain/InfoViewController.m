@@ -48,27 +48,39 @@
     self.navigationController.navigationBar.topItem.backBarButtonItem = btnBack;
     
     //Add Album Artwork
-    MPMediaItemArtwork *albumItem = [currentSong valueForProperty:MPMediaItemPropertyArtwork];
     albumArtwork = [[UIImageView alloc] initWithFrame:CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
                                                                  self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
                                                                  self.view.bounds.size.width,
                                                                  ALBUM_SIZE)];
+    [self updateArtwork];
+    [self.view addSubview:albumArtwork];
+    
+    //Add Song information
+    
+    songView = [[CurrentSongView alloc] initWithFrame:CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
+                                                                                       albumArtwork.frame.origin.y + albumArtwork.frame.size.height,
+                                                                                       self.view.frame.size.width,
+                                                                                       SONG_INFO_HEIGHT)];
+    [songView updateSongInfo:currentSong];
+    songView.showInfoButton = NO;
+    //songView.showArtwork = NO;
+    [self.view addSubview:songView];
+}
+
+- (void)updateSong:(MPMediaItem*)song
+{
+    currentSong = song;
+    [songView updateSongInfo:currentSong];
+    [self updateArtwork];
+}
+
+- (void)updateArtwork
+{
+    MPMediaItemArtwork *albumItem = [currentSong valueForProperty:MPMediaItemPropertyArtwork];
     if (albumItem)
         albumArtwork.image = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
     else
         NSLog(@"No Current Image\n");
-    
-    [self.view addSubview:albumArtwork];
-    
-    //Add Song information
-
-    songView = [[CurrentSongView alloc] initWithPlayer:mediaPlayer andFrame:CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
-                                                                                       albumArtwork.frame.origin.y + albumArtwork.frame.size.height,
-                                                                                       self.view.frame.size.width,
-                                                                                       SONG_INFO_HEIGHT)];
-    songView.showInfoButton = NO;
-    songView.showArtwork = NO;
-    [self.view addSubview:songView];
 }
 
 - (void)didReceiveMemoryWarning

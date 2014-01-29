@@ -13,17 +13,34 @@
 #import "CurrentSongView.h"
 #import "InfoViewController.h"
 #import "GrayTableView.h"
+#import "Song.h"
 
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource>{
+enum PlaylistFunction : NSInteger {
+    Host = 1,
+    Client = 2
+};
+
+@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCNearbyServiceAdvertiserDelegate, MCSessionDelegate>{
+    BOOL isHost;
+    
     MPMusicPlayerController *musicPlayer;
     MPMediaItemCollection *currentPlaylist;
     MPMediaPickerController *picker;
+    
+    NSMutableArray *playlist;
     
     CurrentSongView *albumArtwork;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     
     UIButton *addToList;
+    
+    MCSession *mainSession;
+    MCNearbyServiceAdvertiser *advert;
+    MCPeerID *pid;
+    NSString *service;
 }
+
+- (id)initWithPlaylistFunction:(int)playlistFunction;
 
 @end

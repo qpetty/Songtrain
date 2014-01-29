@@ -124,7 +124,7 @@
 {
     NSLog(@"Create new Train\n");
     //[self.navigationController presentViewController:[[MPMediaPickerController alloc] init] animated: YES completion:nil];
-    [self.navigationController pushViewController:[[PlaylistViewController alloc] init] animated:YES];
+    [self.navigationController pushViewController:[[PlaylistViewController alloc] initWithPlaylistFunction:Host] animated:YES];
 }
 
 - (void)buttonPressed:(UIButton*)sender

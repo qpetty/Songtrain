@@ -26,6 +26,7 @@
 		69327DD6188F0F16001AB7F5 /* SongTrainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69327DD5188F0F16001AB7F5 /* SongTrainTests.m */; };
 		69327DE3188F167F001AB7F5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DE2188F167F001AB7F5 /* MediaPlayer.framework */; };
 		6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956BC2F188F44E9003C80DA /* CurrentSongView.m */; };
+		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
 		69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8B1893637D00B957DB /* InfoViewController.m */; };
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,8 @@
 		69327DE2188F167F001AB7F5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6956BC2E188F44E9003C80DA /* CurrentSongView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentSongView.h; sourceTree = "<group>"; };
 		6956BC2F188F44E9003C80DA /* CurrentSongView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSongView.m; sourceTree = "<group>"; };
+		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
+		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
 		69C04C891893624900B957DB /* UsefulFunctions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UsefulFunctions.h; sourceTree = "<group>"; };
 		69C04C8A1893637D00B957DB /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
 		69C04C8B1893637D00B957DB /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
@@ -152,6 +155,8 @@
 				69C04C8B1893637D00B957DB /* InfoViewController.m */,
 				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
 				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
+				697CF6AA1898794F00CF4DC7 /* Song.h */,
+				697CF6AB1898794F00CF4DC7 /* Song.m */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
 				69327DC2188F0F16001AB7F5 /* Images.xcassets */,
 				69327DB1188F0F16001AB7F5 /* Supporting Files */,
@@ -298,6 +303,7 @@
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
+				697CF6AC1898794F00CF4DC7 /* Song.m in Sources */,
 				69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */,
 				69327DB7188F0F16001AB7F5 /* main.m in Sources */,
 			);

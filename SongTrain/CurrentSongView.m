@@ -78,21 +78,27 @@
 {
     self = [self initWithFrame:frame];
     if (self) {
-        musicPlayer = player;
-        currentSong = [musicPlayer nowPlayingItem];
-        self.showArtwork = YES;
-        
-        //Get Song info
-        [self updateSongInfo:currentSong];
-        
-        //Subscribe to changes of the musicPlayer to update song info
-        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-        [notificationCenter addObserver:self selector:@selector(nowPlayingItemChanged:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:musicPlayer];
-        [notificationCenter addObserver:self selector:@selector(playbackStateChanged:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:musicPlayer];
-        [musicPlayer beginGeneratingPlaybackNotifications];
+        [self addPlayer:player];
     }
     
     return self;
+}
+
+- (void)addPlayer:(MPMusicPlayerController*)player
+{
+    [musicPlayer pause];
+    musicPlayer = player;
+    currentSong = [musicPlayer nowPlayingItem];
+    self.showArtwork = YES;
+    
+    //Get Song info
+    [self updateSongInfo:currentSong];
+    
+    //Subscribe to changes of the musicPlayer to update song info
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self selector:@selector(nowPlayingItemChanged:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:musicPlayer];
+    [notificationCenter addObserver:self selector:@selector(playbackStateChanged:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:musicPlayer];
+    [musicPlayer beginGeneratingPlaybackNotifications];
 }
 
 - (void)updateSongInfo:(MPMediaItem*)song
@@ -145,11 +151,8 @@
     
     MPMusicPlaybackState playbackState = [musicPlayer playbackState];
     
-    
-    if (playbackState == MPMusicPlaybackStatePlaying){
-        if (!progressTimer) {
+    if (playbackState == MPMusicPlaybackStatePlaying && !progressTimer){
             [self setProgressTimer];
-        }
     }
     else{
         [progressTimer invalidate];

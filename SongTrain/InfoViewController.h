@@ -21,5 +21,6 @@
 }
 
 - (id)initWithPlayer:(MPMusicPlayerController*)player;
+- (void)updateSong:(MPMediaItem*)song;
 
 @end
