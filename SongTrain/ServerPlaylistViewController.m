@@ -51,7 +51,6 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     NSLog(@"Stopped Advertising Peers...\n");
-    [mainSession disconnect];
     [advert stopAdvertisingPeer];
 }
 
