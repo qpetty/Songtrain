@@ -23,13 +23,10 @@
     return self;
 }
 
-- (id)initWithPlaylistFunction:(int)playlistFunction
+- (instancetype)initWithSession:(MCSession*)session
 {
     if (self = [super init]) {
-        if (playlistFunction == Host)
-            isHost = YES;
-        else
-            isHost = NO;
+        mainSession = session;
     }
     return self;
 }
@@ -55,17 +52,16 @@
     
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
-    picker.delegate = self;
     picker.allowsPickingMultipleItems = YES;
     picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
     
     //Create an Add button
-    location = CGRectMake(albumArtwork.frame.origin.x,
+    CGRect buttonLocation = CGRectMake(albumArtwork.frame.origin.x,
                           albumArtwork.frame.origin.y + albumArtwork.frame.size.height,
                           50,
                           30);
     
-    addToList = [[UIButton alloc] initWithFrame:location];
+    addToList = [[UIButton alloc] initWithFrame:buttonLocation];
     [addToList setTitle:@"Add" forState:UIControlStateNormal];
     [addToList addTarget:self action:@selector(addToPlaylist) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:addToList];
@@ -80,26 +76,9 @@
     mainTableView.dataSource = self;
     [self.view addSubview:mainTableView];
     
-    if (isHost) {
-        musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-        [albumArtwork addPlayer:musicPlayer];
-        
-        //Add whole queue instead of single song
-        if ([musicPlayer nowPlayingItem])
-            [playlist addObject:[musicPlayer nowPlayingItem]];
-        //Broadcast Train to others
-        service = @"SoundTrain";
-        pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
-        
-        mainSession = [[MCSession alloc] initWithPeer:pid];
-        mainSession.delegate = self;
-    
-        advert = [[MCNearbyServiceAdvertiser alloc] initWithPeer:pid discoveryInfo:nil serviceType:service];
-        advert.delegate = self;
-    }
-    else{
-        NSLog(@"Client\n");
-    }
+    mainSession.delegate = self;
+    pid = mainSession.myPeerID;
+    service = SERVICE_TYPE;
     
     //Subscribe to changes of the musicPlayer
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -148,8 +127,8 @@
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (playlist.count > 0){
-        cell.textLabel.text = [[playlist objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyTitle];
-        cell.detailTextLabel.text = [[playlist objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyArtist];
+        cell.textLabel.text = [[playlist objectAtIndex:[indexPath row]] title];
+        cell.detailTextLabel.text = [[playlist objectAtIndex:[indexPath row]] artistName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
     }
@@ -190,67 +169,13 @@
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
-    [self updateQueueWithCollection:mediaItemCollection];
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [mainTableView reloadData];
+    //[self updateQueueWithCollection:mediaItemCollection];
 }
 
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-//Has a quick delay when new song are added and sound turns off after the 2nd addition
-- (void) updateQueueWithCollection: (MPMediaItemCollection *) collection
-{
-    
-    // Add 'collection' to the music player's playback queue, but only if
-    //    the user chose at least one song to play.
-    if (collection) {
-        BOOL wasPlaying = NO;
-        if (musicPlayer.playbackState == MPMusicPlaybackStatePlaying) {
-            wasPlaying = YES;
-        }
-        
-        // Save the now-playing item and its current playback time.
-        MPMediaItem *nowPlayingItem        = musicPlayer.nowPlayingItem;
-        NSTimeInterval currentPlaybackTime = musicPlayer.currentPlaybackTime;
-        
-        for (MPMediaItem *item in collection.items)
-            [playlist addObject:item];
-        
-        if (playlist.count) {
-            currentPlaylist = [MPMediaItemCollection collectionWithItems:(NSArray *) playlist];
-            [musicPlayer setQueueWithItemCollection: currentPlaylist];
-        }
-
-        // Restore the now-playing item and its current playback time.
-        musicPlayer.nowPlayingItem      = nowPlayingItem;
-        musicPlayer.currentPlaybackTime = currentPlaybackTime;
-        if (wasPlaying) {
-            [musicPlayer play];
-        }
-
-    }
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    NSLog(@"Advertising Peers...\n");
-    [advert startAdvertisingPeer];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    NSLog(@"Stopped Advertising Peers...\n");
-    [advert stopAdvertisingPeer];
-}
-
--(void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL, MCSession *))invitationHandler
-{
-    NSLog(@"Got Invite from %@", peerID.displayName);
-    invitationHandler(YES,mainSession);
 }
 
 -(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
@@ -261,7 +186,6 @@
     } else if (state == MCSessionStateConnected) {
         //Start stream
         NSLog(@"Connected to %@", peerID.displayName);
-
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
     }

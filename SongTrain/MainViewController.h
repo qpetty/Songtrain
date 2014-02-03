@@ -14,7 +14,8 @@
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
 #import "InfoViewController.h"
-#import "PlaylistViewController.h"
+#import "ServerPlaylistViewController.h"
+#import "ClientPlaylistViewController.h"
 
 @interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate>{
     
@@ -23,7 +24,7 @@
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     
-    MCSession *session;
+    MCSession *mainSession;
     MCNearbyServiceBrowser *browse;
     MCPeerID *pid;
     NSString *service;

@@ -55,7 +55,6 @@
                           self.view.bounds.size.height - location.origin.y - location.size.height - 40);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     [self.view addSubview:mainTableView];
-    [mainTableView reloadData];
     
     
     //TableView Title
@@ -71,15 +70,15 @@
     [self.view addSubview:label];
     
     //Multipeer Connectivity initialization
-    service = @"SoundTrain";
+    service = SERVICE_TYPE;
     pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
     
     peerArray = [[NSMutableArray alloc] init];
     mainTableView.dataSource = self;
     mainTableView.delegate = self;
     
-    session = [[MCSession alloc] initWithPeer:pid];
-    session.delegate = self;
+    mainSession = [[MCSession alloc] initWithPeer:pid];
+    mainSession.delegate = self;
     
     browse = [[MCNearbyServiceBrowser alloc] initWithPeer:pid serviceType:service];
     browse.delegate = self;
@@ -89,6 +88,9 @@
 {
     [super viewWillAppear:animated];
     NSLog(@"Browsing for Peers...\n");
+    [peerArray removeAllObjects];
+    //[mainSession disconnect];
+    [mainTableView reloadData];
     [browse startBrowsingForPeers];
 }
 
@@ -124,7 +126,7 @@
 {
     NSLog(@"Create new Train\n");
     //[self.navigationController presentViewController:[[MPMediaPickerController alloc] init] animated: YES completion:nil];
-    [self.navigationController pushViewController:[[PlaylistViewController alloc] initWithPlaylistFunction:Host] animated:YES];
+    [self.navigationController pushViewController:[[ServerPlaylistViewController alloc] initWithSession:mainSession] animated:YES];
 }
 
 - (void)buttonPressed:(UIButton*)sender
@@ -168,6 +170,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"Selected train: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
+    
+    [browse invitePeer:[peerArray objectAtIndex:[indexPath row]] toSession:mainSession withContext:nil timeout:0];
+    
+    /*
+    [mainSession nearbyConnectionDataForPeer:[peerArray objectAtIndex:[indexPath row]] withCompletionHandler:^(NSData *connectionData, NSError *error) {
+        [mainSession connectPeer:[peerArray objectAtIndex:[indexPath row]] withNearbyConnectionData:connectionData];
+    }];
+    */
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -184,8 +194,10 @@
     NSLog(@"Found Peer: %@", peerID.displayName);
     if (![peerID.displayName isEqualToString:pid.displayName]) {
         NSLog(@"Added Peer: %@", peerID.displayName);
-        [peerArray addObject:peerID];
-        [mainTableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [peerArray addObject:peerID];
+            [mainTableView reloadData];
+        });
     }
 }
 
@@ -194,8 +206,10 @@
     NSLog(@"Lost Peer: %@", peerID.displayName);
     if (![peerID.displayName isEqualToString:pid.displayName]) {
         NSLog(@"Removed Peer: %@", peerID.displayName);
-        [peerArray removeObjectIdenticalTo:peerID];
-        [mainTableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [peerArray removeObjectIdenticalTo:peerID];
+            [mainTableView reloadData];
+        });
     }
 }
 
@@ -205,6 +219,11 @@
         NSLog(@"Connecting to %@", peerID.displayName);
     } else if (state == MCSessionStateConnected) {
         NSLog(@"Connected to %@", peerID.displayName);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.navigationController pushViewController:[[ClientPlaylistViewController alloc] initWithSession:mainSession andServerPeerID:peerID] animated:YES];
+            [peerArray removeAllObjects];
+            [mainTableView reloadData];
+        });
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
     }
@@ -227,6 +246,6 @@
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
-    NSLog(@"Here: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    //NSLog(@"Here: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
 }
 @end

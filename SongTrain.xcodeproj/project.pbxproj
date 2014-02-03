@@ -29,6 +29,8 @@
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
 		69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8B1893637D00B957DB /* InfoViewController.m */; };
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
+		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
+		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,10 @@
 		69C04C8B1893637D00B957DB /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		69C04C8D18962EC800B957DB /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
 		69C04C8E18962EC800B957DB /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistViewController.m; sourceTree = "<group>"; };
+		69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPlaylistViewController.h; sourceTree = "<group>"; };
+		69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPlaylistViewController.m; sourceTree = "<group>"; };
+		69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPlaylistViewController.h; sourceTree = "<group>"; };
+		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +161,10 @@
 				69C04C8B1893637D00B957DB /* InfoViewController.m */,
 				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
 				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
+				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
+				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
+				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
+				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
 				697CF6AA1898794F00CF4DC7 /* Song.h */,
 				697CF6AB1898794F00CF4DC7 /* Song.m */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
@@ -300,6 +310,8 @@
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
 				69327DBB188F0F16001AB7F5 /* AppDelegate.m in Sources */,
+				69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */,
+				69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,

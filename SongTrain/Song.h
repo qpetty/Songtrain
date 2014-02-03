@@ -12,11 +12,11 @@
 
 @interface Song : NSObject <NSCoding>
 
-@property (weak, nonatomic) NSString *title;
-@property (weak, nonatomic) NSString *name;
-@property (weak, nonatomic) MCPeerID *host;
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *artistName;
+@property (strong, nonatomic) MCPeerID *host;
 //Maybe needed not sure yet
-@property (weak, nonatomic) MPMediaItem *media;
+@property (strong, nonatomic) MPMediaItem *media;
 
 @property (nonatomic) int songPosition;
 @property (nonatomic) int totalSongs;

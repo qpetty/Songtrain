@@ -16,4 +16,6 @@
 
 #define ARTWORK_HEIGHT 138.0
 
+#define SERVICE_TYPE @"Songtrain"
+
 #endif

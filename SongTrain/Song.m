@@ -15,7 +15,7 @@
     if(self = [super init])
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
-        self.name = [aDecoder decodeObjectForKey:@"name"];
+        self.artistName = [aDecoder decodeObjectForKey:@"name"];
         self.host = [aDecoder decodeObjectForKey:@"host"];
         self.media = [aDecoder decodeObjectForKey:@"media"];
         _songPosition = [aDecoder decodeIntForKey:@"songPosition"];
@@ -27,7 +27,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeObject:self.title forKey:@"title"];
-    [aCoder encodeObject:self.name forKey:@"name"];
+    [aCoder encodeObject:self.artistName forKey:@"name"];
     [aCoder encodeObject:self.host forKey:@"host"];
     [aCoder encodeObject:self.media forKey:@"media"];
     [aCoder encodeInt:_songPosition forKey:@"songPosition"];

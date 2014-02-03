@@ -15,12 +15,7 @@
 #import "GrayTableView.h"
 #import "Song.h"
 
-enum PlaylistFunction : NSInteger {
-    Host = 1,
-    Client = 2
-};
-
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCNearbyServiceAdvertiserDelegate, MCSessionDelegate>{
+@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate>{
     BOOL isHost;
     
     MPMusicPlayerController *musicPlayer;
@@ -36,11 +31,10 @@ enum PlaylistFunction : NSInteger {
     UIButton *addToList;
     
     MCSession *mainSession;
-    MCNearbyServiceAdvertiser *advert;
     MCPeerID *pid;
     NSString *service;
 }
 
-- (id)initWithPlaylistFunction:(int)playlistFunction;
+- (instancetype)initWithSession:(MCSession*)session;
 
 @end
