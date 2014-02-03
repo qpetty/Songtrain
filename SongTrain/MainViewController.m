@@ -88,16 +88,17 @@
 {
     [super viewWillAppear:animated];
     NSLog(@"Browsing for Peers...\n");
+    [mainSession disconnect];
     [peerArray removeAllObjects];
-    //[mainSession disconnect];
-    [mainTableView reloadData];
-    [browse startBrowsingForPeers];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     NSLog(@"View did appear...\n");
+    [mainTableView reloadData];
+    [browse startBrowsingForPeers];
+    mainSession.delegate = self;
     //[self.albumArtwork updateSongInfo:[musicPlayer nowPlayingItem]];
 }
 
@@ -112,8 +113,6 @@
 {
     [super viewDidDisappear:animated];
     NSLog(@"View did Disappear...\n");
-    //[progressTimer invalidate];
-    //progressTimer = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -125,7 +124,6 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
-    //[self.navigationController presentViewController:[[MPMediaPickerController alloc] init] animated: YES completion:nil];
     [self.navigationController pushViewController:[[ServerPlaylistViewController alloc] initWithSession:mainSession] animated:YES];
 }
 
@@ -173,11 +171,6 @@
     
     [browse invitePeer:[peerArray objectAtIndex:[indexPath row]] toSession:mainSession withContext:nil timeout:0];
     
-    /*
-    [mainSession nearbyConnectionDataForPeer:[peerArray objectAtIndex:[indexPath row]] withCompletionHandler:^(NSData *connectionData, NSError *error) {
-        [mainSession connectPeer:[peerArray objectAtIndex:[indexPath row]] withNearbyConnectionData:connectionData];
-    }];
-    */
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -206,8 +199,18 @@
     NSLog(@"Lost Peer: %@", peerID.displayName);
     if (![peerID.displayName isEqualToString:pid.displayName]) {
         NSLog(@"Removed Peer: %@", peerID.displayName);
+        
+        //NSLog(@"Array size before: %d\n", peerArray.count);
+        for (MCPeerID *peer in peerArray) {
+            if ([peer.displayName isEqualToString:peerID.displayName]) {
+                [peerArray removeObject:peer];
+                break;
+            }
+        }
+        [peerArray removeObjectIdenticalTo:peerID];
+        //NSLog(@"Array size after: %d\n", peerArray.count);
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [peerArray removeObjectIdenticalTo:peerID];
             [mainTableView reloadData];
         });
     }

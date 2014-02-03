@@ -32,8 +32,15 @@
     [albumArtwork addPlayer:musicPlayer];
     
     //Add whole queue instead of single song
-    //if ([musicPlayer nowPlayingItem])
-        //[playlist addObject:[musicPlayer nowPlayingItem]];
+    if ([musicPlayer nowPlayingItem]){
+        Song *nowPlayingSong = [[Song alloc] init];
+        nowPlayingSong.title = [[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyTitle];
+        nowPlayingSong.artistName = [[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyArtist];
+        nowPlayingSong.host = pid;
+        nowPlayingSong.media = [musicPlayer nowPlayingItem];
+        
+        [playlist addObject:nowPlayingSong];
+    }
     //Broadcast Train to others
     
     advert = [[MCNearbyServiceAdvertiser alloc] initWithPeer:pid discoveryInfo:nil serviceType:service];
@@ -68,6 +75,8 @@
         Song *oneSong = [[Song alloc] init];
         oneSong.title = [item valueForProperty:MPMediaItemPropertyTitle];
         oneSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        oneSong.host = pid;
+        oneSong.media = item;
         [playlist addObject:oneSong];
     }
     
@@ -100,6 +109,21 @@
         }
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
+        //Remove songs from disconnected peer
+        int i = 0;
+        while (i < playlist.count) {
+            //NSLog(@"Looking at song: %@", [playlist objectAtIndex:i]);
+            //NSLog(@"Host is: %@", [[playlist objectAtIndex:i] host]);
+            if ([peerID.displayName isEqualToString:[ (MCPeerID*)[[playlist objectAtIndex:i] host] displayName]]) {
+                [playlist removeObjectAtIndex:i];
+            }
+            else{
+                i++;
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [mainTableView reloadData];
+        });
     }
 }
 

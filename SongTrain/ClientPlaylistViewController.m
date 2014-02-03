@@ -58,6 +58,8 @@
         Song *oneSong = [[Song alloc] init];
         oneSong.title = [item valueForProperty:MPMediaItemPropertyTitle];
         oneSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        oneSong.host = pid;
+        oneSong.media = item;
         [songRequests addObject:oneSong];
     }
     
@@ -79,6 +81,7 @@
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
         dispatch_async(dispatch_get_main_queue(), ^{
+            [mainSession disconnect];
             [self.navigationController popViewControllerAnimated:YES];
         });
     }
@@ -87,9 +90,9 @@
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Recieved some data\n");
-    NSLog(@"Playlist before data size: %d\n", playlist.count);
+    //NSLog(@"Playlist before data size: %d\n", playlist.count);
     playlist = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"Playlist size after data: %d\n", playlist.count);
+    //NSLog(@"Playlist size after data: %d\n", playlist.count);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [mainTableView reloadData];
