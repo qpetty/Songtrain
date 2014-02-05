@@ -27,6 +27,10 @@
 		69327DE3188F167F001AB7F5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DE2188F167F001AB7F5 /* MediaPlayer.framework */; };
 		6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956BC2F188F44E9003C80DA /* CurrentSongView.m */; };
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
+		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
+		69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA718A038FA00483DD8 /* CoreAudio.framework */; };
+		69BE4FB518A1ABBC00483DD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */; };
+		69BE4FB718A1C07200483DD8 /* TheFuneral.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 69BE4FB618A1BDE200483DD8 /* TheFuneral.m4a */; };
 		69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8B1893637D00B957DB /* InfoViewController.m */; };
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
@@ -73,6 +77,10 @@
 		6956BC2F188F44E9003C80DA /* CurrentSongView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSongView.m; sourceTree = "<group>"; };
 		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
+		69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		69BE4FA718A038FA00483DD8 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		69BE4FB618A1BDE200483DD8 /* TheFuneral.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = TheFuneral.m4a; sourceTree = "<group>"; };
 		69C04C891893624900B957DB /* UsefulFunctions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UsefulFunctions.h; sourceTree = "<group>"; };
 		69C04C8A1893637D00B957DB /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
 		69C04C8B1893637D00B957DB /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
@@ -89,6 +97,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69BE4FB518A1ABBC00483DD8 /* AVFoundation.framework in Frameworks */,
+				69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */,
+				69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */,
 				691FDE1A1890D64E00DD83D6 /* MultipeerConnectivity.framework in Frameworks */,
 				69327DE3188F167F001AB7F5 /* MediaPlayer.framework in Frameworks */,
 				69327DAD188F0F16001AB7F5 /* CoreGraphics.framework in Frameworks */,
@@ -132,6 +143,9 @@
 		69327DA9188F0F16001AB7F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */,
+				69BE4FA718A038FA00483DD8 /* CoreAudio.framework */,
+				69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */,
 				691FDE191890D64E00DD83D6 /* MultipeerConnectivity.framework */,
 				69327DE2188F167F001AB7F5 /* MediaPlayer.framework */,
 				69327DAA188F0F16001AB7F5 /* Foundation.framework */,
@@ -167,6 +181,8 @@
 				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
 				697CF6AA1898794F00CF4DC7 /* Song.h */,
 				697CF6AB1898794F00CF4DC7 /* Song.m */,
+				69BE4FB618A1BDE200483DD8 /* TheFuneral.m4a */,
+				69BE4FA918A0399F00483DD8 /* Public Utilities */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
 				69327DC2188F0F16001AB7F5 /* Images.xcassets */,
 				69327DB1188F0F16001AB7F5 /* Supporting Files */,
@@ -208,6 +224,13 @@
 			children = (
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		69BE4FA918A0399F00483DD8 /* Public Utilities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Public Utilities";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				69327DC3188F0F16001AB7F5 /* Images.xcassets in Resources */,
+				69BE4FB718A1C07200483DD8 /* TheFuneral.m4a in Resources */,
 				69327DB5188F0F16001AB7F5 /* InfoPlist.strings in Resources */,
 				69327DBE188F0F16001AB7F5 /* Main.storyboard in Resources */,
 			);
