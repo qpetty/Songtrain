@@ -91,7 +91,7 @@
 
 - (void)nowPlayingItemChanged:(id)sender
 {
-    while (playlist.count > 0 && [playlist firstObject] != [musicPlayer nowPlayingItem]) {
+    while (playlist.count && [playlist firstObject] != [musicPlayer nowPlayingItem]) {
         [playlist removeObjectAtIndex:0];
     }
     [mainTableView reloadData];
@@ -126,7 +126,7 @@
         cell.backgroundColor = UIColorFromRGB(0x464646);
         cell.textLabel.textColor = [UIColor whiteColor];
     }
-    if (playlist.count > 0){
+    if (playlist.count){
         cell.textLabel.text = [[playlist objectAtIndex:[indexPath row]] title];
         cell.detailTextLabel.text = [[playlist objectAtIndex:[indexPath row]] artistName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -155,7 +155,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(playlist.count > 0)
+    if(playlist.count)
         return playlist.count;
     return 1;
 }
