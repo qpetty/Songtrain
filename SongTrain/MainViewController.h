@@ -30,6 +30,7 @@
     NSString *service;
     
     NSMutableArray *peerArray;
+    UIImage *songNotPlayingHeader;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;

@@ -36,6 +36,8 @@
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
+		CA7044AA18A6D7D7009B6A1D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044A918A6D7D7009B6A1D /* splash.png */; };
+		CA7044AC18A6D80F009B6A1D /* name.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044AB18A6D80F009B6A1D /* name.png */; };
 		CAB4E57E18A6BF9000A654FC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAB4E57D18A6BF9000A654FC /* CoreImage.framework */; };
 		CAB4E58018A6C23B00A654FC /* mainViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */; };
 /* End PBXBuildFile section */
@@ -95,6 +97,8 @@
 		69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPlaylistViewController.m; sourceTree = "<group>"; };
 		69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPlaylistViewController.h; sourceTree = "<group>"; };
 		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
+		CA7044A918A6D7D7009B6A1D /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
+		CA7044AB18A6D80F009B6A1D /* name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = name.png; sourceTree = "<group>"; };
 		CAB4E57D18A6BF9000A654FC /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mainViewBackground.png; path = Images.xcassets/mainViewBackground.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -207,6 +211,8 @@
 				CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */,
 				69327DB2188F0F16001AB7F5 /* SongTrain-Info.plist */,
 				69327DB3188F0F16001AB7F5 /* InfoPlist.strings */,
+				CA7044AB18A6D80F009B6A1D /* name.png */,
+				CA7044A918A6D7D7009B6A1D /* splash.png */,
 				69327DB6188F0F16001AB7F5 /* main.m */,
 				69327DB8188F0F16001AB7F5 /* SongTrain-Prefix.pch */,
 			);
@@ -325,7 +331,9 @@
 				69BE4FB718A1C07200483DD8 /* TheFuneral.m4a in Resources */,
 				69327DB5188F0F16001AB7F5 /* InfoPlist.strings in Resources */,
 				69327DBE188F0F16001AB7F5 /* Main.storyboard in Resources */,
+				CA7044AA18A6D7D7009B6A1D /* splash.png in Resources */,
 				CAB4E58018A6C23B00A654FC /* mainViewBackground.png in Resources */,
+				CA7044AC18A6D80F009B6A1D /* name.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

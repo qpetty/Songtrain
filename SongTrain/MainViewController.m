@@ -29,7 +29,7 @@
     [self setTitle:@"Station"];
 
     //Blur Background Image and add to MainView
-    CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"mainViewBackground.png"]];
+    CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
 
     CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
     [gaussianBlurFilter setValue:gaussBlurBackground forKey: @"inputImage"];
@@ -53,23 +53,30 @@
     self.albumArtwork.delegate = self;
     if ([musicPlayer nowPlayingItem]) {
        [self.view addSubview:self.albumArtwork];
+    } else {
+       // Put Label here.
+        songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
+        UIImageView *header = [[UIImageView alloc] initWithImage:songNotPlayingHeader];
+        header.frame = CGRectMake(self.view.bounds.size.width/4, self.view.bounds.size.height/8, self.view.bounds.size.width/2, self.view.bounds.size.height/15);
+        [self.view addSubview:header];
     }
 
 
     
     //Setup create train button
     location = CGRectMake(self.view.bounds.origin.x,
-                          location.origin.y + location.size.height + 40,
+                          location.origin.y + location.size.height,
                           self.view.bounds.size.width,
                           50);
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
+    self.createTrainButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     [self.createTrainButton addTarget:self action:@selector(createTrainPressed:) forControlEvents:UIControlEventTouchDown];
     
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
-                          location.origin.y + location.size.height + 40,
+                          location.origin.y + location.size.height + 60,
                           self.view.bounds.size.width,
                           self.view.bounds.size.height - location.origin.y - location.size.height - 40);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
@@ -84,7 +91,7 @@
     label = [[UILabel alloc] initWithFrame:location];
     label.textColor = [UIColor whiteColor];
     [label setFont:[UIFont systemFontOfSize:12]];
-    label.text = @"TRAINS";
+    label.text = @"NEARBY TRAINS";
     
     [self.view addSubview:label];
 

@@ -55,7 +55,7 @@
     
     NSURL *assetURL = [NSURL URLWithString:[[NSBundle mainBundle] pathForResource:@"TheFuneral" ofType:@"m4a"]];
     player = [[MusicQueuePlayer alloc] initWithUrl:assetURL];
-    [player play];
+    //[player play];
     //[player getAudioFromFile:[[playlist firstObject] media]];
     
     //[self getAudioFromFile: [[playlist firstObject] media]];
