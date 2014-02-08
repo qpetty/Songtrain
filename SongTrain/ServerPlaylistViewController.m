@@ -52,13 +52,7 @@
     [audioSession setActive:YES error:nil];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
     
-    
-    NSURL *assetURL = [NSURL URLWithString:[[NSBundle mainBundle] pathForResource:@"TheFuneral" ofType:@"m4a"]];
-    player = [[MusicQueuePlayer alloc] initWithUrl:assetURL];
-    [player play];
-    //[player getAudioFromFile:[[playlist firstObject] media]];
-    
-    //[self getAudioFromFile: [[playlist firstObject] media]];
+    //NSURL *assetURL = [NSURL URLWithString:[[NSBundle mainBundle] pathForResource:@"TheFuneral" ofType:@"m4a"]];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -79,7 +73,6 @@
 {
     NSLog(@"Stopped Advertising Peers...\n");
     [advert stopAdvertisingPeer];
-    [player stopQueue];
 }
 
 - (void)didReceiveMemoryWarning
@@ -147,6 +140,15 @@
             [mainTableView reloadData];
         });
     }
+}
+
+-(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
+{
+    if (audioInStream) {
+        [audioInStream stop];
+    }
+    audioInStream = [[TDAudioInputStreamer alloc] initWithInputStream:stream];
+    [audioInStream start];
 }
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID

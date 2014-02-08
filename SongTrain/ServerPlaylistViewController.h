@@ -10,11 +10,11 @@
 #import "PlaylistViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
-#import "MusicQueuePlayer.h"
+#import "TDAudioStreamer.h"
 
 @interface ServerPlaylistViewController : PlaylistViewController <MCNearbyServiceAdvertiserDelegate>{
     MCNearbyServiceAdvertiser *advert;
-    MusicQueuePlayer *player;
+    TDAudioInputStreamer *audioInStream;
 }
 
 @end
