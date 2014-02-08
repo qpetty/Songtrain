@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import <CoreImage/CoreImage.h>
 
 @interface MainViewController ()
 
@@ -25,18 +26,36 @@
     //Sets up the navigationBar to be transparent, same as Background Image
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xebebeb), NSForegroundColorAttributeName, nil];
-    [self setTitle:@"Songtrain"];
-    
+    [self setTitle:@"Station"];
+
+    //Blur Background Image and add to MainView
+    CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"mainViewBackground.png"]];
+
+    CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
+    [gaussianBlurFilter setValue:gaussBlurBackground forKey: @"inputImage"];
+    [gaussianBlurFilter setValue:[NSNumber numberWithFloat: 8] forKey: @"inputRadius"];
+    CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+    UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
+
+    UIImageView *newView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+   newView.frame = CGRectMake(self.view.bounds.origin.x - 15, self.view.bounds.origin.y - 15, self.view.bounds.size.width + 30, self.view.bounds.size.height + 30);
+    newView.image = blurredImage;
+    [self.view addSubview:newView];
+
     //Insert Song View in the created CGRect
     CGRect location = CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
                                      self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
                                      self.view.bounds.size.width,
                                      ARTWORK_HEIGHT);
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    
+
     self.albumArtwork = [[CurrentSongView alloc] initWithPlayer:musicPlayer andFrame:location];
     self.albumArtwork.delegate = self;
-    [self.view addSubview:self.albumArtwork];
+    if ([musicPlayer nowPlayingItem]) {
+       [self.view addSubview:self.albumArtwork];
+    }
+
+
     
     //Setup create train button
     location = CGRectMake(self.view.bounds.origin.x,
@@ -149,7 +168,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"peerCell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] init];
-        cell.backgroundColor = UIColorFromRGB(0x464646);
+        cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (peerArray.count > 0){
@@ -162,6 +181,9 @@
         cell.userInteractionEnabled = NO;
         cell.textLabel.text = @"No Nearby Trains";
     }
+
+
+
     return cell;
 }
 

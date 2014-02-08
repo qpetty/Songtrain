@@ -16,11 +16,12 @@
     maxHeight = frame.size.height;
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = UIColorFromRGB(0x464646);
-        [self.layer setBorderWidth:1.0f];
-        [self.layer setBorderColor:UIColorFromRGB(0x707070).CGColor];
-        self.separatorColor = UIColorFromRGB(0x363636);
+        self.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
+        [self.layer setBorderWidth:0.5f];
+        [self.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
+        self.separatorColor = UIColorFromRGB(0x252525);
         self.scrollEnabled = NO;
+
     }
     return self;
 }
