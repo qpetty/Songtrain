@@ -87,7 +87,11 @@
     label.text = @"TRAINS";
     
     [self.view addSubview:label];
-    
+
+    // Hide annoying line
+    self.navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
+    self.navBarHairlineImageView.hidden = YES;
+
     //Multipeer Connectivity initialization
     service = SERVICE_TYPE;
     pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
@@ -101,6 +105,8 @@
     
     browse = [[MCNearbyServiceBrowser alloc] initWithPeer:pid serviceType:service];
     browse.delegate = self;
+
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -273,4 +279,18 @@
 {
     //NSLog(@"Here: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
 }
+
+- (UIImageView *)findHairlineImageViewUnder:(UIView *)view {
+   if ([view isKindOfClass:UIImageView.class] && view.bounds.size.height <= 1.0) {
+      return (UIImageView *)view;
+   }
+   for (UIView *subview in view.subviews) {
+      UIImageView *imageView = [self findHairlineImageViewUnder:subview];
+      if (imageView) {
+         return imageView;
+      }
+   }
+   return nil;
+}
+
 @end

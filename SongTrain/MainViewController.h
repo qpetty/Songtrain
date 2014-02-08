@@ -33,5 +33,6 @@
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;
+@property (strong, nonatomic) UIImageView *navBarHairlineImageView;
 
 @end
