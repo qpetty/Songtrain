@@ -13,9 +13,13 @@
 #import "CurrentSongView.h"
 #import "InfoViewController.h"
 #import "GrayTableView.h"
+#import "SongtrainProtocol.h"
 #import "Song.h"
+#import "NSMutableArray+Playlist.h"
 
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate>{
+#import "TDAudioStreamer.h"
+
+@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate, SongtrainProtocolDelegate>{
     BOOL isHost;
     
     MPMusicPlayerController *musicPlayer;
@@ -33,6 +37,8 @@
     MCSession *mainSession;
     MCPeerID *pid;
     NSString *service;
+    
+    SongtrainProtocol *trainProtocol;
 }
 
 - (instancetype)initWithSession:(MCSession*)session;

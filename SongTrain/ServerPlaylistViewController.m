@@ -33,14 +33,9 @@
     
     //Add whole queue instead of single song
     if ([musicPlayer nowPlayingItem]){
-        Song *nowPlayingSong = [[Song alloc] init];
-        nowPlayingSong.title = [[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyTitle];
-        nowPlayingSong.artistName = [[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyArtist];
-        nowPlayingSong.host = pid;
-        nowPlayingSong.media = [musicPlayer nowPlayingItem];
-        
-        [playlist addObject:nowPlayingSong];
+        [playlist addSongFromMediaItemToList:[musicPlayer nowPlayingItem] withPeerID:pid];
     }
+    
     //Broadcast Train to others
     
     advert = [[MCNearbyServiceAdvertiser alloc] initWithPeer:pid discoveryInfo:nil serviceType:service];
@@ -86,18 +81,13 @@
     //[self updateQueueWithCollection:mediaItemCollection];
     
     for (MPMediaItem *item in mediaItemCollection.items){
-        Song *oneSong = [[Song alloc] init];
-        oneSong.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        oneSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        oneSong.host = pid;
-        oneSong.media = item;
-        [playlist addObject:oneSong];
+        [playlist addSongFromMediaItemToList:item withPeerID:pid];
     }
     
     NSLog(@"Sending some data\n");
 
-    NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:playlist];
-    [mainSession sendData:dataToSend toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
+    //NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:playlist];
+    [mainSession sendData:[SongtrainProtocol dataFromSongArray:playlist] toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
     
     [self dismissViewControllerAnimated:YES completion:nil];
     [mainTableView reloadData];
@@ -119,8 +109,7 @@
         //Start stream
         NSLog(@"Connected to %@", peerID.displayName);
         if (playlist.count) {
-            NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:playlist];
-            [mainSession sendData:dataToSend toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
+            [mainSession sendData:[SongtrainProtocol dataFromSongArray:playlist] toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
         }
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
@@ -153,16 +142,28 @@
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
-    NSMutableArray *songRequests = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    for (Song *one in songRequests) {
+    [trainProtocol messageToParse:data];
+}
+
+- (void)receivedSongArray:(NSMutableArray*)songArray
+{
+    for (Song *one in songArray) {
         [playlist addObject:one];
     }
     NSLog(@"Sending ACK from server\n");
-    NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:playlist];
-    [mainSession sendData:dataToSend toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
+    
+    [mainSession sendData:[SongtrainProtocol dataFromSongArray:playlist] toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         [mainTableView reloadData];
     });
+}
+
+- (void)finishedPlayingSong
+{
+    [playlist removeObjectAtIndex:0];
+    NSURL *nextURL = [[[playlist objectAtIndex:0] media] valueForProperty:MPMediaItemPropertyAssetURL];
+    NSArray *nextPeer = [NSArray arrayWithObjects:[[playlist objectAtIndex:0] host], nil];
+    [mainSession sendData:[SongtrainProtocol dataFromURL: nextURL] toPeers: nextPeer withMode:MCSessionSendDataReliable error:nil];
 }
 
 @end

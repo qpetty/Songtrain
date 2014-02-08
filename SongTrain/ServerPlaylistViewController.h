@@ -12,7 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "TDAudioStreamer.h"
 
-@interface ServerPlaylistViewController : PlaylistViewController <MCNearbyServiceAdvertiserDelegate>{
+@interface ServerPlaylistViewController : PlaylistViewController <MCNearbyServiceAdvertiserDelegate, SongtrainProtocolDelegate, TDAudioInputStreamDelegate>{
     MCNearbyServiceAdvertiser *advert;
     TDAudioInputStreamer *audioInStream;
 }

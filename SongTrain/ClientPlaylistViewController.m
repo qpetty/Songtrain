@@ -64,8 +64,8 @@
     }
     
     NSLog(@"Sending some data\n");
-    NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:songRequests];
-    [mainSession sendData:dataToSend toPeers:[NSArray arrayWithObject:serverID] withMode:MCSessionSendDataReliable error:nil];
+    
+    [mainSession sendData:[SongtrainProtocol dataFromSongArray:songRequests] toPeers:[NSArray arrayWithObject:serverID] withMode:MCSessionSendDataReliable error:nil];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -90,13 +90,31 @@
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Recieved some data\n");
-    //NSLog(@"Playlist before data size: %d\n", playlist.count);
-    playlist = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    //NSLog(@"Playlist size after data: %d\n", playlist.count);
-    
+    [trainProtocol messageToParse:data];
+}
+
+- (void)receivedSongArray:(NSMutableArray*)songArray
+{
+    playlist = songArray;
     dispatch_async(dispatch_get_main_queue(), ^{
         [mainTableView reloadData];
     });
+}
+- (void)requestToStartStreaming:(NSURL*) url
+{
+    if (audioOutStream) {
+        [audioOutStream stop];
+    }
+    NSOutputStream *outStream = [mainSession startStreamWithName:@"one" toPeer:serverID error:nil];
+    audioOutStream = [[TDAudioOutputStreamer alloc] initWithOutputStream:outStream];
+    [audioOutStream streamAudioFromURL:url];
+    [audioOutStream start];
+}
+- (void)requestToStopStreaming
+{
+    if (audioOutStream) {
+        [audioOutStream stop];
+    }
 }
 
 @end

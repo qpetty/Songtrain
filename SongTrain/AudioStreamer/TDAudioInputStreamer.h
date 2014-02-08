@@ -8,7 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol TDAudioInputStreamDelegate <NSObject>
+
+@required
+- (void)finishedPlayingSong;
+
+@end
+
 @interface TDAudioInputStreamer : NSObject
+
+@property (assign, nonatomic) id<TDAudioInputStreamDelegate> delegate;
 
 @property (assign, nonatomic) UInt32 audioStreamReadMaxLength;
 @property (assign, nonatomic) UInt32 audioQueueBufferSize;

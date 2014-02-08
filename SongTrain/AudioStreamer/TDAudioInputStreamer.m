@@ -115,6 +115,7 @@
         case TDAudioStreamEventEnd:
             self.isPlaying = NO;
             [self.audioQueue finish];
+            [self.delegate finishedPlayingSong];
             break;
 
         case TDAudioStreamEventError:
