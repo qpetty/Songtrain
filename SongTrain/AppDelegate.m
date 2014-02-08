@@ -16,6 +16,7 @@
     
     //Sets status bar to white text
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setTintColor:UIColorFromRGB(0x7FA8D7)];
     return YES;
 }
 							

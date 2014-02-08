@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UsefulFunctions.h"
 
 @interface GrayTableView : UITableView{
     double maxHeight;

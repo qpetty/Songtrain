@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
-#import "UsefulFunctions.h"
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
