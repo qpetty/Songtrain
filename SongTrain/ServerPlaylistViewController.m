@@ -182,10 +182,16 @@
     
     Song *nextSong = [playlist firstObject];
     
-    if (audioPlayer)
+    if (audioPlayer){
         [audioPlayer stop];
-    else if (audioInStream)
+        audioPlayer = nil;
+    }
+    
+    if (audioInStream){
+        [audioInStream pause];
         [audioInStream stop];
+        audioInStream = nil;
+    }
 
     if ([nextSong.host.displayName isEqualToString:[pid displayName]]) {
         
