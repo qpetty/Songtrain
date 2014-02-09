@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
 
+
 @interface ClientPlaylistViewController : PlaylistViewController{
     MCPeerID *serverID;
+    TDAudioOutputStreamer *audioOutStream;
 }
 
 - (instancetype)initWithSession:(MCSession*)session andServerPeerID:(MCPeerID*)peerID;

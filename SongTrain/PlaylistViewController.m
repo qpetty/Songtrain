@@ -87,6 +87,9 @@
     [musicPlayer beginGeneratingPlaybackNotifications];
     
     [mainTableView reloadData];
+    
+    trainProtocol = [[SongtrainProtocol alloc] init];
+    trainProtocol.delegate = self;
 }
 
 - (void)nowPlayingItemChanged:(id)sender
