@@ -47,7 +47,19 @@
     [audioSession setActive:YES error:nil];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
     
-    //NSURL *assetURL = [NSURL URLWithString:[[NSBundle mainBundle] pathForResource:@"TheFuneral" ofType:@"m4a"]];
+    CGRect location = CGRectMake(addToList.frame.origin.x + 150, addToList.frame.origin.y, addToList.frame.size.width, addToList.frame.size.height);
+    
+    playButton = [[UIButton alloc] initWithFrame:location];
+    [playButton setTitle:@"Play" forState:UIControlStateNormal];
+    [playButton addTarget:self action:@selector(playNextSong) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:playButton];
+    
+    location = CGRectMake(addToList.frame.origin.x + 250, addToList.frame.origin.y, addToList.frame.size.width, addToList.frame.size.height);
+    
+    skipButton = [[UIButton alloc] initWithFrame:location];
+    [skipButton setTitle:@"Skip" forState:UIControlStateNormal];
+    [skipButton addTarget:self action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:skipButton];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -138,6 +150,7 @@
     }
     audioInStream = [[TDAudioInputStreamer alloc] initWithInputStream:stream];
     [audioInStream start];
+    NSLog(@"Received Stream: %@\n", streamName);
 }
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
@@ -158,12 +171,68 @@
     });
 }
 
+- (void)playNextSong
+{
+    if (!playlist.count) {
+        //No songs in list
+        return;
+    }
+    
+    NSLog(@"Trying to play the next song\n");
+    
+    Song *nextSong = [playlist firstObject];
+    
+    if (audioPlayer)
+        [audioPlayer stop];
+    else if (audioInStream)
+        [audioInStream stop];
+
+    if ([nextSong.host.displayName isEqualToString:[pid displayName]]) {
+        
+        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[[nextSong media] valueForProperty:MPMediaItemPropertyAssetURL] error:nil];
+        audioPlayer.delegate = self;
+        [audioPlayer play];
+        
+        NSLog(@"Sending meida item: %@\n", nextSong.media);
+        NSLog(@"URL of item: %@\n", [nextSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
+        
+        NSLog(@"Beginning Local Song\n");
+    }
+    else{
+        NSArray *nextPeer = [NSArray arrayWithObjects:nextSong.host, nil];
+        [mainSession sendData:[SongtrainProtocol dataFromMedia: nextSong] toPeers: nextPeer withMode:MCSessionSendDataReliable error:nil];
+        NSLog(@"Playing Song from %@\n", nextSong.host.displayName);
+    }
+}
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    [self finishedPlayingSong];
+}
+
+- (void)pause
+{
+    if (audioPlayer)
+        [audioPlayer pause];
+    else if (audioInStream)
+        [audioInStream pause];
+}
+
+- (void)resume
+{
+    if (audioPlayer)
+        [audioPlayer play];
+    else if (audioInStream)
+        [audioInStream resume];
+}
+
 - (void)finishedPlayingSong
 {
     [playlist removeObjectAtIndex:0];
-    NSURL *nextURL = [[[playlist objectAtIndex:0] media] valueForProperty:MPMediaItemPropertyAssetURL];
-    NSArray *nextPeer = [NSArray arrayWithObjects:[[playlist objectAtIndex:0] host], nil];
-    [mainSession sendData:[SongtrainProtocol dataFromURL: nextURL] toPeers: nextPeer withMode:MCSessionSendDataReliable error:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [mainTableView reloadData];
+    });
+    [self playNextSong];
 }
 
 @end

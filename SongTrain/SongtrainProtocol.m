@@ -33,11 +33,11 @@
     return [NSKeyedArchiver archivedDataWithRootObject:message];
 }
 
-+(NSData*)dataFromURL:(NSURL*)url
++(NSData*)dataFromMedia:(Song*)item
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = StartStreaming;
-    message.data = [NSKeyedArchiver archivedDataWithRootObject:url];
+    message.data = [NSKeyedArchiver archivedDataWithRootObject:item];
     return [NSKeyedArchiver archivedDataWithRootObject:message];
 }
 

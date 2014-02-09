@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "SingleMessage.h"
+#import "Song.h"
 
 enum MessageTypes : NSInteger {
     SongArray = 1,
@@ -20,7 +22,7 @@ enum MessageTypes : NSInteger {
 - (void)receivedSongArray:(NSMutableArray*)songArray;
 
 @optional
-- (void)requestToStartStreaming:(NSURL*) url;
+- (void)requestToStartStreaming:(Song*)song;
 - (void)requestToStopStreaming;
 
 @end
@@ -31,6 +33,6 @@ enum MessageTypes : NSInteger {
 
 -(void)messageToParse:(NSData*)data;
 +(NSData*)dataFromSongArray:(NSMutableArray*)array;
-+(NSData*)dataFromURL:(NSURL*)url;
++(NSData*)dataFromMedia:(Song*)item;
 
 @end

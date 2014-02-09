@@ -17,6 +17,7 @@
     nowPlayingSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
     nowPlayingSong.host = pid;
     nowPlayingSong.media = item;
+    nowPlayingSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
     
     [self addObject:nowPlayingSong];
 }

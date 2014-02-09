@@ -18,6 +18,7 @@
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
         self.host = [aDecoder decodeObjectForKey:@"host"];
         self.media = [aDecoder decodeObjectForKey:@"media"];
+        self.url = [aDecoder decodeObjectForKey:@"url"];
         _songPosition = [aDecoder decodeIntForKey:@"songPosition"];
         _totalSongs = [aDecoder decodeIntForKey:@"totalSongs"];
     }
@@ -30,6 +31,7 @@
     [aCoder encodeObject:self.artistName forKey:@"name"];
     [aCoder encodeObject:self.host forKey:@"host"];
     [aCoder encodeObject:self.media forKey:@"media"];
+    [aCoder encodeObject:self.url forKey:@"url"];
     [aCoder encodeInt:_songPosition forKey:@"songPosition"];
     [aCoder encodeInt:_totalSongs forKey:@"totalSongs"];
 }

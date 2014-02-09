@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import <MediaPlayer/MediaPlayer.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import "UsefulFunctions.h"
 #import "CurrentSongView.h"
 #import "InfoViewController.h"
@@ -20,7 +23,6 @@
 #import "TDAudioStreamer.h"
 
 @interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate, SongtrainProtocolDelegate>{
-    BOOL isHost;
     
     MPMusicPlayerController *musicPlayer;
     MPMediaItemCollection *currentPlaylist;

@@ -17,6 +17,7 @@
 @property (strong, nonatomic) MCPeerID *host;
 //Maybe needed not sure yet
 @property (strong, nonatomic) MPMediaItem *media;
+@property (strong, nonatomic) NSURL *url;
 
 @property (nonatomic) int songPosition;
 @property (nonatomic) int totalSongs;

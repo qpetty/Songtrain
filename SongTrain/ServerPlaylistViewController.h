@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
-#import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
 #import "TDAudioStreamer.h"
 
-@interface ServerPlaylistViewController : PlaylistViewController <MCNearbyServiceAdvertiserDelegate, SongtrainProtocolDelegate, TDAudioInputStreamDelegate>{
+@interface ServerPlaylistViewController : PlaylistViewController <MCNearbyServiceAdvertiserDelegate, AVAudioPlayerDelegate, SongtrainProtocolDelegate, TDAudioInputStreamDelegate>{
     MCNearbyServiceAdvertiser *advert;
     TDAudioInputStreamer *audioInStream;
+    AVAudioPlayer *audioPlayer;
+    
+    UIButton *playButton, *skipButton;
 }
 
 @end

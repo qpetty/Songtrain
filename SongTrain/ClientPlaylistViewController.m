@@ -60,6 +60,9 @@
         oneSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
         oneSong.host = pid;
         oneSong.media = item;
+        oneSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        NSLog(@"Sending meida item: %@\n", oneSong.media);
+        NSLog(@"URL of item: %@\n", [oneSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
         [songRequests addObject:oneSong];
     }
     
@@ -100,14 +103,17 @@
         [mainTableView reloadData];
     });
 }
-- (void)requestToStartStreaming:(NSURL*) url
+- (void)requestToStartStreaming:(Song*)song
 {
     if (audioOutStream) {
         [audioOutStream stop];
     }
     NSOutputStream *outStream = [mainSession startStreamWithName:@"one" toPeer:serverID error:nil];
     audioOutStream = [[TDAudioOutputStreamer alloc] initWithOutputStream:outStream];
-    [audioOutStream streamAudioFromURL:url];
+    NSLog(@"Trying to play media item: %@\n", song.media);
+    NSLog(@"URL of item: %@\n", [song.media valueForProperty:MPMediaItemPropertyAssetURL]);
+    NSLog(@"URL from song: %@\n", song.url);
+    [audioOutStream streamAudioFromURL:song.url];
     [audioOutStream start];
 }
 - (void)requestToStopStreaming
