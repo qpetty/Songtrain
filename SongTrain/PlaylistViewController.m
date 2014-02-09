@@ -44,6 +44,8 @@
                                  ARTWORK_HEIGHT);
     
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
+    
+    
     playlist = [[NSMutableArray alloc] init];
     
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
