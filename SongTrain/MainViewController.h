@@ -16,12 +16,17 @@
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate>{
+#import "ControlPanel.h"
+
+#define HEIGHT_BEFORE_TABLEVIEW 60
+
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
     
     UILabel *label;
     MPMusicPlayerController *musicPlayer;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
+    ControlPanel *panel;
     
     MCSession *mainSession;
     MCNearbyServiceBrowser *browse;

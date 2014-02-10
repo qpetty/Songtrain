@@ -54,7 +54,7 @@
     if ([musicPlayer nowPlayingItem]) {
        [self.view addSubview:self.albumArtwork];
     } else {
-       // Put Label here.
+        // Put Label here.
         songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
         UIImageView *header = [[UIImageView alloc] initWithImage:songNotPlayingHeader];
         header.frame = CGRectMake(self.view.bounds.size.width/4, self.view.bounds.size.height/6, self.view.bounds.size.width/2, self.view.bounds.size.height/15);
@@ -65,9 +65,9 @@
     
     //Setup create train button
     location = CGRectMake(self.view.bounds.origin.x,
-                          location.origin.y + location.size.height,
+                          self.albumArtwork.frame.origin.y + self.albumArtwork.frame.size.height,
                           self.view.bounds.size.width,
-                          50);
+                          SINGLE_TABLEVIEWCELL_HEIGHT);
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
@@ -75,17 +75,17 @@
     [self.createTrainButton addTarget:self action:@selector(createTrainPressed:) forControlEvents:UIControlEventTouchDown];
     
     //Create TableView
-    location = CGRectMake(self.view.bounds.origin.x,
-                          location.origin.y + location.size.height + 60,
-                          self.view.bounds.size.width,
-                          self.view.bounds.size.height - location.origin.y - location.size.height - 40);
+    location = CGRectMake(self.view.frame.origin.x,
+                          self.createTrainButton.frame.origin.y + self.createTrainButton.frame.size.height + HEIGHT_BEFORE_TABLEVIEW,
+                          self.view.frame.size.width,
+                          self.view.frame.size.height - self.createTrainButton.frame.origin.y - self.createTrainButton.frame.size.height - HEIGHT_BEFORE_TABLEVIEW - self.albumArtwork.frame.origin.y);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     [self.view addSubview:mainTableView];
     
     
     //TableView Title
     location = CGRectMake(self.view.bounds.origin.x + 15,
-                          location.origin.y - 20,
+                          mainTableView.frame.origin.y - 20,
                           self.view.bounds.size.width,
                           14);
     label = [[UILabel alloc] initWithFrame:location];
@@ -95,6 +95,16 @@
     
     [self.view addSubview:label];
 
+    //Add Control Bar at bottom of the screen
+    location = CGRectMake(mainTableView.frame.origin.x,
+                          mainTableView.frame.origin.y + mainTableView.frame.size.height,
+                          self.view.frame.size.width,
+                          self.albumArtwork.frame.origin.y);
+    
+    panel = [[ControlPanel alloc] initWithFrame:location];
+    panel.delegate = self;
+    [self.view addSubview:panel];
+    
     // Hide annoying line
     self.navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
     self.navBarHairlineImageView.hidden = YES;

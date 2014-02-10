@@ -13,8 +13,8 @@
 
 enum MessageTypes : NSInteger {
     SongArray = 1,
-    StartStreaming = 2,
-    StopStreaming = 3
+    StartStreaming,
+    StopStreaming
 };
 
 @protocol SongtrainProtocolDelegate <NSObject>

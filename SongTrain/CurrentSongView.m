@@ -17,7 +17,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.frame = frame;
         self.userInteractionEnabled = YES;
         
         self.tintColor = UIColorFromRGB(0x797979);
@@ -152,7 +151,7 @@
     MPMusicPlaybackState playbackState = [musicPlayer playbackState];
     
     if (playbackState == MPMusicPlaybackStatePlaying && !progressTimer){
-            [self setProgressTimer];
+        [self setProgressTimer];
     }
     else{
         [progressTimer invalidate];

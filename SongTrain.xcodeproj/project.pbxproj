@@ -41,6 +41,7 @@
 		6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4E918A6A90000EAB82A /* SingleMessage.m */; };
 		6970F4ED18A6ABFA00EAB82A /* SongtrainProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */; };
 		6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */; };
+		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
 		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
 		69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA718A038FA00483DD8 /* CoreAudio.framework */; };
@@ -123,6 +124,8 @@
 		6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongtrainProtocol.m; sourceTree = "<group>"; };
 		6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Playlist.h"; sourceTree = "<group>"; };
 		6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Playlist.m"; sourceTree = "<group>"; };
+		6970F4F718A8514B00EAB82A /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
+		6970F4F818A8514B00EAB82A /* ControlPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlPanel.m; sourceTree = "<group>"; };
 		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
 		69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -218,20 +221,22 @@
 				69327DBC188F0F16001AB7F5 /* Main.storyboard */,
 				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
 				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
-				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
-				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
-				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
-				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
-				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
-				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
-				69C04C8A1893637D00B957DB /* InfoViewController.h */,
-				69C04C8B1893637D00B957DB /* InfoViewController.m */,
 				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
 				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
 				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
 				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
 				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
 				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
+				69C04C8A1893637D00B957DB /* InfoViewController.h */,
+				69C04C8B1893637D00B957DB /* InfoViewController.m */,
+				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
+				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
+				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
+				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
+				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
+				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
+				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
+				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
 				6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */,
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
 				6970F4EB18A6ABFA00EAB82A /* SongtrainProtocol.h */,
@@ -453,6 +458,7 @@
 				6970F4E718A6A0BE00EAB82A /* TDAudioStreamerConstants.m in Sources */,
 				6970F4DE18A6A0BE00EAB82A /* TDAudioQueue.m in Sources */,
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
+				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
 				6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
