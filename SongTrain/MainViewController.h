@@ -15,6 +15,7 @@
 #import "InfoViewController.h"
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
+#import "NSMutableArray+Playlist.h"
 
 #import "ControlPanel.h"
 
@@ -23,10 +24,11 @@
 @interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
     
     UILabel *label;
-    MPMusicPlayerController *musicPlayer;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     ControlPanel *panel;
+    
+    NSMutableArray *playlist;
     
     MCSession *mainSession;
     MCNearbyServiceBrowser *browse;

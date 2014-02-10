@@ -17,15 +17,12 @@
 #import "InfoViewController.h"
 #import "GrayTableView.h"
 #import "SongtrainProtocol.h"
-#import "Song.h"
 #import "NSMutableArray+Playlist.h"
 
 #import "TDAudioStreamer.h"
 
 @interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate, SongtrainProtocolDelegate>{
     
-    MPMusicPlayerController *musicPlayer;
-    MPMediaItemCollection *currentPlaylist;
     MPMediaPickerController *picker;
     
     NSMutableArray *playlist;

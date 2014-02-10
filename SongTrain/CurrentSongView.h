@@ -11,42 +11,30 @@
 #import "UsefulFunctions.h"
 
 enum ButtonNames : NSInteger {
-    InfoButton = 1,
-    FavoriteButton = 2,
-    MuteButton = 3
+    InfoButton = 1
 };
 
 @protocol CurrentSongViewDelegate <NSObject>
 
-- (void)buttonPressed:(UIButton*)sender;
+- (void)buttonPressed:(UIButton*)sender withSong:(Song*)song;
 
 @end
 
 @interface CurrentSongView : UIImageView{
-    MPMusicPlayerController *musicPlayer;
-    MPMediaItem *currentSong;
+    Song *currentSong;
     UILabel *songTitle;
     UILabel *songArtist;
     
     UIButton *infoButton;
-    UIButton *favoriteButton;
-    UIButton *muteButton;
-
-    UIProgressView *songProgress;
-    NSTimer *progressTimer;
 }
 
 @property (weak, nonatomic) id <CurrentSongViewDelegate> delegate;
 @property (nonatomic, assign, setter = setIsShowArtwork:) BOOL showArtwork;
 @property (nonatomic, assign, setter = setIsShowInfoButton:) BOOL showInfoButton;
 
-- (id)initWithPlayer:(MPMusicPlayerController*)player andFrame:(CGRect)frame;
-- (void)updateSongInfo:(MPMediaItem*)song;
+- (id)initWithSong:(Song*)song andFrame:(CGRect)frame;
+- (void)updateSongInfo:(Song*)song;
 - (void)setIsShowArtwork:(BOOL)show;
 - (void)setIsShowInfoButton:(BOOL)show;
-
-- (void)addPlayer:(MPMusicPlayerController*)player;
-- (void)nowPlayingItemChanged:(id)sender;
-- (void)playbackStateChanged:(id)sender;
 
 @end

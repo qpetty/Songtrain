@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
-#import "Song.h"
 
 @interface NSMutableArray (Playlist)
 

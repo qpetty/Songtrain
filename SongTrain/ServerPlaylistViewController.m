@@ -28,12 +28,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    [albumArtwork addPlayer:musicPlayer];
-    
-    //Add whole queue instead of single song
-    if ([musicPlayer nowPlayingItem]){
-        [playlist addSongFromMediaItemToList:[musicPlayer nowPlayingItem] withPeerID:pid];
+    MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
+    if (currentItem) {
+        [playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
+        [albumArtwork updateSongInfo:[playlist objectAtIndex:0]];
     }
     
     //Broadcast Train to others

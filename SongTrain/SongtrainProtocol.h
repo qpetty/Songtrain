@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "SingleMessage.h"
-#import "Song.h"
 
 enum MessageTypes : NSInteger {
     SongArray = 1,

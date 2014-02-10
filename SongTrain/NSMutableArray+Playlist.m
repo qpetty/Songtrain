@@ -19,6 +19,14 @@
     nowPlayingSong.media = item;
     nowPlayingSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
     
+    MPMediaItemArtwork *albumItem = [item valueForProperty:MPMediaItemPropertyArtwork];
+    if (albumItem){
+        NSLog(@"Adding Image to Song\n");
+        nowPlayingSong.albumImage = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+    }
+    else
+        NSLog(@"No Current Image\n");
+    
     [self addObject:nowPlayingSong];
 }
 
