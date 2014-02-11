@@ -9,15 +9,18 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <CoreImage/CoreImage.h>
+
+#import "QPMusicPlayerController.h"
+
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
-#import "InfoViewController.h"
+#import "ControlPanel.h"
+
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
-#import "NSMutableArray+Playlist.h"
-
-#import "ControlPanel.h"
+#import "InfoViewController.h"
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
@@ -28,7 +31,7 @@
     GrayTableView *mainTableView;
     ControlPanel *panel;
     
-    NSMutableArray *playlist;
+    QPMusicPlayerController *musicPlayer;
     
     MCSession *mainSession;
     MCNearbyServiceBrowser *browse;

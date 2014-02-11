@@ -7,7 +7,6 @@
 //
 
 #import "MainViewController.h"
-#import <CoreImage/CoreImage.h>
 
 @interface MainViewController ()
 
@@ -38,7 +37,7 @@
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
 
     UIImageView *newView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-   newView.frame = CGRectMake(self.view.bounds.origin.x - 15, self.view.bounds.origin.y - 15, self.view.bounds.size.width + 30, self.view.bounds.size.height + 30);
+    newView.frame = CGRectMake(self.view.bounds.origin.x - 15, self.view.bounds.origin.y - 15, self.view.bounds.size.width + 30, self.view.bounds.size.height + 30);
     newView.image = blurredImage;
     [self.view addSubview:newView];
 
@@ -47,16 +46,15 @@
                                      self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
                                      self.view.bounds.size.width,
                                      ARTWORK_HEIGHT);
-
-    playlist = [[NSMutableArray alloc] init];
+    
+    musicPlayer = [QPMusicPlayerController musicPlayer];
     
     self.albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     self.albumArtwork.delegate = self;
-    MPMediaItem *mediaItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
-    if (mediaItem) {
-        [playlist addSongFromMediaItemToList:mediaItem withPeerID:pid];
-        [self.albumArtwork updateSongInfo:[playlist objectAtIndex:0]];
-       [self.view addSubview:self.albumArtwork];
+
+    if (musicPlayer.currentSong) {
+        [self.albumArtwork updateSongInfo:musicPlayer.currentSong];
+        [self.view addSubview:self.albumArtwork];
     } else {
         // Put Label here.
         songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
