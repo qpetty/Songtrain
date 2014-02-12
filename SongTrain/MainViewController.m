@@ -47,6 +47,8 @@
                                      self.view.bounds.size.width,
                                      ARTWORK_HEIGHT);
     
+    sessionManager = [QPSessionManager sessionManager];
+    sessionManager.delegate = self;
     musicPlayer = [QPMusicPlayerController musicPlayer];
     
     self.albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
@@ -84,6 +86,9 @@
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     [self.view addSubview:mainTableView];
     
+    mainTableView.dataSource = self;
+    mainTableView.delegate = self;
+    
     
     //TableView Title
     location = CGRectMake(self.view.bounds.origin.x + 15,
@@ -110,53 +115,18 @@
     // Hide annoying line
     self.navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
     self.navBarHairlineImageView.hidden = YES;
-
-    //Multipeer Connectivity initialization
-    service = SERVICE_TYPE;
-    pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
-    
-    peerArray = [[NSMutableArray alloc] init];
-    mainTableView.dataSource = self;
-    mainTableView.delegate = self;
-    
-    mainSession = [[MCSession alloc] initWithPeer:pid];
-    mainSession.delegate = self;
-    
-    browse = [[MCNearbyServiceBrowser alloc] initWithPeer:pid serviceType:service];
-    browse.delegate = self;
-
-
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"Browsing for Peers...\n");
-    [mainSession disconnect];
-    [peerArray removeAllObjects];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    NSLog(@"View did appear...\n");
-    [mainTableView reloadData];
-    [browse startBrowsingForPeers];
-    mainSession.delegate = self;
-    //[self.albumArtwork updateSongInfo:[musicPlayer nowPlayingItem]];
+    [sessionManager startBrowsing];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"Stopped browsing for Peers...\n");
-    [browse stopBrowsingForPeers];
-}
-
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    NSLog(@"View did Disappear...\n");
+    //[sessionManager stopBrowsing];
 }
 
 - (void)didReceiveMemoryWarning
@@ -168,7 +138,7 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
-    [self.navigationController pushViewController:[[ServerPlaylistViewController alloc] initWithSession:mainSession] animated:YES];
+    //[self.navigationController pushViewController:[[ServerPlaylistViewController alloc] initWithSession:mainSession] animated:YES];
 }
 
 - (void)buttonPressed:(UIButton *)sender withSong:(Song *)song
@@ -182,6 +152,13 @@
 
 }
 
+- (void)availablePeersUpdated:(NSMutableArray *)peerArray
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [mainTableView reloadData];
+    });
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"peerCell"];
@@ -190,8 +167,8 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
-    if (peerArray.count > 0){
-        cell.textLabel.text = [[peerArray objectAtIndex:[indexPath row]] displayName];
+    if (sessionManager.peerArray.count > 0){
+        cell.textLabel.text = [[sessionManager.peerArray objectAtIndex:[indexPath row]] displayName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
     }
@@ -201,96 +178,27 @@
         cell.textLabel.text = @"No Nearby Trains";
     }
 
-
-
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"Selected train: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
+    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:[indexPath row]]];
     
-    [browse invitePeer:[peerArray objectAtIndex:[indexPath row]] toSession:mainSession withContext:nil timeout:0];
+    ClientPlaylistViewController *nextView = [[ClientPlaylistViewController alloc] init];
+    sessionManager.delegate = nextView;
+    [self.navigationController pushViewController:nextView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(peerArray.count > 0)
-        return peerArray.count;
+    if(sessionManager.peerArray.count > 0)
+        return sessionManager.peerArray.count;
     else
         return 1;
-}
-
-- (void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info
-{
-    NSLog(@"Found Peer: %@", peerID.displayName);
-    if (![peerID.displayName isEqualToString:pid.displayName]) {
-        NSLog(@"Added Peer: %@", peerID.displayName);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [peerArray addObject:peerID];
-            [mainTableView reloadData];
-        });
-    }
-}
-
--(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
-{
-    NSLog(@"Lost Peer: %@", peerID.displayName);
-    if (![peerID.displayName isEqualToString:pid.displayName]) {
-        NSLog(@"Removed Peer: %@", peerID.displayName);
-        
-        //NSLog(@"Array size before: %d\n", peerArray.count);
-        for (MCPeerID *peer in peerArray) {
-            if ([peer.displayName isEqualToString:peerID.displayName]) {
-                [peerArray removeObject:peer];
-                break;
-            }
-        }
-        [peerArray removeObjectIdenticalTo:peerID];
-        //NSLog(@"Array size after: %d\n", peerArray.count);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [mainTableView reloadData];
-        });
-    }
-}
-
--(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
-{
-    if (state == MCSessionStateConnecting) {
-        NSLog(@"Connecting to %@", peerID.displayName);
-    } else if (state == MCSessionStateConnected) {
-        NSLog(@"Connected to %@", peerID.displayName);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.navigationController pushViewController:[[ClientPlaylistViewController alloc] initWithSession:mainSession andServerPeerID:peerID] animated:YES];
-            [peerArray removeAllObjects];
-            [mainTableView reloadData];
-        });
-    } else if (state == MCSessionStateNotConnected) {
-        NSLog(@"Disconnected from %@", peerID.displayName);
-    }
-}
-
--(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
-{
-    NSLog(@"Got Stream: %@  from %@\n", streamName, [peerID displayName]);
-}
-
--(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
-{
-    
-}
-
--(void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error
-{
-    
-}
-
--(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
-{
-    //NSLog(@"Here: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
 }
 
 - (UIImageView *)findHairlineImageViewUnder:(UIView *)view {

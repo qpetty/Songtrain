@@ -23,14 +23,6 @@
     return self;
 }
 
-- (instancetype)initWithSession:(MCSession*)session
-{
-    if (self = [super init]) {
-        mainSession = session;
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -46,8 +38,6 @@
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     albumArtwork.delegate = self;
     [self.view addSubview:albumArtwork];
-    
-    playlist = [[NSMutableArray alloc] init];
     
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
@@ -75,16 +65,15 @@
     mainTableView.dataSource = self;
     [self.view addSubview:mainTableView];
     
-    mainSession.delegate = self;
-    pid = mainSession.myPeerID;
-    service = SERVICE_TYPE;
-    
-    trainProtocol = [[SongtrainProtocol alloc] init];
-    trainProtocol.delegate = self;
+    musicPlayer = [QPMusicPlayerController musicPlayer];
+    sessionManager = [QPSessionManager sessionManager];
 }
 
-- (void)playbackStateChanged:(id)sender
+- (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    [sessionManager stopBrowsing];
+    sessionManager.delegate = self;
 }
 
 - (void)addToPlaylist
@@ -103,6 +92,16 @@
     }
 }
 
+- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
+{
+}
+
+
+- (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *identifier = @"Peer cell";
@@ -112,9 +111,9 @@
         cell.backgroundColor = UIColorFromRGB(0x464646);
         cell.textLabel.textColor = [UIColor whiteColor];
     }
-    if (playlist.count){
-        cell.textLabel.text = [[playlist objectAtIndex:[indexPath row]] title];
-        cell.detailTextLabel.text = [[playlist objectAtIndex:[indexPath row]] artistName];
+    if (musicPlayer.playlist.count){
+        cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
+        cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] artistName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
     }
@@ -133,7 +132,7 @@
     
     if (!infoView)
         infoView = [[InfoViewController alloc] init];
-    [infoView updateSong:[playlist objectAtIndex:[indexPath row]]];
+    [infoView updateSong:[musicPlayer.playlist objectAtIndex:[indexPath row]]];
     [self.navigationController pushViewController:infoView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -141,8 +140,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(playlist.count)
-        return playlist.count;
+    if(musicPlayer.playlist.count)
+        return musicPlayer.playlist.count;
     return 1;
 }
 
@@ -151,50 +150,4 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
-{
-    //[self updateQueueWithCollection:mediaItemCollection];
-}
-
-
-- (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
-{
-    if (state == MCSessionStateConnecting) {
-        //Loading Icon
-        NSLog(@"Connecting to %@", peerID.displayName);
-    } else if (state == MCSessionStateConnected) {
-        //Start stream
-        NSLog(@"Connected to %@", peerID.displayName);
-    } else if (state == MCSessionStateNotConnected) {
-        NSLog(@"Disconnected from %@", peerID.displayName);
-    }
-}
-
--(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
-{
-    
-}
-
--(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
-{
-    
-}
-
--(void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error
-{
-    
-}
-
--(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
-{
-    
-}
-
 @end

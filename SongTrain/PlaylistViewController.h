@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import <MediaPlayer/MediaPlayer.h>
-#import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "UsefulFunctions.h"
@@ -19,27 +18,26 @@
 #import "SongtrainProtocol.h"
 #import "NSMutableArray+Playlist.h"
 
+#import "QPMusicPlayerController.h"
+#import "QPSessionManager.h"
+
 #import "TDAudioStreamer.h"
 
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, MCSessionDelegate, SongtrainProtocolDelegate>{
+@class QPMusicPlayerController;
+@class QPSessionManager;
+
+@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate>{
     
     MPMediaPickerController *picker;
     
-    NSMutableArray *playlist;
+    QPMusicPlayerController *musicPlayer;
+    QPSessionManager *sessionManager;
     
     CurrentSongView *albumArtwork;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     
     UIButton *addToList;
-    
-    MCSession *mainSession;
-    MCPeerID *pid;
-    NSString *service;
-    
-    SongtrainProtocol *trainProtocol;
 }
-
-- (instancetype)initWithSession:(MCSession*)session;
 
 @end

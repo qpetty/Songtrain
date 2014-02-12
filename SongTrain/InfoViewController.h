@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UsefulFunctions.h"
 #import "CurrentSongView.h"
 
 #define ALBUM_SIZE 300

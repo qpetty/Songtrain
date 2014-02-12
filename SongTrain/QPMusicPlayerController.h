@@ -6,18 +6,38 @@
 //  Copyright (c) 2014 Quinton Petty. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <MediaPlayer/MediaPlayer.h>
-#import <MultipeerConnectivity/MultipeerConnectivity.h>
-#import "NSMutableArray+Playlist.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface QPMusicPlayerController : NSObject{
-    NSMutableArray *playlist;
+#import "TDAudioStreamer.h"
+#import "NSMutableArray+Playlist.h"
+#import "QPSessionManager.h"
+
+@protocol QPMusicPlayerControllerDelegate <NSObject>
+
+- (void)playListHasBeenUpdated;
+
+@end
+
+@interface QPMusicPlayerController : NSObject <AVAudioPlayerDelegate>{
+    QPSessionManager *sessionManager;
     MCPeerID *pid;
+    
+    TDAudioInputStreamer *audioInStream;
+    TDAudioOutputStreamer *audioOutStream;
+    AVAudioPlayer *audioPlayer;
 }
 
 @property (nonatomic, retain) Song *currentSong;
+@property (nonatomic, retain) NSMutableArray *playlist;
 
 + (id)musicPlayer;
 
+- (void)addSongsToPlaylist:(MPMediaItemCollection*)songs;
+- (void)addArrayOfSongsToPlaylist:(NSMutableArray *)songs;
+
+- (void)removeSongsWithPeerID:(MCPeerID*)peerID;
+
+- (void)recievedStream:(NSInputStream*)inputStream;
+- (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong;
+- (void)stopOutStream;
 @end

@@ -9,12 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
 
-
-@interface ClientPlaylistViewController : PlaylistViewController{
-    MCPeerID *serverID;
+@interface ClientPlaylistViewController : PlaylistViewController <QPSessionManagerDelegate>{
     TDAudioOutputStreamer *audioOutStream;
 }
-
-- (instancetype)initWithSession:(MCSession*)session andServerPeerID:(MCPeerID*)peerID;
 
 @end

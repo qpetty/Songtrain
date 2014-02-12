@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import <CoreImage/CoreImage.h>
 
 #import "QPMusicPlayerController.h"
+#import "QPSessionManager.h"
 
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
@@ -24,7 +24,7 @@
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
     
     UILabel *label;
     InfoViewController *infoView;
@@ -32,13 +32,8 @@
     ControlPanel *panel;
     
     QPMusicPlayerController *musicPlayer;
+    QPSessionManager *sessionManager;
     
-    MCSession *mainSession;
-    MCNearbyServiceBrowser *browse;
-    MCPeerID *pid;
-    NSString *service;
-    
-    NSMutableArray *peerArray;
     UIImage *songNotPlayingHeader;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
