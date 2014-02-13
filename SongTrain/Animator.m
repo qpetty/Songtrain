@@ -76,7 +76,7 @@
         }];
     } else {
 
-        toViewController.view.frame = CGRectMake(container.frame.origin.x - fromViewController.view.frame.size.width, container.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
+        toViewController.view.frame = CGRectMake(container.frame.origin.x - fromViewController.view.frame.size.width - 2, container.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
         fromViewController.view.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
         // Timing can be altered

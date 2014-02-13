@@ -39,7 +39,7 @@
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
 
     newView = [[UIImageView alloc] initWithFrame:self.view.frame];
-    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5, self.view.bounds.size.height + 30);
+    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 30);
     newView.image = blurredImage;
     [self.view addSubview:newView];
 
