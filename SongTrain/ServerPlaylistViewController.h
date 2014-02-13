@@ -15,7 +15,7 @@
     TDAudioInputStreamer *audioInStream;
     AVAudioPlayer *audioPlayer;
     
-    UIButton *playButton, *skipButton;
+    UIButton *playButton, *skipButton, *djButton;
 }
 
 @end
