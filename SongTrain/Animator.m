@@ -5,6 +5,7 @@
 //  Created by Brandon Leventhal on 2/12/14.
 //  Copyright (c) 2014 Quinton Petty. All rights reserved.
 //
+// Parallax animation delegate object
 
 #import "Animator.h"
 
@@ -21,14 +22,15 @@
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    // Get to and from view controllers from the context
+    // Get to and from view controllers from the context using given keys
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *container = [transitionContext containerView];
     fromViewController.view.backgroundColor = [UIColor clearColor];
 
 
-    //Blur Background Image
+    //Blur Background Image, only create this on the first animation since the
+    // container has a strong reference to it
     if (self.firstTime) {
         push = YES;
         CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
@@ -52,10 +54,7 @@
     fromViewController.view.backgroundColor = [UIColor clearColor];
     toViewController.view.backgroundColor = [UIColor clearColor];
 
-
-
-
-
+    // Add views to the container superview
     [container insertSubview:fromViewController.view aboveSubview:newView];
     [container insertSubview:toViewController.view aboveSubview:newView];
 
@@ -72,11 +71,11 @@
             [transitionContext completeTransition:finished];
         }];
     } else {
-        //container.bounds = CGRectMake(0, 0, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
         toViewController.view.frame = CGRectMake(container.frame.origin.x - fromViewController.view.frame.size.width, container.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
         fromViewController.view.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
+        // Timing can be altered
         [UIView animateKeyframesWithDuration:2 delay:0 options:0 animations:^{
             newView.transform = CGAffineTransformMakeTranslation(container.bounds.origin.x, 0);
             toViewController.view.transform = CGAffineTransformMakeTranslation(container.frame.origin.x, 0);
@@ -87,11 +86,11 @@
         }];
     }
 
-    // TODO: add implementation for popping;
 }
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
+    // This can be altered.
     return 2;
 }
 

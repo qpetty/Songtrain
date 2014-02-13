@@ -170,7 +170,7 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
-        ServerPlaylistViewController *incoming = [[ServerPlaylistViewController alloc] initWithSession:mainSession];
+    ServerPlaylistViewController *incoming = [[ServerPlaylistViewController alloc] initWithSession:mainSession];
     [self.navigationController pushViewController:incoming animated:YES];
 }
 

@@ -31,7 +31,18 @@
         [addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
         [addButton setImage:[UIImage imageNamed:@"add_click"] forState:UIControlStateSelected];
         //[addButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
-        
+
+        // Create Skip Button
+
+        location = CGRectMake(frame.size.width - location.origin.x - BUTTON_SIZE, location.origin.y, BUTTON_SIZE, BUTTON_SIZE);
+        skipButton = [[UIButton alloc] initWithFrame:location];
+        [self addSubview:skipButton];
+        [skipButton setContentMode:UIViewContentModeScaleAspectFit];
+
+        [skipButton setImage:[UIImage imageNamed:@"skip"] forState:UIControlStateNormal];
+        [skipButton setImage:[UIImage imageNamed:@"skip_click"] forState:UIControlStateSelected];
+        //[skipButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
+
         //Create Progress Bar
         
         songProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
