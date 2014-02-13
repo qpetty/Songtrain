@@ -7,6 +7,7 @@
 //
 
 #import "PlaylistViewController.h"
+#import "Animator.h"
 
 @interface PlaylistViewController ()
 
@@ -18,7 +19,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        // Custom initialization        
     }
     return self;
 }
@@ -215,5 +216,6 @@
 {
     
 }
+
 
 @end

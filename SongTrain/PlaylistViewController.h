@@ -41,6 +41,7 @@
     NSString *service;
     
     SongtrainProtocol *trainProtocol;
+
 }
 
 - (instancetype)initWithSession:(MCSession*)session;

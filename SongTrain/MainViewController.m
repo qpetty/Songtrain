@@ -21,12 +21,13 @@
 
     //Construct User Interface
     
-    self.view.backgroundColor = UIColorFromRGB(0x363636);
+    //self.view.backgroundColor = UIColorFromRGB(0x363636);
     
     //Sets up the navigationBar to be transparent, same as Background Image
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xebebeb), NSForegroundColorAttributeName, nil];
     [self setTitle:@"Station"];
+    self.navigationController.delegate = self;
 
     //Blur Background Image and add to MainView
     CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
@@ -37,8 +38,8 @@
     CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
 
-    UIImageView *newView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-   newView.frame = CGRectMake(self.view.bounds.origin.x - 15, self.view.bounds.origin.y - 15, self.view.bounds.size.width + 30, self.view.bounds.size.height + 30);
+    newView = [[UIImageView alloc] initWithFrame:self.view.frame];
+    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5, self.view.bounds.size.height + 30);
     newView.image = blurredImage;
     [self.view addSubview:newView];
 
@@ -109,6 +110,9 @@
     self.navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
     self.navBarHairlineImageView.hidden = YES;
 
+    // Set up parallax animator
+    animator = [[Animator alloc] init];
+
     //Multipeer Connectivity initialization
     service = SERVICE_TYPE;
     pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
@@ -166,7 +170,8 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
-    [self.navigationController pushViewController:[[ServerPlaylistViewController alloc] initWithSession:mainSession] animated:YES];
+        ServerPlaylistViewController *incoming = [[ServerPlaylistViewController alloc] initWithSession:mainSession];
+    [self.navigationController pushViewController:incoming animated:YES];
 }
 
 - (void)buttonPressed:(UIButton*)sender
@@ -308,6 +313,21 @@
       }
    }
    return nil;
+}
+
+
+-(id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+
+    // Use this until I think of a better way.
+    newView.image = nil;
+
+    switch (operation) {
+        case UINavigationControllerOperationPush:
+            return animator;
+        case UINavigationControllerOperationPop:
+            return animator;
+        default: return nil;
+    }
 }
 
 

@@ -13,6 +13,7 @@
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
 #import "InfoViewController.h"
+#import "Animator.h"
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
 
@@ -20,7 +21,8 @@
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MCNearbyServiceBrowserDelegate, MCSessionDelegate, CurrentSongViewDelegate, ControlPanelDelegate,
+    UINavigationControllerDelegate>{
     
     UILabel *label;
     MPMusicPlayerController *musicPlayer;
@@ -35,6 +37,9 @@
     
     NSMutableArray *peerArray;
     UIImage *songNotPlayingHeader;
+
+    UIImageView *newView;
+    id<UIViewControllerAnimatedTransitioning> animator;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;
