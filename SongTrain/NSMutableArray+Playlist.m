@@ -19,6 +19,10 @@
     nowPlayingSong.media = item;
     nowPlayingSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
     
+    MPMediaItemArtwork *albumItem = [item valueForProperty:MPMediaItemPropertyArtwork];
+    if (albumItem)
+        nowPlayingSong.albumImage = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+    
     [self addObject:nowPlayingSong];
 }
 

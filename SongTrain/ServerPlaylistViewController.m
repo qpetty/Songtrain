@@ -29,12 +29,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    [albumArtwork addPlayer:musicPlayer];
-    
-    //Add whole queue instead of single song
-    if ([musicPlayer nowPlayingItem]){
-        [playlist addSongFromMediaItemToList:[musicPlayer nowPlayingItem] withPeerID:pid];
+    MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
+    if (currentItem) {
+        [playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
+        [albumArtwork updateSongInfo:[playlist objectAtIndex:0]];
     }
     
     //Broadcast Train to others
@@ -80,14 +78,6 @@
 {
     NSLog(@"Advertising Peers...\n");
     [advert startAdvertisingPeer];
-
-    /*
-    const char *here = "somehting";
-     
-    dispatch_async(dispatch_queue_create(here, NULL),^{
-        [self getAudioFromFile: [[playlist firstObject] media]];
-    });
-     */
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -104,15 +94,11 @@
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
-    //[self updateQueueWithCollection:mediaItemCollection];
-    
     for (MPMediaItem *item in mediaItemCollection.items){
         [playlist addSongFromMediaItemToList:item withPeerID:pid];
     }
     
-    NSLog(@"Sending some data\n");
-
-    //NSData *dataToSend = [NSKeyedArchiver archivedDataWithRootObject:playlist];
+    NSLog(@"Sending updated playlist\n");
     [mainSession sendData:[SongtrainProtocol dataFromSongArray:playlist] toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -132,7 +118,6 @@
         //Loading Icon
         NSLog(@"Connecting to %@", peerID.displayName);
     } else if (state == MCSessionStateConnected) {
-        //Start stream
         NSLog(@"Connected to %@", peerID.displayName);
         if (playlist.count) {
             [mainSession sendData:[SongtrainProtocol dataFromSongArray:playlist] toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];

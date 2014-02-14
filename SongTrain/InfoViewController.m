@@ -23,12 +23,11 @@
     return self;
 }
 
-- (id)initWithPlayer:(MPMusicPlayerController*)player
+- (id)initWithSong:(Song*)song
 {
     self = [super init];
     if(self) {
-        mediaPlayer = player;
-        currentSong = [player nowPlayingItem];
+        currentSong = song;
         self.title = @"Song Info";
     }
     return self;
@@ -63,11 +62,11 @@
                                                                                        SONG_INFO_HEIGHT)];
     [songView updateSongInfo:currentSong];
     songView.showInfoButton = NO;
-    //songView.showArtwork = NO;
+    songView.showArtwork = NO;
     [self.view addSubview:songView];
 }
 
-- (void)updateSong:(MPMediaItem*)song
+- (void)updateSong:(Song*)song
 {
     currentSong = song;
     [songView updateSongInfo:currentSong];
@@ -76,11 +75,7 @@
 
 - (void)updateArtwork
 {
-    MPMediaItemArtwork *albumItem = [currentSong valueForProperty:MPMediaItemPropertyArtwork];
-    if (albumItem)
-        albumArtwork.image = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
-    else
-        NSLog(@"No Current Image\n");
+    albumArtwork.image = currentSong.albumImage;
 }
 
 - (void)didReceiveMemoryWarning

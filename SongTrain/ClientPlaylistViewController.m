@@ -55,15 +55,7 @@
     NSMutableArray *songRequests = [[NSMutableArray alloc] init];
     
     for (MPMediaItem *item in mediaItemCollection.items){
-        Song *oneSong = [[Song alloc] init];
-        oneSong.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        oneSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        oneSong.host = pid;
-        oneSong.media = item;
-        oneSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
-        NSLog(@"Sending meida item: %@\n", oneSong.media);
-        NSLog(@"URL of item: %@\n", [oneSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
-        [songRequests addObject:oneSong];
+        [songRequests addSongFromMediaItemToList:item withPeerID:pid];
     }
     
     NSLog(@"Sending some data\n");

@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+enum ControlPanelButtonNames : NSInteger {
+    AddButton = 1,
+    SkipButton
+};
+
 @protocol ControlPanelDelegate <NSObject>
 
 - (void)buttonPressed:(UIButton*)sender;

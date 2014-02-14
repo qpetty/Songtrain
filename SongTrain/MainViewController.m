@@ -7,7 +7,6 @@
 //
 
 #import "MainViewController.h"
-#import <CoreImage/CoreImage.h>
 
 @interface MainViewController ()
 
@@ -48,12 +47,15 @@
                                      self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
                                      self.view.bounds.size.width,
                                      ARTWORK_HEIGHT);
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-
-    self.albumArtwork = [[CurrentSongView alloc] initWithPlayer:musicPlayer andFrame:location];
+    
+    musicPlayer = [QPMusicPlayerController musicPlayer];
+    
+    self.albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     self.albumArtwork.delegate = self;
-    if ([musicPlayer nowPlayingItem]) {
-       [self.view addSubview:self.albumArtwork];
+
+    if (musicPlayer.currentSong) {
+        [self.albumArtwork updateSongInfo:musicPlayer.currentSong];
+        [self.view addSubview:self.albumArtwork];
     } else {
         // Put Label here.
         songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
@@ -174,21 +176,15 @@
     [self.navigationController pushViewController:incoming animated:YES];
 }
 
-- (void)buttonPressed:(UIButton*)sender
+- (void)buttonPressed:(UIButton *)sender withSong:(Song *)song
 {
     if (sender.tag == InfoButton) {
         NSLog(@"Info Button pressed\n");
         //TODO: Memory allocation, only want one InfoViewController
-        infoView = [[InfoViewController alloc] initWithPlayer:musicPlayer];
+        infoView = [[InfoViewController alloc] initWithSong:song];
         [self.navigationController pushViewController:infoView animated:YES];
     }
-    else if (sender.tag == FavoriteButton) {
-        NSLog(@"Favorite Button pressed\n");
-    }
-    else if (sender.tag == MuteButton) {
-        NSLog(@"Mute Button pressed\n");
-        
-    }
+
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

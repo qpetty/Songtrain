@@ -48,6 +48,7 @@
         songProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [self addSubview:songProgress];
         songProgress.frame = CGRectMake(0, 0, frame.size.width, 10);
+        songProgress.progress = 0.5;
     }
     return self;
 }

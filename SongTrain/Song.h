@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *artistName;
+@property (strong, nonatomic) UIImage *albumImage;
 @property (strong, nonatomic) MCPeerID *host;
 //Maybe needed not sure yet
 @property (strong, nonatomic) MPMediaItem *media;

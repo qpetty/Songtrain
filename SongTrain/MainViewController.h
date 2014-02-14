@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <CoreImage/CoreImage.h>
+
+#import "QPMusicPlayerController.h"
+
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
@@ -16,8 +20,7 @@
 #import "Animator.h"
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
-
-#import "ControlPanel.h"
+#import "InfoViewController.h"
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
@@ -25,10 +28,11 @@
     UINavigationControllerDelegate>{
     
     UILabel *label;
-    MPMusicPlayerController *musicPlayer;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     ControlPanel *panel;
+    
+    QPMusicPlayerController *musicPlayer;
     
     MCSession *mainSession;
     MCNearbyServiceBrowser *browse;

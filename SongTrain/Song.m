@@ -16,6 +16,7 @@
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
+        self.albumImage = [aDecoder decodeObjectForKey:@"image"];
         self.host = [aDecoder decodeObjectForKey:@"host"];
         self.media = [aDecoder decodeObjectForKey:@"media"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
@@ -29,6 +30,7 @@
 {
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
+    [aCoder encodeObject:self.albumImage forKey:@"image"];
     [aCoder encodeObject:self.host forKey:@"host"];
     [aCoder encodeObject:self.media forKey:@"media"];
     [aCoder encodeObject:self.url forKey:@"url"];

@@ -25,6 +25,8 @@
 		69327DD4188F0F16001AB7F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69327DD2188F0F16001AB7F5 /* InfoPlist.strings */; };
 		69327DD6188F0F16001AB7F5 /* SongTrainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69327DD5188F0F16001AB7F5 /* SongTrainTests.m */; };
 		69327DE3188F167F001AB7F5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69327DE2188F167F001AB7F5 /* MediaPlayer.framework */; };
+		6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */; };
+		6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394618A9B487001A7AC8 /* QPSessionManager.m */; };
 		6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956BC2F188F44E9003C80DA /* CurrentSongView.m */; };
 		6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4C418A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m */; };
 		6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4C718A6A0BE00EAB82A /* TDAudioFileStream.m */; };
@@ -93,6 +95,10 @@
 		69327DD3188F0F16001AB7F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		69327DD5188F0F16001AB7F5 /* SongTrainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SongTrainTests.m; sourceTree = "<group>"; };
 		69327DE2188F167F001AB7F5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPMusicPlayerController.h; sourceTree = "<group>"; };
+		6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPMusicPlayerController.m; sourceTree = "<group>"; };
+		6933394518A9B487001A7AC8 /* QPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPSessionManager.h; sourceTree = "<group>"; };
+		6933394618A9B487001A7AC8 /* QPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPSessionManager.m; sourceTree = "<group>"; };
 		6956BC2E188F44E9003C80DA /* CurrentSongView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentSongView.h; sourceTree = "<group>"; };
 		6956BC2F188F44E9003C80DA /* CurrentSongView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSongView.m; sourceTree = "<group>"; };
 		6970F4C318A6A0BE00EAB82A /* NSMutableArray+QueueMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueMethods.h"; sourceTree = "<group>"; };
@@ -244,12 +250,11 @@
 				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
 				6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */,
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
-				6970F4EB18A6ABFA00EAB82A /* SongtrainProtocol.h */,
-				6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */,
-				697CF6AA1898794F00CF4DC7 /* Song.h */,
-				697CF6AB1898794F00CF4DC7 /* Song.m */,
-				6970F4E818A6A90000EAB82A /* SingleMessage.h */,
-				6970F4E918A6A90000EAB82A /* SingleMessage.m */,
+				6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */,
+				6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */,
+				6933394518A9B487001A7AC8 /* QPSessionManager.h */,
+				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
+				6933394118A9ABEE001A7AC8 /* Network Data */,
 				6970F4C118A6A0BE00EAB82A /* AudioStreamer */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
@@ -296,6 +301,51 @@
 			children = (
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		6933393F18A9ABC2001A7AC8 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
+				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
+				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
+				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
+				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
+				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
+				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
+				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
+				69C04C8A1893637D00B957DB /* InfoViewController.h */,
+				69C04C8B1893637D00B957DB /* InfoViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		6933394018A9ABD7001A7AC8 /* UI Views */ = {
+			isa = PBXGroup;
+			children = (
+				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
+				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
+				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
+				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
+				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
+				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
+				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
+				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
+			);
+			name = "UI Views";
+			sourceTree = "<group>";
+		};
+		6933394118A9ABEE001A7AC8 /* Network Data */ = {
+			isa = PBXGroup;
+			children = (
+				6970F4EB18A6ABFA00EAB82A /* SongtrainProtocol.h */,
+				6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */,
+				697CF6AA1898794F00CF4DC7 /* Song.h */,
+				697CF6AB1898794F00CF4DC7 /* Song.m */,
+				6970F4E818A6A90000EAB82A /* SingleMessage.h */,
+				6970F4E918A6A90000EAB82A /* SingleMessage.m */,
+			);
+			name = "Network Data";
 			sourceTree = "<group>";
 		};
 		6970F4C118A6A0BE00EAB82A /* AudioStreamer */ = {
@@ -455,6 +505,7 @@
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
 				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
 				6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */,
+				6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
 				69327DBB188F0F16001AB7F5 /* AppDelegate.m in Sources */,
 				69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */,
@@ -475,6 +526,7 @@
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
 				6970F4E418A6A0BE00EAB82A /* TDAudioInputStreamer.m in Sources */,
+				6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */,
 				6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */,
 				6970F4E118A6A0BE00EAB82A /* TDAudioQueueController.m in Sources */,
 				697CF6AC1898794F00CF4DC7 /* Song.m in Sources */,

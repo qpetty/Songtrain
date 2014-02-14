@@ -44,14 +44,11 @@
                                  self.view.bounds.size.width,
                                  ARTWORK_HEIGHT);
     
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    
-    
-    playlist = [[NSMutableArray alloc] init];
-    
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     albumArtwork.delegate = self;
     [self.view addSubview:albumArtwork];
+    
+    playlist = [[NSMutableArray alloc] init];
     
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
@@ -83,24 +80,8 @@
     pid = mainSession.myPeerID;
     service = SERVICE_TYPE;
     
-    //Subscribe to changes of the musicPlayer
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self selector:@selector(nowPlayingItemChanged:) name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification object:musicPlayer];
-    //[notificationCenter addObserver:self selector:@selector(playbackStateChanged:) name:MPMusicPlayerControllerPlaybackStateDidChangeNotification object:musicPlayer];
-    [musicPlayer beginGeneratingPlaybackNotifications];
-    
-    [mainTableView reloadData];
-    
     trainProtocol = [[SongtrainProtocol alloc] init];
     trainProtocol.delegate = self;
-}
-
-- (void)nowPlayingItemChanged:(id)sender
-{
-    while (playlist.count && [playlist firstObject] != [musicPlayer nowPlayingItem]) {
-        [playlist removeObjectAtIndex:0];
-    }
-    [mainTableView reloadData];
 }
 
 - (void)playbackStateChanged:(id)sender
@@ -112,13 +93,13 @@
     [self.navigationController presentViewController:picker animated: YES completion:nil];
 }
 
-- (void)buttonPressed:(UIButton*)sender
+- (void)buttonPressed:(UIButton*)sender withSong:(Song *)song
 {
     if (sender.tag == InfoButton) {
         NSLog(@"Info Button pressed\n");
         //TODO: Memory allocation, only want one InfoViewController
         if (!infoView)
-            infoView = [[InfoViewController alloc] initWithPlayer:musicPlayer];
+            infoView = [[InfoViewController alloc] initWithSong:song];
         [self.navigationController pushViewController:infoView animated:YES];
     }
 }

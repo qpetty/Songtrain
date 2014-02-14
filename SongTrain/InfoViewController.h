@@ -14,13 +14,12 @@
 #define SONG_INFO_HEIGHT 130
 
 @interface InfoViewController : UIViewController{
-    MPMusicPlayerController *mediaPlayer;
-    MPMediaItem *currentSong;
+    Song *currentSong;
     UIImageView *albumArtwork;
     CurrentSongView *songView;
 }
 
-- (id)initWithPlayer:(MPMusicPlayerController*)player;
-- (void)updateSong:(MPMediaItem*)song;
+- (id)initWithSong:(Song*)song;
+- (void)updateSong:(Song*)song;
 
 @end
