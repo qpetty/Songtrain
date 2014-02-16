@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
 
-@interface ClientPlaylistViewController : PlaylistViewController <QPSessionManagerDelegate>{
+@interface ClientPlaylistViewController : PlaylistViewController {
     TDAudioOutputStreamer *audioOutStream;
 }
 

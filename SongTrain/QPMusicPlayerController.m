@@ -30,37 +30,52 @@
         _playlist = [[NSMutableArray alloc] init];
         pid = [sessionManager pid];
         
-        MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
-        if (currentItem){
-            [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
-            self.currentSong = [_playlist objectAtIndex:0];
-        }
+        currentlyPlaying = NO;
     }
     return self;
+}
+
+- (void)resetMusicPlayer
+{
+    [_playlist removeAllObjects];
+    MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
+    if (currentItem && sessionManager.currentRole == ServerConnection){
+        [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
+        self.currentSong = [_playlist objectAtIndex:0];
+    }
 }
 
 - (void)addSongsToPlaylist:(MPMediaItemCollection*)songs
 {
     if (sessionManager.currentRole == ClientConnection) {
         NSMutableArray *proposedSongs = [[NSMutableArray alloc] init];
-        for (MPMediaItem *item in songs){
+        for (MPMediaItem *item in songs.items){
             [proposedSongs addSongFromMediaItemToList:item withPeerID:pid];
         }
         [sessionManager sendData:[SongtrainProtocol dataFromSongArray:proposedSongs] ToPeer:sessionManager.server];
     }
     else if (sessionManager.currentRole == ServerConnection) {
-        for (MPMediaItem *item in songs){
+        for (MPMediaItem *item in songs.items){
             [_playlist addSongFromMediaItemToList:item withPeerID:pid];
         }
         [sessionManager sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:_playlist]];
+        [self.delegate playListHasBeenUpdated];
     }
 }
 
+//Should only be called by the server
 - (void)addArrayOfSongsToPlaylist:(NSMutableArray *)songs
 {
     for (Song *item in songs){
         [_playlist addSongToList:item];
     }
+    [self.delegate playListHasBeenUpdated];
+}
+
+- (void)recievedPlaylistFromServer:(NSMutableArray *)songs
+{
+    _playlist = songs;
+    [self.delegate playListHasBeenUpdated];
 }
 
 - (void)removeSongsWithPeerID:(MCPeerID*)peerID
@@ -104,13 +119,14 @@
         [audioInStream stop];
     }
     audioInStream = [[TDAudioInputStreamer alloc] initWithInputStream:inputStream];
+    audioInStream.delegate = self;
     [audioInStream start];
-    //NSLog(@"Received Stream: %@\n", streamName);
+    NSLog(@"Received Stream\n");
 }
 
-- (void)playNextSong
+- (void)play
 {
-    if (!_playlist.count) {
+    if (currentlyPlaying || !_playlist.count) {
         //No songs in list
         return;
     }
@@ -136,8 +152,8 @@
         audioPlayer.delegate = self;
         [audioPlayer play];
         
-        NSLog(@"Sending meida item: %@\n", nextSong.media);
-        NSLog(@"URL of item: %@\n", [nextSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
+        //NSLog(@"Sending meida item: %@\n", nextSong.media);
+        //NSLog(@"URL of item: %@\n", [nextSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
         
         NSLog(@"Beginning Local Song\n");
     }
@@ -145,6 +161,7 @@
         [sessionManager sendData:[SongtrainProtocol dataFromMedia:nextSong] ToPeer:nextSong.host];
         NSLog(@"Playing Song from %@\n", nextSong.host.displayName);
     }
+    currentlyPlaying = YES;
 }
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -171,7 +188,9 @@
 - (void)finishedPlayingSong
 {
     [_playlist removeObjectAtIndex:0];
-    [self playNextSong];
+    currentlyPlaying = NO;
+    [self play];
+    [self.delegate playListHasBeenUpdated];
 }
 
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
 
-@interface ServerPlaylistViewController : PlaylistViewController <QPMusicPlayerControllerDelegate>{
+@interface ServerPlaylistViewController : PlaylistViewController {
     UIButton *playButton, *skipButton;
 }
 

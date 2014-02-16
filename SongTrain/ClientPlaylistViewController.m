@@ -46,4 +46,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)connectedToPeer:(MCPeerID *)peerID
+{
+    [musicPlayer resetMusicPlayer];
+}
+
+- (void)disconnectedFromPeer:(MCPeerID *)peerID
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 @end

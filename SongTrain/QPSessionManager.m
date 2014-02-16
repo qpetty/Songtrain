@@ -108,6 +108,8 @@
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
+    NSLog(@"Got some data from %@\n", peerID.displayName);
+    
     [trainProtocol messageToParse:data];
 }
 
@@ -158,23 +160,30 @@
 
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID
 {
+    NSLog(@"Sending Data to %@\n", peerID.displayName);
     [_mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
 }
 
 - (void)sendDataToAllPeers:(NSData*)data
 {
+    for (MCPeerID *peer in _mainSession.connectedPeers) {
+        NSLog(@"Sending Data to %@\n", peer.displayName);
+    }
     [_mainSession sendData:data toPeers:_mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
 }
 
 - (void)receivedSongArray:(NSMutableArray *)songArray
 {
+    NSLog(@"Recieved Song Array\n");
+    
     if (_currentRole == ServerConnection) {
-        [[QPMusicPlayerController musicPlayer] addArrayOfSongsToPlaylist:songArray];
         NSLog(@"Sending ACK from server\n");
+        [[QPMusicPlayerController musicPlayer] addArrayOfSongsToPlaylist:songArray];
         [self sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:[[QPMusicPlayerController musicPlayer] playlist]]];
     }
     else if (_currentRole == ClientConnection) {
-        [[QPMusicPlayerController musicPlayer] setPlaylist:songArray];
+        NSLog(@"Got Playlist from server\n");
+        [[QPMusicPlayerController musicPlayer] recievedPlaylistFromServer:songArray];
     }
 }
 

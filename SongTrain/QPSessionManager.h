@@ -16,10 +16,11 @@ enum CurrentConnectionRole : NSInteger {
 
 @protocol QPSessionManagerDelegate <NSObject>
 
-@optional
-- (void)availablePeersUpdated:(NSMutableArray*)peerArray;
 - (void)connectedToPeer:(MCPeerID*)peerID;
 - (void)disconnectedFromPeer:(MCPeerID*)peerID;
+
+@optional
+- (void)availablePeersUpdated:(NSMutableArray*)peerArray;
 
 @end
 

@@ -19,6 +19,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        musicPlayer = [QPMusicPlayerController musicPlayer];
+        musicPlayer.delegate = self;
+        sessionManager = [QPSessionManager sessionManager];
+        sessionManager.delegate = self;
     }
     return self;
 }
@@ -64,16 +68,19 @@
     mainTableView.delegate = self;
     mainTableView.dataSource = self;
     [self.view addSubview:mainTableView];
-    
+
+    /*
     musicPlayer = [QPMusicPlayerController musicPlayer];
+    musicPlayer.delegate = self;
     sessionManager = [QPSessionManager sessionManager];
+    sessionManager.delegate = self;
+     */
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [sessionManager stopBrowsing];
-    sessionManager.delegate = self;
+    //[sessionManager stopBrowsing];
 }
 
 - (void)addToPlaylist
@@ -143,6 +150,14 @@
     if(musicPlayer.playlist.count)
         return musicPlayer.playlist.count;
     return 1;
+}
+
+- (void)playListHasBeenUpdated
+{
+    NSLog(@"Updating Playlist\n");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [mainTableView reloadData];
+    });
 }
 
 - (void)didReceiveMemoryWarning

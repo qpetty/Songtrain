@@ -37,15 +37,17 @@
     
     playButton = [[UIButton alloc] initWithFrame:location];
     [playButton setTitle:@"Play" forState:UIControlStateNormal];
-    [playButton addTarget:self action:@selector(playNextSong) forControlEvents:UIControlEventTouchDown];
+    [playButton addTarget:musicPlayer action:@selector(play) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:playButton];
     
     location = CGRectMake(addToList.frame.origin.x + 250, addToList.frame.origin.y, addToList.frame.size.width, addToList.frame.size.height);
     
     skipButton = [[UIButton alloc] initWithFrame:location];
     [skipButton setTitle:@"Skip" forState:UIControlStateNormal];
-    [skipButton addTarget:self action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
+    [skipButton addTarget:musicPlayer action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:skipButton];
+    
+    [sessionManager createServer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,8 +66,11 @@
 
 - (void)connectedToPeer:(MCPeerID *)peerID
 {
+    //NSLog(@"connectedToPeer");
+    [musicPlayer resetMusicPlayer];
     if (musicPlayer.playlist.count) {
         [sessionManager sendData:[SongtrainProtocol dataFromSongArray:musicPlayer.playlist] ToPeer:peerID];
+        //NSLog(@"Sent Log to peer");
     }
 }
 
