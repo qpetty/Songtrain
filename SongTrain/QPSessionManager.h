@@ -32,14 +32,16 @@ enum CurrentConnectionRole : NSInteger {
     NSString *service;
     
     SongtrainProtocol *trainProtocol;
+    
+    MCSession *mainSession;
 }
 
 @property (weak, nonatomic) id <QPSessionManagerDelegate> delegate;
-@property (nonatomic, retain, readonly) MCSession *mainSession;
-@property (nonatomic, retain, readonly) MCPeerID *pid;
-@property (nonatomic, retain, readonly) MCPeerID *server;
-@property (nonatomic, retain, readonly) NSMutableArray *peerArray;
-@property (nonatomic, assign, readonly) NSUInteger currentRole;
+//@property (atomic, strong, readonly) MCSession *mainSession;
+@property (atomic, retain, readonly) MCPeerID *pid;
+@property (atomic, retain, readonly) MCPeerID *server;
+@property (atomic, retain, readonly) NSMutableArray *peerArray;
+@property (atomic, assign, readonly) NSUInteger currentRole;
 
 + (id)sessionManager;
 

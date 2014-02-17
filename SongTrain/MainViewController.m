@@ -138,9 +138,10 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
+    [sessionManager stopBrowsing];
+    [sessionManager createServer];
     ServerPlaylistViewController *newViewController = [[ServerPlaylistViewController alloc] init];
     sessionManager.delegate = newViewController;
-    [sessionManager stopBrowsing];
     [self.navigationController pushViewController:newViewController animated:YES];
 }
 
@@ -188,11 +189,11 @@
 {
     NSLog(@"Selected train: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
     
+    [sessionManager stopBrowsing];
     ClientPlaylistViewController *nextView = [[ClientPlaylistViewController alloc] init];
     sessionManager.delegate = nextView;
     
     [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:[indexPath row]]];
-    [sessionManager stopBrowsing];
     [self.navigationController pushViewController:nextView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

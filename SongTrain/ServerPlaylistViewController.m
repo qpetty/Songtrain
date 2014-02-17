@@ -46,8 +46,6 @@
     [skipButton setTitle:@"Skip" forState:UIControlStateNormal];
     [skipButton addTarget:musicPlayer action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:skipButton];
-    
-    [sessionManager createServer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,7 +59,6 @@
     [musicPlayer addSongsToPlaylist:mediaItemCollection];
     
     [self dismissViewControllerAnimated:YES completion:nil];
-    [mainTableView reloadData];
 }
 
 - (void)connectedToPeer:(MCPeerID *)peerID
@@ -69,8 +66,9 @@
     //NSLog(@"connectedToPeer");
     [musicPlayer resetMusicPlayer];
     if (musicPlayer.playlist.count) {
-        [sessionManager sendData:[SongtrainProtocol dataFromSongArray:musicPlayer.playlist] ToPeer:peerID];
-        //NSLog(@"Sent Log to peer");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [sessionManager sendData:[SongtrainProtocol dataFromSongArray:musicPlayer.playlist] ToPeer:peerID];
+        });
     }
 }
 

@@ -9,8 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistViewController.h"
 
-@interface ClientPlaylistViewController : PlaylistViewController {
-    TDAudioOutputStreamer *audioOutStream;
-}
-
+@interface ClientPlaylistViewController : PlaylistViewController
 @end

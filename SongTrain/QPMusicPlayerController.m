@@ -61,6 +61,7 @@
         [sessionManager sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:_playlist]];
         [self.delegate playListHasBeenUpdated];
     }
+    NSLog(@"Finished adding all songs to the playlist\n");
 }
 
 //Should only be called by the server

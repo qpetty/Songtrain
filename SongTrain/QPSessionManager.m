@@ -15,6 +15,7 @@
     static QPSessionManager *sharedSessionManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        NSLog(@"Session Manager allocated\n");
         sharedSessionManager = [[self alloc] init];
     });
     return sharedSessionManager;
@@ -27,8 +28,8 @@
         
         _peerArray = [[NSMutableArray alloc] init];
         
-        _mainSession = [[MCSession alloc] initWithPeer:self.pid];
-        _mainSession.delegate = self;
+        mainSession = [[MCSession alloc] initWithPeer:self.pid];
+        mainSession.delegate = self;
         
         trainProtocol = [[SongtrainProtocol alloc] init];
         trainProtocol.delegate = self;
@@ -56,12 +57,12 @@
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
-    [browse invitePeer:peerID toSession:_mainSession withContext:nil timeout:0];
+    [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
 
 - (void)restartSession
 {
-    [_mainSession disconnect];
+    [mainSession disconnect];
     //[advert stopAdvertisingPeer];
     _currentRole = NotConnected;
 }
@@ -110,6 +111,8 @@
 {
     NSLog(@"Got some data from %@\n", peerID.displayName);
     
+    NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
+    
     [trainProtocol messageToParse:data];
 }
 
@@ -118,7 +121,7 @@
 -(void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL, MCSession *))invitationHandler
 {
     NSLog(@"Got Invite from %@", peerID.displayName);
-    invitationHandler(YES,_mainSession);
+    invitationHandler(YES,mainSession);
 }
 
 #pragma mark - Browsing Methods
@@ -152,7 +155,6 @@
 
 - (void)stopBrowsing
 {
-    [_peerArray removeAllObjects];
     [browse startBrowsingForPeers];
 }
 
@@ -161,20 +163,25 @@
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID
 {
     NSLog(@"Sending Data to %@\n", peerID.displayName);
-    [_mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
+    [mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
+    NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)sendDataToAllPeers:(NSData*)data
 {
-    for (MCPeerID *peer in _mainSession.connectedPeers) {
+    for (MCPeerID *peer in mainSession.connectedPeers) {
         NSLog(@"Sending Data to %@\n", peer.displayName);
     }
-    [_mainSession sendData:data toPeers:_mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
+    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
+    NSLog(@"Sent Data to All Peers\n");
+    NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)receivedSongArray:(NSMutableArray *)songArray
 {
     NSLog(@"Recieved Song Array\n");
+    
+    NSLog(@"Thread: %@\n", [[NSThread currentThread] name]);
     
     if (_currentRole == ServerConnection) {
         NSLog(@"Sending ACK from server\n");
@@ -189,7 +196,7 @@
 
 - (void)requestToStartStreaming:(Song*)song
 {
-    [[QPMusicPlayerController musicPlayer] fillOutStream:[_mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];
+    [[QPMusicPlayerController musicPlayer] fillOutStream:[mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];
 }
 - (void)requestToStopStreaming
 {
