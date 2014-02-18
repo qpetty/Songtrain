@@ -48,6 +48,7 @@
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
     picker.allowsPickingMultipleItems = YES;
+    picker.showsCloudItems = NO;
     picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
     
     //Create an Add button
@@ -71,6 +72,16 @@
     mainTableView.dataSource = self;
     [self.view addSubview:mainTableView];
 
+    //Add Control Bar at bottom of the screen
+    location = CGRectMake(mainTableView.frame.origin.x,
+                          mainTableView.frame.origin.y + mainTableView.frame.size.height,
+                          self.view.frame.size.width,
+                          albumArtwork.frame.origin.y);
+    
+    panel = [[ControlPanel alloc] initWithFrame:location];
+    panel.delegate = self;
+    [self.view addSubview:panel];
+    
     /*
     musicPlayer = [QPMusicPlayerController musicPlayer];
     musicPlayer.delegate = self;

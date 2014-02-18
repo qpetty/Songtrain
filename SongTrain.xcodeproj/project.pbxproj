@@ -228,26 +228,8 @@
 				69327DBA188F0F16001AB7F5 /* AppDelegate.m */,
 				69C04C891893624900B957DB /* UsefulFunctions.h */,
 				69327DBC188F0F16001AB7F5 /* Main.storyboard */,
-				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
-				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
-				CAA2F08B18AC256600E24534 /* Animator.h */,
-				CAA2F08C18AC256600E24534 /* Animator.m */,
-				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
-				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
-				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
-				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
-				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
-				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
-				69C04C8A1893637D00B957DB /* InfoViewController.h */,
-				69C04C8B1893637D00B957DB /* InfoViewController.m */,
-				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
-				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
-				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
-				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
-				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
-				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
-				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
-				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
+				69C4391D18B319C30031217D /* View Controllers */,
+				69C4391E18B319E30031217D /* UI Views */,
 				6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */,
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
 				6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */,
@@ -301,38 +283,6 @@
 			children = (
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		6933393F18A9ABC2001A7AC8 /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
-				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
-				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
-				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
-				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
-				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
-				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
-				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
-				69C04C8A1893637D00B957DB /* InfoViewController.h */,
-				69C04C8B1893637D00B957DB /* InfoViewController.m */,
-			);
-			name = "View Controllers";
-			sourceTree = "<group>";
-		};
-		6933394018A9ABD7001A7AC8 /* UI Views */ = {
-			isa = PBXGroup;
-			children = (
-				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
-				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
-				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
-				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
-				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
-				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
-				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
-				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
-			);
-			name = "UI Views";
 			sourceTree = "<group>";
 		};
 		6933394118A9ABEE001A7AC8 /* Network Data */ = {
@@ -400,6 +350,40 @@
 			children = (
 			);
 			name = "Public Utilities";
+			sourceTree = "<group>";
+		};
+		69C4391D18B319C30031217D /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
+				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
+				CAA2F08B18AC256600E24534 /* Animator.h */,
+				CAA2F08C18AC256600E24534 /* Animator.m */,
+				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
+				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
+				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
+				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
+				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
+				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
+				69C04C8A1893637D00B957DB /* InfoViewController.h */,
+				69C04C8B1893637D00B957DB /* InfoViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		69C4391E18B319E30031217D /* UI Views */ = {
+			isa = PBXGroup;
+			children = (
+				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
+				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
+				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
+				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
+				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
+				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
+				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
+				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
+			);
+			name = "UI Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

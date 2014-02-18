@@ -47,6 +47,4 @@
 - (void)recievedStream:(NSInputStream*)inputStream;
 - (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong;
 - (void)stopOutStream;
-
-- (void)finishedPlayingSong;
 @end

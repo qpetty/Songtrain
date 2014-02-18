@@ -66,7 +66,7 @@
         toViewController.view.frame = CGRectMake(fromViewController.view.frame.size.width, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
 
         // Timing can be altered
-        [UIView animateKeyframesWithDuration:2 delay:0 options:0 animations:^{
+        [UIView animateKeyframesWithDuration:ANIMATION_DURATION delay:0 options:0 animations:^{
             newView.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width / 2, 0);
             toViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width - 2, 0);
@@ -80,7 +80,7 @@
         fromViewController.view.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
         // Timing can be altered
-        [UIView animateKeyframesWithDuration:2 delay:0 options:0 animations:^{
+        [UIView animateKeyframesWithDuration:ANIMATION_DURATION delay:0 options:0 animations:^{
             newView.transform = CGAffineTransformMakeTranslation(container.bounds.origin.x, 0);
             toViewController.view.transform = CGAffineTransformMakeTranslation(container.frame.origin.x, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(2, 0);
@@ -95,7 +95,7 @@
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     // This can be altered.
-    return 2;
+    return ANIMATION_DURATION;
 }
 
 @end

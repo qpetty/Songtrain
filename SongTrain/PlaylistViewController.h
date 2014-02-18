@@ -15,9 +15,10 @@
 #import "CurrentSongView.h"
 #import "InfoViewController.h"
 #import "GrayTableView.h"
+#import "ControlPanel.h"
+
 #import "SongtrainProtocol.h"
 #import "NSMutableArray+Playlist.h"
-
 #import "QPMusicPlayerController.h"
 #import "QPSessionManager.h"
 
@@ -33,6 +34,7 @@
     CurrentSongView *albumArtwork;
     InfoViewController *infoView;
     GrayTableView *mainTableView;
+    ControlPanel *panel;
     
     UIButton *addToList;
 }

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define ANIMATION_DURATION 1
+
 @interface Animator : NSObject <UIViewControllerAnimatedTransitioning>
 {
     UIImageView *newView;

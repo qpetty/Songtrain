@@ -42,6 +42,7 @@
     if (currentItem && sessionManager.currentRole == ServerConnection){
         [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
         self.currentSong = [_playlist objectAtIndex:0];
+        [self.delegate playListHasBeenUpdated];
     }
 }
 
@@ -129,6 +130,8 @@
 {
     if (currentlyPlaying || !_playlist.count) {
         //No songs in list
+        NSLog(@"Something is already playing\n");
+        NSLog(@"No Other songs to play\n");
         return;
     }
     
@@ -142,7 +145,6 @@
     }
     
     if (audioInStream){
-        [audioInStream pause];
         [audioInStream stop];
         audioInStream = nil;
     }
@@ -165,11 +167,6 @@
     currentlyPlaying = YES;
 }
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
-{
-    [self finishedPlayingSong];
-}
-
 - (void)pause
 {
     if (audioPlayer)
@@ -186,8 +183,19 @@
         [audioInStream resume];
 }
 
+- (void)skip
+{
+    [self finishedPlayingSong];
+}
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    [self finishedPlayingSong];
+}
+
 - (void)finishedPlayingSong
 {
+    NSLog(@"Finished Song and trying to play next\n");
     [_playlist removeObjectAtIndex:0];
     currentlyPlaying = NO;
     [self play];
