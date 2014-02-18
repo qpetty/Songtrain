@@ -32,7 +32,6 @@
     //Blur Background Image, only create this on the first animation since the
     // container has a strong reference to it
     if (self.firstTime) {
-        push = YES;
         CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
         CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
         [gaussianBlurFilter setValue:gaussBlurBackground forKey: @"inputImage"];
@@ -59,9 +58,9 @@
     [container insertSubview:toViewController.view aboveSubview:newView];
 
 
-    // Animate the parallax, push alternates for pushing and popping
+    // Animate the parallax, self.push alternates for self.pushing and popping
     // This might need to be changed for the info button, haven't attempted yet
-    if (push) {
+    if (self.push) {
 
         toViewController.view.frame = CGRectMake(fromViewController.view.frame.size.width, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
 
@@ -71,7 +70,6 @@
             toViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width - 2, 0);
         } completion:^(BOOL finished) {
-            push = !push;
             [transitionContext completeTransition:finished];
         }];
     } else {
@@ -85,7 +83,6 @@
             toViewController.view.transform = CGAffineTransformMakeTranslation(container.frame.origin.x, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(2, 0);
         } completion:^(BOOL finished) {
-            push = !push;
             [transitionContext completeTransition:finished];
         }];
     }

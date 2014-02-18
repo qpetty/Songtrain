@@ -11,7 +11,8 @@
 @interface Animator : NSObject <UIViewControllerAnimatedTransitioning>
 {
     UIImageView *newView;
-    BOOL push;
 }
 @property BOOL firstTime;
+@property BOOL push;
+
 @end

@@ -12,7 +12,7 @@
 #import <CoreImage/CoreImage.h>
 
 #import "QPMusicPlayerController.h"
-
+#import "ControlPanel.h"
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
@@ -43,7 +43,7 @@
     UIImage *songNotPlayingHeader;
 
     UIImageView *newView;
-    id<UIViewControllerAnimatedTransitioning> animator;
+    Animator *animator;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;
