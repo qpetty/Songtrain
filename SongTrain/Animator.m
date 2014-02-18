@@ -39,8 +39,6 @@
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *container = [transitionContext containerView];
-    fromViewController.view.backgroundColor = [UIColor clearColor];
-
 
     //Blur Background Image, only create this on the first animation since the
     // container has a strong reference to it
