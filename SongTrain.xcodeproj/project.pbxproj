@@ -54,6 +54,7 @@
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
 		CA7044AA18A6D7D7009B6A1D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044A918A6D7D7009B6A1D /* splash.png */; };
 		CA7044AC18A6D80F009B6A1D /* name.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044AB18A6D80F009B6A1D /* name.png */; };
+		CAA2F08D18AC256600E24534 /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA2F08C18AC256600E24534 /* Animator.m */; };
 		CAB4E57E18A6BF9000A654FC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAB4E57D18A6BF9000A654FC /* CoreImage.framework */; };
 		CAB4E58018A6C23B00A654FC /* mainViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */; };
 /* End PBXBuildFile section */
@@ -148,6 +149,8 @@
 		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
 		CA7044A918A6D7D7009B6A1D /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		CA7044AB18A6D80F009B6A1D /* name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = name.png; sourceTree = "<group>"; };
+		CAA2F08B18AC256600E24534 /* Animator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animator.h; sourceTree = "<group>"; };
+		CAA2F08C18AC256600E24534 /* Animator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Animator.m; sourceTree = "<group>"; };
 		CAB4E57D18A6BF9000A654FC /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mainViewBackground.png; path = Images.xcassets/mainViewBackground.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -225,8 +228,26 @@
 				69327DBA188F0F16001AB7F5 /* AppDelegate.m */,
 				69C04C891893624900B957DB /* UsefulFunctions.h */,
 				69327DBC188F0F16001AB7F5 /* Main.storyboard */,
-				6933393F18A9ABC2001A7AC8 /* View Controllers */,
-				6933394018A9ABD7001A7AC8 /* UI Views */,
+				69327DBF188F0F16001AB7F5 /* MainViewController.h */,
+				69327DC0188F0F16001AB7F5 /* MainViewController.m */,
+				CAA2F08B18AC256600E24534 /* Animator.h */,
+				CAA2F08C18AC256600E24534 /* Animator.m */,
+				69C04C8D18962EC800B957DB /* PlaylistViewController.h */,
+				69C04C8E18962EC800B957DB /* PlaylistViewController.m */,
+				69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */,
+				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
+				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
+				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
+				69C04C8A1893637D00B957DB /* InfoViewController.h */,
+				69C04C8B1893637D00B957DB /* InfoViewController.m */,
+				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
+				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
+				691FDE131890CB0F00DD83D6 /* SingleCellButton.h */,
+				691FDE141890CB0F00DD83D6 /* SingleCellButton.m */,
+				6956BC2E188F44E9003C80DA /* CurrentSongView.h */,
+				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
+				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
+				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
 				6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */,
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
 				6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */,
@@ -490,6 +511,7 @@
 				69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */,
 				69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */,
 				6970F4E618A6A0BE00EAB82A /* TDAudioStreamer.m in Sources */,
+				CAA2F08D18AC256600E24534 /* Animator.m in Sources */,
 				6970F4E718A6A0BE00EAB82A /* TDAudioStreamerConstants.m in Sources */,
 				6970F4DE18A6A0BE00EAB82A /* TDAudioQueue.m in Sources */,
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 #import "PlaylistViewController.h"
+#import "Animator.h"
 
 @interface PlaylistViewController ()
 

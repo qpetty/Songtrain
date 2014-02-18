@@ -16,15 +16,15 @@
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
-#import "ControlPanel.h"
-
+#import "InfoViewController.h"
+#import "Animator.h"
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
 #import "InfoViewController.h"
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, CurrentSongViewDelegate, ControlPanelDelegate>{
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, CurrentSongViewDelegate, ControlPanelDelegate, UINavigationControllerDelegate>{
     
     UILabel *label;
     InfoViewController *infoView;
@@ -35,6 +35,9 @@
     QPSessionManager *sessionManager;
     
     UIImage *songNotPlayingHeader;
+
+    UIImageView *newView;
+    id<UIViewControllerAnimatedTransitioning> animator;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;

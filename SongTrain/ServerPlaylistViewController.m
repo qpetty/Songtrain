@@ -10,6 +10,7 @@
 #import "QPMusicPlayerController.h"
 #import "QPSessionManager.h"
 
+#define BUTTON_SIZE 30
 
 @interface ServerPlaylistViewController ()
 
@@ -46,6 +47,19 @@
     [skipButton setTitle:@"Skip" forState:UIControlStateNormal];
     [skipButton addTarget:musicPlayer action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:skipButton];
+
+    // Add Dj button for host, I think that's the only person who should have it, right?
+    // TODO: reposition the dj button, alter size, ui changes and what not
+    location = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                          self.navigationController.navigationBar.frame.size.height / 7,                                 BUTTON_SIZE, BUTTON_SIZE);
+    djButton = [[UIButton alloc] initWithFrame:location];
+    [self.navigationController.navigationBar addSubview:djButton];
+    [djButton setContentMode:UIViewContentModeScaleAspectFit];
+
+    [djButton setImage:[UIImage imageNamed:@"dj_click"] forState:UIControlStateNormal];
+    [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateSelected];
+
+    //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
 }
 
 - (void)didReceiveMemoryWarning
