@@ -163,7 +163,14 @@
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID
 {
     NSLog(@"Sending Data to %@\n", peerID.displayName);
-    [mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:nil];
+    
+    NSError *error;
+    [mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:&error];
+    
+    if (error != nil) {
+        NSLog(@"Error: %@\n", error.localizedDescription);
+    }
+    
     NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 

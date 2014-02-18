@@ -19,6 +19,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        NSLog(@"Delegates for music player and session manager will be set\n");
         musicPlayer = [QPMusicPlayerController musicPlayer];
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
