@@ -78,11 +78,9 @@
         [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
             newView.frame = CGRectMake(newView.frame.origin.x - (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
         } completion:^(BOOL finished) {
-            //[transitionContext completeTransition:finished];
         }];
         // Timing can be altered
         [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
-            //newView.frame = CGRectMake(newView.frame.origin.x - (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
             toViewController.view.frame = CGRectMake(toViewController.view.frame.origin.x - toViewController.view.frame.size.width, toViewController.view.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
             fromViewController.view.frame = CGRectMake(fromViewController.view.frame.origin.x - fromViewController.view.frame.size.width, fromViewController.view.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
@@ -94,11 +92,15 @@
         toViewController.view.frame = CGRectMake(container.frame.origin.x - fromViewController.view.frame.size.width - 2, container.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
         fromViewController.view.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
+        [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
+            newView.frame = CGRectMake(newView.frame.origin.x + (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
+        } completion:^(BOOL finished) {
+        }];
+
         // Timing can be altered
         [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
             toViewController.view.frame = CGRectMake(toViewController.view.frame.origin.x + toViewController.view.frame.size.width + 2, toViewController.view.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
             fromViewController.view.frame = CGRectMake(fromViewController.view.frame.origin.x + fromViewController.view.frame.size.width, fromViewController.view.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
-            newView.frame = CGRectMake(newView.frame.origin.x + (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
 
         } completion:^(BOOL finished) {
             [transitionContext completeTransition:finished];
