@@ -22,10 +22,14 @@ enum ControlPanelButtonNames : NSInteger {
 @interface ControlPanel : UIImageView{
     UIButton *addButton;
     UIButton *skipButton;
+    UILabel *timeLabel;
     
     UIProgressView *songProgress;
 }
 
 @property (weak, nonatomic) id <ControlPanelDelegate> delegate;
+@property (nonatomic, assign, setter = setSongDuration:) NSRange songDuration;
+
+- (void)setSongDuration:(NSRange)songDuration;
 
 @end

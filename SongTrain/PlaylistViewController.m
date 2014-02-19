@@ -64,20 +64,21 @@
     
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
-                          location.origin.y + location.size.height + 40,
+                          albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 40,
                           self.view.bounds.size.width,
-                          self.view.bounds.size.height - location.origin.y - location.size.height - 40);
+                          self.view.bounds.size.height - (2 * albumArtwork.frame.origin.y) - albumArtwork.frame.size.height - 40);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     mainTableView.delegate = self;
     mainTableView.dataSource = self;
     [self.view addSubview:mainTableView];
 
     //Add Control Bar at bottom of the screen
+
     location = CGRectMake(mainTableView.frame.origin.x,
                           mainTableView.frame.origin.y + mainTableView.frame.size.height,
                           self.view.frame.size.width,
                           albumArtwork.frame.origin.y);
-    
+     
     panel = [[ControlPanel alloc] initWithFrame:location];
     panel.delegate = self;
     [self.view addSubview:panel];
@@ -99,6 +100,16 @@
 - (void)addToPlaylist
 {
     [self.navigationController presentViewController:picker animated: YES completion:nil];
+}
+
+- (void)buttonPressed:(UIButton *)sender
+{
+    if (sender.tag == AddButton) {
+        [self addToPlaylist];
+    }
+    else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
+        [musicPlayer finishedPlayingSong];
+    }
 }
 
 - (void)buttonPressed:(UIButton*)sender withSong:(Song *)song
@@ -128,7 +139,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-        cell.backgroundColor = UIColorFromRGB(0x464646);
+        cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (musicPlayer.playlist.count){

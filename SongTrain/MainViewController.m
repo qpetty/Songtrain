@@ -110,7 +110,7 @@
                           self.albumArtwork.frame.origin.y);
     
     panel = [[ControlPanel alloc] initWithFrame:location];
-    panel.delegate = self;
+    //panel.delegate = self;
     [self.view addSubview:panel];
     
     // Hide annoying line
