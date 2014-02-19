@@ -86,9 +86,6 @@
         currentMinutes++;
         songDuration.location -= 60;
     }
-    
-    NSLog(@"Song progress: %lu : %lu\n", songDuration.location, songDuration.length);
-    
     timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu - %d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
 }
 
