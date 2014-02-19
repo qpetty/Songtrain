@@ -120,6 +120,8 @@
     // Set up parallax animator
     animator = [[Animator alloc] init];
 
+    // Allow musicplayercontroller to update control panel
+    musicPlayer.panel = panel;
 }
 
 -(void)viewWillAppear:(BOOL)animated

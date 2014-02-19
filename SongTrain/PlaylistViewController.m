@@ -51,6 +51,7 @@
     picker.showsCloudItems = NO;
     picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
     
+    /*
     //Create an Add button
     CGRect buttonLocation = CGRectMake(albumArtwork.frame.origin.x,
                           albumArtwork.frame.origin.y + albumArtwork.frame.size.height,
@@ -61,6 +62,7 @@
     [addToList setTitle:@"Add" forState:UIControlStateNormal];
     [addToList addTarget:self action:@selector(addToPlaylist) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:addToList];
+    */
     
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
@@ -82,6 +84,9 @@
     panel = [[ControlPanel alloc] initWithFrame:location];
     panel.delegate = self;
     [self.view addSubview:panel];
+    
+    // Allow musicplayercontroller to update control panel
+    musicPlayer.panel = panel;
     
     /*
     musicPlayer = [QPMusicPlayerController musicPlayer];
@@ -108,7 +113,7 @@
         [self addToPlaylist];
     }
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
-        [musicPlayer finishedPlayingSong];
+        [musicPlayer skip];
     }
 }
 
@@ -180,6 +185,7 @@
 {
     NSLog(@"Updating Playlist\n");
     dispatch_async(dispatch_get_main_queue(), ^{
+        [albumArtwork updateSongInfo:musicPlayer.currentSong];
         [mainTableView reloadData];
     });
 }

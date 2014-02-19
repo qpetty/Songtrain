@@ -55,7 +55,7 @@
         [self addSubview:songProgress];
         songProgress.tintColor = UIColorFromRGB(0x7FA8D7);
         songProgress.frame = CGRectMake(0, 0, frame.size.width, 10);
-        songProgress.progress = 0.5;
+        songProgress.progress = 0.0;
         
         //Create Time Label
         
@@ -74,7 +74,22 @@
 
 - (void)setSongDuration:(NSRange)songDuration
 {
-    songProgress.progress = songDuration.location / songDuration.length;
+    songProgress.progress = (float)songDuration.location / (float)songDuration.length;
+    
+    int totalMinutes = 0, currentMinutes = 0;
+    
+    while (songDuration.length >= 60) {
+        totalMinutes++;
+        songDuration.length -= 60;
+    }
+    while (songDuration.location >= 60) {
+        currentMinutes++;
+        songDuration.location -= 60;
+    }
+    
+    NSLog(@"Song progress: %lu : %lu\n", songDuration.location, songDuration.length);
+    
+    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu - %d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
 }
 
 @end

@@ -34,20 +34,22 @@
     
     picker.delegate = self;
     
-    CGRect location = CGRectMake(addToList.frame.origin.x + 150, addToList.frame.origin.y, addToList.frame.size.width, addToList.frame.size.height);
+    CGRect location = CGRectMake(0, albumArtwork.frame.origin.y + albumArtwork.frame.size.height, 50, 50);
     
     playButton = [[UIButton alloc] initWithFrame:location];
     [playButton setTitle:@"Play" forState:UIControlStateNormal];
     [playButton addTarget:musicPlayer action:@selector(play) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:playButton];
     
+    /*
     location = CGRectMake(addToList.frame.origin.x + 250, addToList.frame.origin.y, addToList.frame.size.width, addToList.frame.size.height);
     
     skipButton = [[UIButton alloc] initWithFrame:location];
     [skipButton setTitle:@"Skip" forState:UIControlStateNormal];
     [skipButton addTarget:musicPlayer action:@selector(finishedPlayingSong) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:skipButton];
-
+     */
+    
     // Add Dj button for host, I think that's the only person who should have it, right?
     // TODO: reposition the dj button, alter size, ui changes and what not
     location = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
@@ -60,6 +62,8 @@
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateSelected];
 
     //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
+    
+    [albumArtwork updateSongInfo:musicPlayer.currentSong];
 }
 
 - (void)didReceiveMemoryWarning

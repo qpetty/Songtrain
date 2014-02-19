@@ -13,6 +13,8 @@
 #import "NSMutableArray+Playlist.h"
 #import "QPSessionManager.h"
 
+#import "ControlPanel.h"
+
 @protocol QPMusicPlayerControllerDelegate <NSObject>
 
 - (void)playListHasBeenUpdated;
@@ -27,12 +29,14 @@
     TDAudioOutputStreamer *audioOutStream;
     AVAudioPlayer *audioPlayer;
     
+    NSTimer *timer;
     BOOL currentlyPlaying;
 }
 
 @property (weak, nonatomic) id <QPMusicPlayerControllerDelegate> delegate;
 @property (nonatomic, retain) Song *currentSong;
 @property (nonatomic, retain) NSMutableArray *playlist;
+@property (weak, nonatomic) ControlPanel *panel;
 
 + (id)musicPlayer;
 
@@ -47,4 +51,6 @@
 - (void)recievedStream:(NSInputStream*)inputStream;
 - (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong;
 - (void)stopOutStream;
+
+- (void)skip;
 @end

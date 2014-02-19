@@ -30,6 +30,13 @@
         _playlist = [[NSMutableArray alloc] init];
         pid = [sessionManager pid];
         
+        MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
+        if (currentItem && sessionManager.currentRole == ServerConnection){
+            [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
+            self.currentSong = [_playlist objectAtIndex:0];
+            [self.delegate playListHasBeenUpdated];
+        }
+        
         currentlyPlaying = NO;
     }
     return self;
@@ -137,7 +144,8 @@
     
     NSLog(@"Trying to play the next song\n");
     
-    Song *nextSong = [_playlist firstObject];
+    self.currentSong = [_playlist firstObject];
+    [self.delegate playListHasBeenUpdated];
     
     if (audioPlayer){
         [audioPlayer stop];
@@ -149,11 +157,13 @@
         audioInStream = nil;
     }
     
-    if ([nextSong.host.displayName isEqualToString:[pid displayName]]) {
+    if ([self.currentSong.host.displayName isEqualToString:[pid displayName]]) {
         
-        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[[nextSong media] valueForProperty:MPMediaItemPropertyAssetURL] error:nil];
+        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[[self.currentSong media] valueForProperty:MPMediaItemPropertyAssetURL] error:nil];
         audioPlayer.delegate = self;
         [audioPlayer play];
+        
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimeLeft) userInfo:nil repeats:YES];
         
         //NSLog(@"Sending meida item: %@\n", nextSong.media);
         //NSLog(@"URL of item: %@\n", [nextSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
@@ -161,8 +171,8 @@
         NSLog(@"Beginning Local Song\n");
     }
     else{
-        [sessionManager sendData:[SongtrainProtocol dataFromMedia:nextSong] ToPeer:nextSong.host];
-        NSLog(@"Playing Song from %@\n", nextSong.host.displayName);
+        [sessionManager sendData:[SongtrainProtocol dataFromMedia:self.currentSong] ToPeer:self.currentSong.host];
+        NSLog(@"Playing Song from %@\n", self.currentSong.host.displayName);
     }
     currentlyPlaying = YES;
 }
@@ -202,4 +212,11 @@
     [self.delegate playListHasBeenUpdated];
 }
 
+- (void)updateTimeLeft
+{
+    NSRange range;
+    range.length = audioPlayer.duration;
+    range.location = audioPlayer.currentTime;
+    self.panel.songDuration = range;
+}
 @end
