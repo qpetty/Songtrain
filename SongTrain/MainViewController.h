@@ -39,7 +39,7 @@
     UIImage *songNotPlayingHeader;
 
     UIImageView *newView;
-    id<UIViewControllerAnimatedTransitioning> animator;
+    Animator *animator;
 }
 @property (strong, nonatomic) CurrentSongView *albumArtwork;
 @property (strong, nonatomic) SingleCellButton *createTrainButton;

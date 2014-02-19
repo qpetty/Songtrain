@@ -233,8 +233,10 @@
 
     switch (operation) {
         case UINavigationControllerOperationPush:
+            animator.push = YES;
             return animator;
         case UINavigationControllerOperationPop:
+            animator.push = NO;
             return animator;
         default: return nil;
     }

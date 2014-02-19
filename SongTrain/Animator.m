@@ -9,6 +9,9 @@
 
 #import "Animator.h"
 
+#define TRANSITION_TIME 0.5
+#define NUMBER_OF_VIEWS 3.0
+
 @implementation Animator
 
 - (instancetype)init
@@ -20,19 +23,26 @@
     return self;
 }
 
+- (instancetype)initWithImage:(UIImageView *)parallaxImage
+{
+    self = [super init];
+    if (self) {
+        self.firstTime = YES;
+    }
+    // Consider making all this generic to be turned into a library
+    return self;
+}
+
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     // Get to and from view controllers from the context using given keys
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *container = [transitionContext containerView];
-    fromViewController.view.backgroundColor = [UIColor clearColor];
-
 
     //Blur Background Image, only create this on the first animation since the
     // container has a strong reference to it
     if (self.firstTime) {
-        push = YES;
         CIImage *gaussBlurBackground = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
         CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
         [gaussianBlurFilter setValue:gaussBlurBackground forKey: @"inputImage"];
@@ -59,19 +69,22 @@
     [container insertSubview:toViewController.view aboveSubview:newView];
 
 
-    // Animate the parallax, push alternates for pushing and popping
+    // Animate the parallax, self.push alternates for self.pushing and popping
     // This might need to be changed for the info button, haven't attempted yet
-    if (push) {
+    if (self.push) {
 
         toViewController.view.frame = CGRectMake(fromViewController.view.frame.size.width, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
 
+        [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
+            newView.frame = CGRectMake(newView.frame.origin.x - (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
+        } completion:^(BOOL finished) {
+        }];
         // Timing can be altered
         [UIView animateKeyframesWithDuration:ANIMATION_DURATION delay:0 options:0 animations:^{
             newView.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width / 2, 0);
             toViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(-fromViewController.view.frame.size.width - 2, 0);
         } completion:^(BOOL finished) {
-            push = !push;
             [transitionContext completeTransition:finished];
         }];
     } else {
@@ -79,13 +92,17 @@
         toViewController.view.frame = CGRectMake(container.frame.origin.x - fromViewController.view.frame.size.width - 2, container.frame.origin.y, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
         fromViewController.view.frame = CGRectMake(container.frame.origin.x, container.frame.origin.y, toViewController.view.frame.size.width, toViewController.view.frame.size.height);
 
+        [UIView animateKeyframesWithDuration:TRANSITION_TIME delay:0 options:0 animations:^{
+            newView.frame = CGRectMake(newView.frame.origin.x + (newView.frame.size.width - toViewController.view.frame.size.width)/NUMBER_OF_VIEWS, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
+        } completion:^(BOOL finished) {
+        }];
+
         // Timing can be altered
         [UIView animateKeyframesWithDuration:ANIMATION_DURATION delay:0 options:0 animations:^{
             newView.transform = CGAffineTransformMakeTranslation(container.bounds.origin.x, 0);
             toViewController.view.transform = CGAffineTransformMakeTranslation(container.frame.origin.x, 0);
             fromViewController.view.transform = CGAffineTransformMakeTranslation(2, 0);
         } completion:^(BOOL finished) {
-            push = !push;
             [transitionContext completeTransition:finished];
         }];
     }
