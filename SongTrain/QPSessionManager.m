@@ -155,7 +155,7 @@
 
 - (void)stopBrowsing
 {
-    [browse startBrowsingForPeers];
+    [browse stopBrowsingForPeers];
 }
 
 #pragma mark - Data Methods
