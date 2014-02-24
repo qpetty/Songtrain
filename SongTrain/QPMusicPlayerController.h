@@ -13,6 +13,8 @@
 #import "NSMutableArray+Playlist.h"
 #import "QPSessionManager.h"
 
+#import "QPStreamer.h"
+#import "QPOutputStreamer.h"
 #import "ControlPanel.h"
 
 @protocol QPMusicPlayerControllerDelegate <NSObject>
@@ -28,6 +30,9 @@
     TDAudioInputStreamer *audioInStream;
     TDAudioOutputStreamer *audioOutStream;
     AVAudioPlayer *audioPlayer;
+    
+    QPStreamer *streamer;
+    QPOutputStreamer *outStreamer;
     
     NSTimer *timer;
     BOOL currentlyPlaying;

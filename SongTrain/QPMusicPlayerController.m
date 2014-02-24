@@ -104,6 +104,7 @@
 
 - (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong
 {
+    /*
     if (audioOutStream) {
         [audioOutStream stop];
     }
@@ -113,10 +114,15 @@
     NSLog(@"URL from song: %@\n", singleSong.url);
     [audioOutStream streamAudioFromURL:singleSong.url];
     [audioOutStream start];
+     */
+    
+    outStreamer = [[QPOutputStreamer alloc] init];
+    [outStreamer setOutputStream:outStream withURL:singleSong.url];
 }
 
 - (void)recievedStream:(NSInputStream*)inputStream
 {
+    /*
     if (audioInStream) {
         [audioInStream stop];
     }
@@ -124,6 +130,10 @@
     audioInStream.delegate = self;
     [audioInStream start];
     NSLog(@"Received Stream\n");
+     */
+    
+    streamer = [[QPStreamer alloc] init];
+    [streamer setInputStream:inputStream];
 }
 
 - (void)play
