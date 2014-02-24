@@ -115,13 +115,6 @@
     [audioOutStream start];
 }
 
-- (void)stopOutStream
-{
-    if (audioOutStream) {
-        [audioOutStream stop];
-    }
-}
-
 - (void)recievedStream:(NSInputStream*)inputStream
 {
     if (audioInStream) {
@@ -142,17 +135,19 @@
         return;
     }
     
-    NSLog(@"Trying to play the next song\n");
-    
     self.currentSong = [_playlist firstObject];
     [self.delegate playListHasBeenUpdated];
     
+    NSLog(@"Trying to play: %@\n", self.currentSong);
+    
     if (audioPlayer){
+        NSLog(@"Got rid of the Audioplayer\n");
         [audioPlayer stop];
         audioPlayer = nil;
     }
     
     if (audioInStream){
+        NSLog(@"Got rid of the Input Stream\n");
         [audioInStream stop];
         audioInStream = nil;
     }

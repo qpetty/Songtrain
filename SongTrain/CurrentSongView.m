@@ -51,9 +51,8 @@
         //Add buttons
         //Info Button
         
-        //TODO: Replace 200 with some better values
         infoButton = [[UIButton alloc] initWithFrame:CGRectMake(frame.size.width * (9.0 / 10.0) - BUTTON_SIZE,
-                                                                songTitle.frame.origin.y + songTitle.frame.size.height * 0.4,
+                                                                frame.size.height / 2 - BUTTON_SIZE / 2,
                                                                 BUTTON_SIZE,
                                                                 BUTTON_SIZE)];
         infoButton.tag = InfoButton;

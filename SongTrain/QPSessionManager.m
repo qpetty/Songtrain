@@ -51,19 +51,22 @@
 - (void)createServer
 {
     _currentRole = ServerConnection;
+    [browse stopBrowsingForPeers];
     [advert startAdvertisingPeer];
 }
 
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
+    [advert stopAdvertisingPeer];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
 
 - (void)restartSession
 {
     [mainSession disconnect];
-    //[advert stopAdvertisingPeer];
+    [_peerArray removeAllObjects];
+    [browse startBrowsingForPeers];
     _currentRole = NotConnected;
 }
 
@@ -147,17 +150,6 @@
     [self.delegate availablePeersUpdated:self.peerArray];
 }
 
-- (void)startBrowsing
-{
-    [_peerArray removeAllObjects];
-    [browse startBrowsingForPeers];
-}
-
-- (void)stopBrowsing
-{
-    [browse stopBrowsingForPeers];
-}
-
 #pragma mark - Data Methods
 
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID
@@ -207,6 +199,6 @@
 }
 - (void)requestToStopStreaming
 {
-    [[QPMusicPlayerController musicPlayer] stopOutStream];
+    //[[QPMusicPlayerController musicPlayer] stopOutStream];
 }
 @end

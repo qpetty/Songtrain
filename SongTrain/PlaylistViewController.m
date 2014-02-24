@@ -25,6 +25,7 @@
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
+        [musicPlayer resetMusicPlayer];
     }
     return self;
 }
@@ -51,19 +52,6 @@
     picker.showsCloudItems = NO;
     picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
     
-    /*
-    //Create an Add button
-    CGRect buttonLocation = CGRectMake(albumArtwork.frame.origin.x,
-                          albumArtwork.frame.origin.y + albumArtwork.frame.size.height,
-                          50,
-                          30);
-    
-    addToList = [[UIButton alloc] initWithFrame:buttonLocation];
-    [addToList setTitle:@"Add" forState:UIControlStateNormal];
-    [addToList addTarget:self action:@selector(addToPlaylist) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:addToList];
-    */
-    
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
                           albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 40,
@@ -87,19 +75,6 @@
     
     // Allow musicplayercontroller to update control panel
     musicPlayer.panel = panel;
-    
-    /*
-    musicPlayer = [QPMusicPlayerController musicPlayer];
-    musicPlayer.delegate = self;
-    sessionManager = [QPSessionManager sessionManager];
-    sessionManager.delegate = self;
-     */
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    //[sessionManager stopBrowsing];
 }
 
 - (void)addToPlaylist
@@ -147,9 +122,9 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
-    if (musicPlayer.playlist.count){
-        cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
-        cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] artistName];
+    if (musicPlayer.playlist.count > 1){
+        cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] title];
+        cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] artistName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
     }
@@ -168,7 +143,7 @@
     
     if (!infoView)
         infoView = [[InfoViewController alloc] init];
-    [infoView updateSong:[musicPlayer.playlist objectAtIndex:[indexPath row]]];
+    [infoView updateSong:[musicPlayer.playlist objectAtIndex:[indexPath row] + 1]];
     [self.navigationController pushViewController:infoView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -176,8 +151,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(musicPlayer.playlist.count)
-        return musicPlayer.playlist.count;
+    if(musicPlayer.playlist.count > 1)
+        return musicPlayer.playlist.count - 1;
     return 1;
 }
 

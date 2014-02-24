@@ -50,6 +50,7 @@
     
     sessionManager = [QPSessionManager sessionManager];
     sessionManager.delegate = self;
+    [sessionManager restartSession];
     musicPlayer = [QPMusicPlayerController musicPlayer];
     
     self.albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
@@ -124,18 +125,6 @@
     musicPlayer.panel = panel;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [sessionManager startBrowsing];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    //[sessionManager stopBrowsing];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -145,7 +134,6 @@
 - (void)createTrainPressed:(UIButton*)sender
 {
     NSLog(@"Create new Train\n");
-    [sessionManager stopBrowsing];
     [sessionManager createServer];
     ServerPlaylistViewController *newViewController = [[ServerPlaylistViewController alloc] init];
     sessionManager.delegate = newViewController;
@@ -196,7 +184,6 @@
 {
     NSLog(@"Selected train: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
     
-    [sessionManager stopBrowsing];
     ClientPlaylistViewController *nextView = [[ClientPlaylistViewController alloc] init];
     sessionManager.delegate = nextView;
     

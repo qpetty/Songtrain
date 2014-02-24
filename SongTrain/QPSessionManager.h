@@ -47,9 +47,7 @@ enum CurrentConnectionRole : NSInteger {
 
 - (void)createServer;
 - (void)connectToPeer:(MCPeerID*)peerID;
-
-- (void)startBrowsing;
-- (void)stopBrowsing;
+- (void)restartSession;
 
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID;
 - (void)sendDataToAllPeers:(NSData*)data;
