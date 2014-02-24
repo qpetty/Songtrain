@@ -18,13 +18,14 @@ struct myAQStruct {
     AudioStreamBasicDescription     mDataFormat;
     AudioQueueRef                   mQueue;
     AudioQueueBufferRef             mBuffers[kNumberBuffers];
-    UInt32                          bufferByteSize;
-    SInt64                          mCurrentPacket;
+    UInt32                          nextBufferToBeFilled;
+    UInt32                          bytesThatNeedToBeFilled;
     UInt32                          mNumPacketsToRead;
+    
+    UInt32                          bufferByteSize;
     AudioStreamPacketDescription    *mPacketDescs;
     bool                            mIsRunning;
     bool                            readyToPlay;
-    UInt32                          nextBufferToBeFilled;
     CFReadStreamRef                 inputStream;
 };
 

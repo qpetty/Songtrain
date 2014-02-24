@@ -14,7 +14,7 @@
     NSThread *musicThread;
     struct myAQStruct myInfo;
     
-    uint8_t buffer[16000];
+    uint8_t buffer[8000];
 }
 
 static const int minBufferSize = 0x4000;
@@ -50,7 +50,11 @@ static const int minBufferSize = 0x4000;
     myInfo.readyToPlay = NO;
     myInfo.bufferByteSize = minBufferSize;
     myInfo.nextBufferToBeFilled = 0;
+    myInfo.bytesThatNeedToBeFilled = myInfo.bufferByteSize;
+    myInfo.mNumPacketsToRead = 0;
     myInfo.inputStream = (__bridge_retained CFReadStreamRef)input;
+
+    //Need to create an array for audiostreampacketdescriptions to be added to enqueue buffer
     
     [input open];
     
@@ -72,12 +76,21 @@ static const int minBufferSize = 0x4000;
     
     do {
         NSInteger bufferSize = [input read:buffer maxLength:sizeof(buffer)];
-        NSLog(@"Read %ld bytes from input stream after Queue has been set up\n", (long)bufferSize);
+        //NSLog(@"Read %ld bytes from input stream after Queue has been set up\n", (long)bufferSize);
         error = AudioFileStreamParseBytes(myInfo.streamID, (UInt32)bufferSize, buffer, 0);
     } while (myInfo.nextBufferToBeFilled != 0 || myInfo.readyToPlay == NO);
     
-    AudioQueuePrime(myInfo.mQueue, 0, NULL);
+    /*
+    error = AudioQueuePrime(myInfo.mQueue, 0, NULL);
     
+    if (error) {
+        char errorString[7];
+        FormatError(errorString, error);
+        NSLog(@"Error priming audioQueue: %s\n", errorString);
+    }
+     */
+    
+    NSLog(@"Audio Queue Start!\n");
     error = AudioQueueStart(myInfo.mQueue, 0);
     
     if (error) {
@@ -106,21 +119,24 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
     else if (inPropertyID == kAudioFileStreamProperty_ReadyToProducePackets) {
         UInt32 ready;
         AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, &ready);
-        NSLog(@"Produce Packets found :%d!\n", ready);
+
+        NSLog(@"Ready for some audio!\n");
+        myInfo->readyToPlay = YES;
+        OSStatus error = AudioQueueNewOutput(&myInfo->mDataFormat, bufferFromQueueAvailable, inClientData, CFRunLoopGetCurrent(), kCFRunLoopCommonModes, 0, &myInfo->mQueue);
         
-        if (1) {
-            NSLog(@"Ready for some audio!\n");
-            myInfo->readyToPlay = YES;
-            AudioQueueNewOutput(&myInfo->mDataFormat, bufferFromQueueAvailable, inClientData, CFRunLoopGetCurrent(), kCFRunLoopCommonModes, 0, &myInfo->mQueue);
-            
-            for (int i = 0; i < kNumberBuffers; i++) {
-                OSStatus error = AudioQueueAllocateBuffer (myInfo->mQueue, myInfo->bufferByteSize, &myInfo->mBuffers[i]);
-                NSLog(@"Just allocated: %d\n", myInfo->mBuffers[i]);
-                NSLog(@"Just called queue allocate buffer with error code: %d\n", (int)error);
-            }
-            
-            AudioQueueSetParameter (myInfo->mQueue, kAudioQueueParam_Volume, 1.0);
+        if (error) {
+            char errorString[7];
+            FormatError(errorString, error);
+            NSLog(@"Error priming audioQueue: %s\n", errorString);
         }
+        
+        for (int i = 0; i < kNumberBuffers; i++) {
+            OSStatus error = AudioQueueAllocateBuffer (myInfo->mQueue, myInfo->bufferByteSize, &myInfo->mBuffers[i]);
+            NSLog(@"Just allocated: %d\n", myInfo->mBuffers[i]);
+            NSLog(@"Just called queue allocate buffer with error code: %d\n", (int)error);
+        }
+        
+        AudioQueueSetParameter (myInfo->mQueue, kAudioQueueParam_Volume, 1.0);
     }
     else if (inPropertyID == kAudioFileStreamProperty_FileFormat){
         NSLog(@"Found FileFormate\n");
@@ -179,54 +195,68 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
     
     NSLog(@"Audio Stream Services Data Callback\n");
     
-    NSLog(@"Nextbuff: %d   inNumberBytes: %u\n", myInfo->nextBufferToBeFilled, (unsigned int)inNumberBytes);
     
-    //int nextbuff = myInfo->nextBufferToBeFilled;
-    //NSLog(@"Trying to enqueue %d\n", myInfo->mBuffers[nextbuff]);
+    if (myInfo->bytesThatNeedToBeFilled < inNumberBytes) {
+        myInfo->mBuffers[myInfo->nextBufferToBeFilled]->mAudioDataByteSize = myInfo->bufferByteSize - myInfo->bytesThatNeedToBeFilled;
+        
+        NSLog(@"enqueing buffer: %d with %d bytes and %d packets to read\n", (unsigned int)myInfo->nextBufferToBeFilled, myInfo->bufferByteSize, (unsigned int)myInfo->mNumPacketsToRead);
+        OSStatus error = AudioQueueEnqueueBuffer(myInfo->mQueue, myInfo->mBuffers[myInfo->nextBufferToBeFilled++], myInfo->mNumPacketsToRead, NULL);
+        
+        if (error) {
+            char errorString[7];
+            FormatError(errorString, error);
+            NSLog(@"Error in enqueue buffer: %s\n", errorString);
+        }
+        
+        if (myInfo->nextBufferToBeFilled == kNumberBuffers) {
+            myInfo->nextBufferToBeFilled = 0;
+            myInfo->readyToPlay = YES;
+        }
+        
+        myInfo->bytesThatNeedToBeFilled = myInfo->bufferByteSize;
+        myInfo->mNumPacketsToRead = 0;
+    }
+    
+    //Only for one packet at a time
+    myInfo->mNumPacketsToRead++;
     memcpy(myInfo->mBuffers[myInfo->nextBufferToBeFilled]->mAudioData, inInputData, inNumberBytes);
-    
-    myInfo->mBuffers[myInfo->nextBufferToBeFilled]->mAudioDataByteSize = inNumberBytes;
-    NSLog(@"enqueing buffer: %d\n", myInfo->nextBufferToBeFilled);
-    OSStatus error = AudioQueueEnqueueBuffer(myInfo->mQueue, myInfo->mBuffers[myInfo->nextBufferToBeFilled++], inNumberPackets, inPacketDescriptions);
-    
-    if (error) {
-        char errorString[7];
-        FormatError(errorString, error);
-        NSLog(@"Error in enqueue buffer: %s\n", errorString);
-    }
-    
-    if (myInfo->nextBufferToBeFilled == kNumberBuffers) {
-        myInfo->nextBufferToBeFilled = 0;
-        myInfo->readyToPlay = YES;
-    }
+    myInfo->bytesThatNeedToBeFilled -= inNumberBytes;
 }
 
 static void bufferFromQueueAvailable(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inCompleteAQBuffer) {
     struct myAQStruct *myInfo = (struct myAQStruct *)inUserData;
     uint8_t buffer[16000];
     
+    static int totalFromOut = 0;
+    
     int currentBuffer = myInfo->nextBufferToBeFilled;
     
+    /*
     while (currentBuffer == myInfo->nextBufferToBeFilled) {
         
-    if (CFReadStreamHasBytesAvailable(myInfo->inputStream)) {
-           
-    
-        NSLog(@"Trying to read %ld bytes for next buffer\n", (CFIndex)sizeof(buffer));
-        CFIndex bufferSize = CFReadStreamRead(myInfo->inputStream, buffer, (CFIndex)sizeof(buffer));
-        NSLog(@"Just read %ld bytes for next buffer\n", bufferSize);
-        OSStatus error = AudioFileStreamParseBytes(myInfo->streamID, (UInt32)bufferSize, buffer, 0);
-    
-        if (error) {
-            char errorString[7];
-            FormatError(errorString, error);
-            NSLog(@"Error in enqueue buffer: %s\n", errorString);
+        NSLog(@"Next buffer: %d\n", myInfo->nextBufferToBeFilled);
+        
+        if (CFReadStreamHasBytesAvailable(myInfo->inputStream)) {
+               
+        
+            NSLog(@"Trying to read %ld bytes for next buffer\n", (CFIndex)sizeof(buffer));
+            CFIndex bufferSize = CFReadStreamRead(myInfo->inputStream, buffer, (CFIndex)sizeof(buffer));
+            totalFromOut += bufferSize;
+            NSLog(@"Just read %ld bytes for next buffer\n", bufferSize);
+            OSStatus error = AudioFileStreamParseBytes(myInfo->streamID, (UInt32)bufferSize, buffer, 0);
+        
+            if (error) {
+                char errorString[7];
+                FormatError(errorString, error);
+                NSLog(@"Error in enqueue buffer: %s\n", errorString);
+            }
+        }
+        else{
+            NSLog(@"No Bytes available, at %d\n", totalFromOut);
         }
     }
-    else{
-        NSLog(@"No Bytes available\n");
-    }
-    }
+     */
+
 }
 
 static char *FormatError(char *str, OSStatus error)
