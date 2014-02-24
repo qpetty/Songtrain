@@ -94,7 +94,7 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
     struct myAQStruct *myInfo = (struct myAQStruct *)inClientData;
     UInt32 propertySize;
     
-    NSLog(@"Audio Stream Services Property Callback\n");
+    NSLog(@"Audio Stream Services Property Callback: %c\n", inPropertyID);
     
     if (inPropertyID == kAudioFileStreamProperty_DataFormat) {
         propertySize = sizeof(AudioStreamBasicDescription);
@@ -122,6 +122,54 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
             AudioQueueSetParameter (myInfo->mQueue, kAudioQueueParam_Volume, 1.0);
         }
     }
+    else if (inPropertyID == kAudioFileStreamProperty_FileFormat){
+        NSLog(@"Found FileFormate\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_FormatList){
+        NSLog(@"Found FormatList\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_MagicCookieData){
+        NSLog(@"Found Magic Cookie data\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_AudioDataByteCount){
+        NSLog(@"Found data bytes count\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_AudioDataPacketCount){
+        NSLog(@"Found data packet count\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_MaximumPacketSize){
+        NSLog(@"Found max packet size\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_DataOffset){
+        NSLog(@"Found data offsett\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_ChannelLayout){
+        NSLog(@"Found channel layout\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_PacketToFrame){
+        NSLog(@"Found packet to frame\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_FrameToPacket){
+        NSLog(@"Found frame to packet\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_PacketToByte){
+        NSLog(@"Found packet to byte\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_ByteToPacket){
+        NSLog(@"Found byte to packet\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_PacketTableInfo){
+        NSLog(@"Found packet table info\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_PacketSizeUpperBound){
+        NSLog(@"Found packet size upper bound\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_AverageBytesPerPacket){
+        NSLog(@"Found average bytes per packet\n");
+    }
+    else if (inPropertyID == kAudioFileStreamProperty_BitRate){
+        NSLog(@"Found bitrate\n");
+    }
 }
 
 void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData,
@@ -138,7 +186,14 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
     memcpy(myInfo->mBuffers[myInfo->nextBufferToBeFilled]->mAudioData, inInputData, inNumberBytes);
     
     myInfo->mBuffers[myInfo->nextBufferToBeFilled]->mAudioDataByteSize = inNumberBytes;
-    AudioQueueEnqueueBuffer(myInfo->mQueue, myInfo->mBuffers[myInfo->nextBufferToBeFilled++], inNumberPackets, inPacketDescriptions);
+    NSLog(@"enqueing buffer: %d\n", myInfo->nextBufferToBeFilled);
+    OSStatus error = AudioQueueEnqueueBuffer(myInfo->mQueue, myInfo->mBuffers[myInfo->nextBufferToBeFilled++], inNumberPackets, inPacketDescriptions);
+    
+    if (error) {
+        char errorString[7];
+        FormatError(errorString, error);
+        NSLog(@"Error in enqueue buffer: %s\n", errorString);
+    }
     
     if (myInfo->nextBufferToBeFilled == kNumberBuffers) {
         myInfo->nextBufferToBeFilled = 0;
@@ -150,10 +205,28 @@ static void bufferFromQueueAvailable(void *inUserData, AudioQueueRef inAQ, Audio
     struct myAQStruct *myInfo = (struct myAQStruct *)inUserData;
     uint8_t buffer[16000];
     
-    NSLog(@"Trying to read %ld bytes for next buffer\n", (CFIndex)sizeof(buffer));
-    CFIndex bufferSize = CFReadStreamRead(myInfo->inputStream, buffer, (CFIndex)sizeof(buffer));
-    NSLog(@"Just read %ld bytes for next buffer\n", bufferSize);
-    AudioFileStreamParseBytes(myInfo->streamID, (UInt32)bufferSize, buffer, 0);
+    int currentBuffer = myInfo->nextBufferToBeFilled;
+    
+    while (currentBuffer == myInfo->nextBufferToBeFilled) {
+        
+    if (CFReadStreamHasBytesAvailable(myInfo->inputStream)) {
+           
+    
+        NSLog(@"Trying to read %ld bytes for next buffer\n", (CFIndex)sizeof(buffer));
+        CFIndex bufferSize = CFReadStreamRead(myInfo->inputStream, buffer, (CFIndex)sizeof(buffer));
+        NSLog(@"Just read %ld bytes for next buffer\n", bufferSize);
+        OSStatus error = AudioFileStreamParseBytes(myInfo->streamID, (UInt32)bufferSize, buffer, 0);
+    
+        if (error) {
+            char errorString[7];
+            FormatError(errorString, error);
+            NSLog(@"Error in enqueue buffer: %s\n", errorString);
+        }
+    }
+    else{
+        NSLog(@"No Bytes available\n");
+    }
+    }
 }
 
 static char *FormatError(char *str, OSStatus error)
