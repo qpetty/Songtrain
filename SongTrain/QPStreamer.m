@@ -107,7 +107,7 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
     struct myAQStruct *myInfo = (struct myAQStruct *)inClientData;
     UInt32 propertySize;
     
-    NSLog(@"Audio Stream Services Property Callback: %c\n", inPropertyID);
+    NSLog(@"found property '%c%c%c%c'\n", (char)(inPropertyID>>24)&255, (char)(inPropertyID>>16)&255, (char)(inPropertyID>>8)&255, (char)inPropertyID&255);
     
     if (inPropertyID == kAudioFileStreamProperty_DataFormat) {
         propertySize = sizeof(AudioStreamBasicDescription);
