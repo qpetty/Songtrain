@@ -13,7 +13,7 @@
 #import "NSMutableArray+Playlist.h"
 #import "QPSessionManager.h"
 
-#import "QPStreamer.h"
+#import "QPInputStreamer.h"
 #import "QPOutputStreamer.h"
 #import "ControlPanel.h"
 
@@ -31,7 +31,7 @@
     TDAudioOutputStreamer *audioOutStream;
     AVAudioPlayer *audioPlayer;
     
-    QPStreamer *streamer;
+    QPInputStreamer *streamer;
     QPOutputStreamer *outStreamer;
     
     NSTimer *timer;

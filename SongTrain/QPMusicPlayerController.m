@@ -132,7 +132,7 @@
     NSLog(@"Received Stream\n");
      */
     
-    streamer = [[QPStreamer alloc] init];
+    streamer = [[QPInputStreamer alloc] init];
     [streamer setInputStream:inputStream];
 }
 
