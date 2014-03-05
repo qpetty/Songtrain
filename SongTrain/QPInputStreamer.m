@@ -12,7 +12,10 @@
     
     NSInputStream *input;
     NSThread *musicThread;
-    struct AudioStreamInfo myInfo;
+    
+    AUGraph graph;
+    AudioUnit outputUnit;
+    TPCircularBuffer audioBuffer;
 }
 
 
@@ -36,222 +39,202 @@
 
 - (void)start
 {
-    OSStatus error = AudioFileStreamOpen(&myInfo, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP1Type, &myInfo.streamID);
-    if (error) {
-        char errorString[7];
-        FormatError(errorString, error);
-        NSLog(@"Error opening file stream: %s\n", errorString);
-    }
-    myInfo.packetListHead = NULL;
-    myInfo.packetListTail = NULL;
-    myInfo.packetsInList = 0;
-    
-    NSLog(@"Setting delegate and scheculing in run loop\n");
-    input.delegate = self;
+    [self initBuffer];
+    [self initAudioGraph];
     [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [input open];
     
     while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
 }
 
-- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+- (void)initBuffer
 {
-    uint8_t buffer[2048];
-    NSInteger length;
+    int32_t spaceAvailableInBuffer;
+    size_t readBytes;
     
-    if (eventCode == NSStreamEventHasBytesAvailable){
-        length = [(NSInputStream*)aStream read:buffer maxLength:sizeof(buffer)];
-       // NSLog(@"Read %d bytes\n", length);
-        OSStatus error = AudioFileStreamParseBytes(myInfo.streamID, (UInt32)length, buffer, 0);
-        
-        if (error) {
-            char errorString[7];
-            FormatError(errorString, error);
-            NSLog(@"Error in stream parsing bytes: %s\n", errorString);
-        }
-
-    }
-    else if (eventCode == NSStreamEventEndEncountered){
-        NSLog(@"No More!\n");
-    }
-    else if (eventCode == NSStreamEventOpenCompleted){
-        NSLog(@"Opened!\n");
-    }
+    uint8_t buffer[256];
+    
+    TPCircularBufferInit(&audioBuffer, kBufferLength);
+    
+    
+    //Fill up buffer here
+    do {
+        TPCircularBufferHead(&audioBuffer, &spaceAvailableInBuffer);
+        readBytes = [input read:buffer maxLength:sizeof(buffer)];
+        TPCircularBufferProduceBytes(&audioBuffer, buffer, (int32_t)readBytes);
+    } while (spaceAvailableInBuffer > 20);
+    
 }
 
-void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFileStream, AudioFileStreamPropertyID inPropertyID, UInt32 *ioFlags)
+- (void)initAudioGraph
 {
-    struct AudioStreamInfo *myInfo = (struct AudioStreamInfo *)inClientData;
-    UInt32 propertySize;
+    //first describe the node, graphs are made up of nodes connected together, in this graph there is only one node.
+	//the descriptions for the components
+	AudioComponentDescription outputDescription;
+	
+	//the AUNode
+	AUNode outputNode;
+	
+	//create the graph
+	OSErr err = noErr;
+	err = NewAUGraph(&graph);
+	//throw an exception if the graph couldn't be created.
+	NSAssert(err == noErr, @"Error creating graph.");
     
-    NSLog(@"found property '%c%c%c%c'\n", (char)(inPropertyID>>24)&255, (char)(inPropertyID>>16)&255, (char)(inPropertyID>>8)&255, (char)inPropertyID&255);
-    
-    if (inPropertyID == kAudioFileStreamProperty_DataFormat) {
-        propertySize = sizeof(AudioStreamBasicDescription);
-        AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, &myInfo->basicDescription);
-        if (propertySize == sizeof(myInfo->basicDescription)) {
-            NSLog(@"Entire AudioStreamBasicDescription found\n");
-        }
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_ReadyToProducePackets) {
-        
-        
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_FileFormat){
-        NSLog(@"Found FileFormate\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_FormatList){
-        NSLog(@"Found FormatList\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_MagicCookieData){
-        NSLog(@"Found Magic Cookie data\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_AudioDataByteCount){
-        NSLog(@"Found data bytes count\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_AudioDataPacketCount){
-        NSLog(@"Found data packet count\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_MaximumPacketSize){
-        NSLog(@"Found max packet size\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_DataOffset){
-        NSLog(@"Found data offsett\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_ChannelLayout){
-        NSLog(@"Found channel layout\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_PacketToFrame){
-        NSLog(@"Found packet to frame\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_FrameToPacket){
-        NSLog(@"Found frame to packet\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_PacketToByte){
-        NSLog(@"Found packet to byte\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_ByteToPacket){
-        NSLog(@"Found byte to packet\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_PacketTableInfo){
-        NSLog(@"Found packet table info\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_PacketSizeUpperBound){
-        NSLog(@"Found packet size upper bound\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_AverageBytesPerPacket){
-        NSLog(@"Found average bytes per packet\n");
-    }
-    else if (inPropertyID == kAudioFileStreamProperty_BitRate){
-        NSLog(@"Found bitrate\n");
-    }
+	//describe the node, this is our output node it is of type remoteIO
+	outputDescription.componentFlags = 0;
+	outputDescription.componentFlagsMask = 0;
+	outputDescription.componentType = kAudioUnitType_Output;
+	outputDescription.componentSubType = kAudioUnitSubType_RemoteIO;
+	outputDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+	
+	//add the node to the graph.
+	err = AUGraphAddNode(graph, &outputDescription, &outputNode);
+	//throw an exception if we couldnt add it
+	NSAssert(err == noErr, @"Error creating output node.");
+	
+	//there are three steps, we open the graph, initialise it and start it.
+	//when we open it (from the doco) the audio units belonging to the graph are open but not initialized. Specifically, no resource allocation occurs.
+	err = AUGraphOpen(graph);
+	NSAssert(err == noErr, @"Error opening graph.");
+	
+	//now that the graph is open we can get the AudioUnits that are in the nodes (or node in this case)
+	//get the output AudioUnit from the graph, we supply a node and a description and the graph creates the AudioUnit which
+	//we then request back from the graph, so we can set properties on it, such as its audio format
+	err = AUGraphNodeInfo(graph, outputNode, &outputDescription, &outputUnit);
+	NSAssert(err == noErr, @"Error getting AudioUnit.");
+	
+	// Set up the master fader callback
+	AURenderCallbackStruct playbackCallbackStruct;
+	playbackCallbackStruct.inputProc = audioOutputCallback;
+	//set the reference to "self" this becomes *inRefCon in the playback callback
+	//as the callback is just a straight C method this is how we can pass it an objective-C class
+	playbackCallbackStruct.inputProcRefCon = (__bridge void *)(self);
+	
+	//now set the callback on the output node, this callback gets called whenever the AUGraph needs samples
+	err = AUGraphSetNodeInputCallback(graph, outputNode, 0, &playbackCallbackStruct);
+	NSAssert(err == noErr, @"Error setting effects callback.");
+	
+	
+	//so far we have not set any property descriptions on the outputAudioUnit, these describe the format of the audio being played
+	
+	//first of all lets see what format it is by default
+	NSLog(@"No AudioStreamBasicDescription has been set.");
+	
+	AudioStreamBasicDescription audioStreamBasicDescription;
+	UInt32 audioStreamBasicDescriptionsize = sizeof (AudioStreamBasicDescription);
+	
+	//get the description of the format from the audio unit, this will describe what format we are sending the AudioUnit (from our callback)
+	AudioUnitGetProperty(outputUnit,
+						 kAudioUnitProperty_StreamFormat,
+						 kAudioUnitScope_Input,
+						 0, // input bus
+						 &audioStreamBasicDescription,
+						 &audioStreamBasicDescriptionsize);
+	NSLog (@"Output Audio Unit: User input AudioStreamBasicDescription\n Sample Rate: %f\n Channels: %d\n Bits Per Channel: %d",
+		   audioStreamBasicDescription.mSampleRate, audioStreamBasicDescription.mChannelsPerFrame,
+		   audioStreamBasicDescription.mBitsPerChannel);
+	
+	//lets actually set the audio format
+	AudioStreamBasicDescription audioFormat;
+	
+	// Describe format
+	audioFormat.mSampleRate			= 44100.00;
+	audioFormat.mFormatID			= kAudioFormatLinearPCM;
+	audioFormat.mFormatFlags		= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+	audioFormat.mFramesPerPacket	= 1;
+	audioFormat.mChannelsPerFrame	= 2;
+	audioFormat.mBitsPerChannel		= 16;
+	audioFormat.mBytesPerPacket		= 4;
+	audioFormat.mBytesPerFrame		= 4;
+	
+	//IMPORTANT: --- the audio unit will play without the setting of the format, it seems to default to 44100khz, 16 bit, stereo, interleaved pcm
+	//but who can tell if this will always be the case?
+	
+	//set the outputAudioUnit input properties
+	err = AudioUnitSetProperty(outputUnit,
+							   kAudioUnitProperty_StreamFormat,
+							   kAudioUnitScope_Input,
+							   0,
+							   &audioFormat,
+							   sizeof(audioFormat));
+	NSAssert(err == noErr, @"Error setting RIO input property.");
+	
+	//now lets check the format again
+	NSLog(@"AudioStreamBasicDescription has been set, notice you now see the sample rate.");
+	
+	//get the description of the format from the audio unit, this will describe what format we are sending the AudioUnit (from our callback)
+	AudioUnitGetProperty(outputUnit,
+						 kAudioUnitProperty_StreamFormat,
+						 kAudioUnitScope_Input,
+						 0, // input bus
+						 &audioStreamBasicDescription,
+						 &audioStreamBasicDescriptionsize);
+	NSLog (@"Output Audio Unit: User input AudioStreamBasicDescription\n Sample Rate: %f\n Channels: %d\n Bits Per Channel: %d",
+		   audioStreamBasicDescription.mSampleRate, audioStreamBasicDescription.mChannelsPerFrame,
+		   audioStreamBasicDescription.mBitsPerChannel);
+	
+	
+	//we then initiailze the graph, this (from the doco):
+	//Calling this function calls the AudioUnitInitialize function on each opened node or audio unit that is involved in a interaction.
+	//If a node is not involved, it is initialized after it becomes involved in an interaction.
+	err = AUGraphInitialize(graph);
+	NSAssert(err == noErr, @"Error initializing graph.");
+	
+	//this prints out a description of the graph, showing the nodes and connections, really handy.
+	//this shows in the console (Command-Shift-R to see it)
+	CAShow(graph);
+	
+	//the final step, as soon as this is run, the graph will start requesting samples. some people would put this on the play button
+	//but ive found that sometimes i get a bit of a pause so i let the callback get called from the start and only start filling the buffer
+	//with samples when the play button is hit.
+	//the doco says :
+	//this function starts rendering by starting the head node of an audio processing graph. The graph must be initialized before it can be started.
+	err = AUGraphStart(graph);
+	NSAssert(err == noErr, @"Error starting graph.");
 }
 
-void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData,
-                            AudioStreamPacketDescription *inPacketDescriptions)
+-(UInt32)getNextPacket
 {
-    struct AudioStreamInfo *myInfo = (struct AudioStreamInfo *)inClientData;
+    int32_t availableBytes;
     
-    //NSLog(@"Audio Stream Services Data Callback\n");
+    void *nextData = TPCircularBufferTail(&audioBuffer, &availableBytes);
     
-    for (int i = 0; i < inNumberPackets; i++) {
-        addPacketToList(myInfo, inPacketDescriptions[i].mVariableFramesInPacket, inPacketDescriptions[i].mDataByteSize, inInputData + inPacketDescriptions[i].mStartOffset);
+    if (nextData) {
+        TPCircularBufferConsume(&audioBuffer, 2);
+        return *(UInt32*)nextData;
     }
-}
-
-void addPacketToList(struct AudioStreamInfo *streamInfo, UInt32 numFrames, UInt32 packetSize, void *data)
-{
-    struct AudioPacket *newPacket = malloc(sizeof(struct AudioPacket));
-    
-    static bool started = NO;
-    
-    newPacket->packetSize = packetSize;
-    newPacket->numFrames = numFrames;
-    newPacket->data = malloc(packetSize);
-    memcpy(newPacket->data, data, packetSize);
-    newPacket->next = NULL;
-    
-    //If the first item in the queue then assign both head and tail to the new item
-    if (!streamInfo->packetListTail)
-        streamInfo->packetListHead = newPacket;
     else
-        streamInfo->packetListTail->next = newPacket;
-
-    streamInfo->packetListTail = newPacket;
-    streamInfo->packetsInList++;
-    
-    if (streamInfo->packetsInList > 40 && !started) {
-        startMyQueue(streamInfo);
-        started = YES;
-    }
+        return 0;
 }
 
-void fillBufferFromPacketQueue(struct AudioStreamInfo *streamInfo, AudioQueueBufferRef inBuffer)
-{
-    streamInfo->packetsFilled = 0;
-    //inBuffer->mAudioDataByteSize = 0;
-    //NSLog(@"Buffer Data Capacity: %u   Buffer Data Size %u    Next Packet Size: %u\n", inBuffer->mAudioDataBytesCapacity, inBuffer->mAudioDataByteSize, streamInfo->packetListHead->packetSize);
-    while (streamInfo->packetListHead && inBuffer->mAudioDataBytesCapacity - inBuffer->mAudioDataByteSize > streamInfo->packetListHead->packetSize) {
-        struct AudioPacket *temp = streamInfo->packetListHead;
-        streamInfo->packetListHead = temp->next;
-        
-        NSLog(@"Filling Packet %u\n", (unsigned int)streamInfo->packetsFilled);
-        
-        memcpy(inBuffer->mAudioData + inBuffer->mAudioDataByteSize, temp->data, temp->packetSize);
-        
-        streamInfo->packetDescription[streamInfo->packetsFilled].mStartOffset = inBuffer->mAudioDataByteSize;
-        streamInfo->packetDescription[streamInfo->packetsFilled].mVariableFramesInPacket = temp->numFrames;
-        streamInfo->packetDescription[streamInfo->packetsFilled].mDataByteSize = temp->packetSize;
-        
-        inBuffer->mAudioDataByteSize += temp->packetSize;
-        streamInfo->packetsFilled++;
-    }
+static OSStatus audioOutputCallback(void *inRefCon,
+                                    AudioUnitRenderActionFlags *ioActionFlags,
+                                    const AudioTimeStamp *inTimeStamp,
+                                    UInt32 inBusNumber,
+                                    UInt32 inNumberFrames,
+                                    AudioBufferList *ioData) {
+	
+	
+	//get a reference to the Objective-C class, we need this as we are outside the class
+	//in just a straight C method.
+	QPInputStreamer *audioPlayback = (__bridge QPInputStreamer *)inRefCon;
+	
+	//cast the buffer as an UInt32, cause our samples are in that format
+	UInt32 *frameBuffer = ioData->mBuffers[0].mData;
+	if (inBusNumber == 0){
+		//loop through the buffer and fill the frames, this is really inefficient
+		//should be using a memcpy, but we will leave that for later
+		for (int j = 0; j < inNumberFrames; j++){
+			// get NextPacket returns a 32 bit value, one frame.
+			frameBuffer[j] = [audioPlayback getNextPacket];
+		}
+	}
+	
+	//dodgy return :)
+	return 0;
 }
 
-void startMyQueue(struct AudioStreamInfo *streamInfo)
-{
-    OSStatus error = AudioQueueNewOutput(&streamInfo->basicDescription, bufferFromQueueAvailable, streamInfo, 0, 0, 0, &streamInfo->audioQueue);
-    
-    if (error) {
-        char errorString[7];
-        FormatError(errorString, error);
-        NSLog(@"Error making new queue audioQueue: %s\n", errorString);
-    }
-    
-    for (int i = 0; i < kNumberBuffers; i++) {
-        AudioQueueBufferRef newBufferRef;
-        OSStatus error = AudioQueueAllocateBuffer (streamInfo->audioQueue, kBufferSize, &newBufferRef);
-        //NSLog(@"Just allocated: %d\n", newBufferRef);
-        
-        bufferFromQueueAvailable(streamInfo, streamInfo->audioQueue, newBufferRef);
-        
-        /*
-        fillBufferFromPacketQueue(streamInfo, newBufferRef);
-        error = AudioQueueEnqueueBuffer(streamInfo->audioQueue, newBufferRef, streamInfo->packetsFilled, streamInfo->packetDescription);
-        NSLog(@"Just called enqueue buffer with error code: %d\n", (int)error);
-         */
-    }
-    
-    AudioQueueSetParameter (streamInfo->audioQueue, kAudioQueueParam_Volume, 1.0);
-    error = AudioQueueStart(streamInfo->audioQueue, 0);
-    if (error) {
-        char errorString[7];
-        FormatError(errorString, error);
-        NSLog(@"Error starting audioQueue: %s\n", errorString);
-    }
-    
-    NSLog(@"Started Audio Queue\n");
-}
-
-static void bufferFromQueueAvailable(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inCompleteAQBuffer)
-{
-    struct AudioStreamInfo *streamInfo = (struct AudioStreamInfo *)inUserData;
-    
-    //NSLog(@"bufferFromQueueAvailable\n");
-    fillBufferFromPacketQueue(streamInfo, inCompleteAQBuffer);
-    OSStatus error = AudioQueueEnqueueBuffer(streamInfo->audioQueue, inCompleteAQBuffer, streamInfo->packetsFilled, streamInfo->packetDescription);
-    NSLog(@"Just called enqueue buffer with error code: %d\n", (int)error);
-}
 
 static char *FormatError(char *str, OSStatus error)
 {

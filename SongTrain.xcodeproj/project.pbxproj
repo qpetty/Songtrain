@@ -46,6 +46,7 @@
 		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
 		6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */; };
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
+		69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */; };
 		699531D418BD6D0C00221E92 /* QPInputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 699531D318BD6D0C00221E92 /* QPInputStreamer.m */; };
 		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
 		69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA718A038FA00483DD8 /* CoreAudio.framework */; };
@@ -139,6 +140,8 @@
 		6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPOutputStreamer.m; sourceTree = "<group>"; };
 		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
+		69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
+		69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPCircularBuffer.h; sourceTree = "<group>"; };
 		699531D218BD6D0C00221E92 /* QPInputStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPInputStreamer.h; sourceTree = "<group>"; };
 		699531D318BD6D0C00221E92 /* QPInputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPInputStreamer.m; sourceTree = "<group>"; };
 		69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -246,6 +249,8 @@
 				6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */,
 				6933394518A9B487001A7AC8 /* QPSessionManager.h */,
 				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
+				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
+				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
 				6933394118A9ABEE001A7AC8 /* Network Data */,
 				6970F4C118A6A0BE00EAB82A /* AudioStreamer */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
@@ -496,6 +501,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */,
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
 				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
 				6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */,

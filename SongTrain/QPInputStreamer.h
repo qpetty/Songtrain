@@ -7,32 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AudioUnit/AudioUnit.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-static const int kNumberBuffers = 3;
-static const int kBufferSize = 0x4000;
+#import "TPCircularBuffer.h"
 
-struct AudioPacket{
-    UInt32  packetSize;
-    UInt32  numFrames;
-    void    *data;
-    struct AudioPacket *next;
-};
+static const int kBufferLength = 8388608;
 
-struct AudioStreamInfo{
-    AudioFileStreamID               streamID;
-    AudioQueueRef                   audioQueue;
-    AudioStreamBasicDescription     basicDescription;
-    
-    UInt32                          packetsInList;
-    struct AudioPacket              *packetListHead;
-    struct AudioPacket              *packetListTail;
-    
-    AudioStreamPacketDescription    packetDescription[512];
-    UInt32                          packetsFilled;
-};
-
-@interface QPInputStreamer : NSObject <NSStreamDelegate>
+@interface QPInputStreamer : NSObject
 
 - (void)setInputStream:(NSInputStream*)inputStream;
 
