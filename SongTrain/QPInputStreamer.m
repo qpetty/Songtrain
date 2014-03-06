@@ -14,7 +14,7 @@
     NSThread *musicThread;
     
     AUGraph graph;
-    AudioUnit outputUnit;
+    AudioUnit outputUnit, inputConverterUnit;
     TPCircularBuffer audioBuffer;
 }
 
@@ -39,11 +39,11 @@
 
 - (void)start
 {
-    [self initBuffer];
-    [self initAudioGraph];
     [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [input open];
     
+    [self initBuffer];
+    [self initAudioGraph];
     while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
 }
 
@@ -61,6 +61,8 @@
     do {
         TPCircularBufferHead(&audioBuffer, &spaceAvailableInBuffer);
         readBytes = [input read:buffer maxLength:sizeof(buffer)];
+        NSLog(@"Adding %zu bytes to the circular buffer with %d filled\n", readBytes, spaceAvailableInBuffer);
+        NSLog(@"Buffer length: %d    Buffer fillcount: %d\n", audioBuffer.length, audioBuffer.fillCount);
         TPCircularBufferProduceBytes(&audioBuffer, buffer, (int32_t)readBytes);
     } while (spaceAvailableInBuffer > 20);
     
@@ -68,31 +70,42 @@
 
 - (void)initAudioGraph
 {
-    //first describe the node, graphs are made up of nodes connected together, in this graph there is only one node.
-	//the descriptions for the components
-	AudioComponentDescription outputDescription;
-	
-	//the AUNode
+    //the AUNode
 	AUNode outputNode;
-	
+	AUNode inputConverterNode;
+    
 	//create the graph
 	OSErr err = noErr;
 	err = NewAUGraph(&graph);
 	//throw an exception if the graph couldn't be created.
 	NSAssert(err == noErr, @"Error creating graph.");
     
-	//describe the node, this is our output node it is of type remoteIO
+    //first describe the node, graphs are made up of nodes connected together, in this graph there is only one node.
+	//the descriptions for the components
+    //describe the node, this is our output node it is of type remoteIO
+    
+	AudioComponentDescription outputDescription;
 	outputDescription.componentFlags = 0;
 	outputDescription.componentFlagsMask = 0;
 	outputDescription.componentType = kAudioUnitType_Output;
 	outputDescription.componentSubType = kAudioUnitSubType_RemoteIO;
 	outputDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
 	
+    AudioComponentDescription converterDescription;
+	converterDescription.componentType = kAudioUnitType_FormatConverter;
+	converterDescription.componentSubType = kAudioUnitSubType_AUConverter;
+	converterDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+	converterDescription.componentFlags = 0;
+	converterDescription.componentFlagsMask = 0;
+    
 	//add the node to the graph.
 	err = AUGraphAddNode(graph, &outputDescription, &outputNode);
 	//throw an exception if we couldnt add it
 	NSAssert(err == noErr, @"Error creating output node.");
 	
+    err = AUGraphAddNode(graph, &converterDescription, &inputConverterNode);
+    NSAssert(err == noErr, @"Error creating converter node.");
+    
 	//there are three steps, we open the graph, initialise it and start it.
 	//when we open it (from the doco) the audio units belonging to the graph are open but not initialized. Specifically, no resource allocation occurs.
 	err = AUGraphOpen(graph);
@@ -102,8 +115,11 @@
 	//get the output AudioUnit from the graph, we supply a node and a description and the graph creates the AudioUnit which
 	//we then request back from the graph, so we can set properties on it, such as its audio format
 	err = AUGraphNodeInfo(graph, outputNode, &outputDescription, &outputUnit);
-	NSAssert(err == noErr, @"Error getting AudioUnit.");
+	NSAssert(err == noErr, @"Error getting output AudioUnit.");
 	
+    err = AUGraphNodeInfo(graph, inputConverterNode, NULL, &inputConverterUnit);
+    NSAssert(err == noErr, @"Error getting converter AudioUnit.");
+    
 	// Set up the master fader callback
 	AURenderCallbackStruct playbackCallbackStruct;
 	playbackCallbackStruct.inputProc = audioOutputCallback;
@@ -112,9 +128,11 @@
 	playbackCallbackStruct.inputProcRefCon = (__bridge void *)(self);
 	
 	//now set the callback on the output node, this callback gets called whenever the AUGraph needs samples
-	err = AUGraphSetNodeInputCallback(graph, outputNode, 0, &playbackCallbackStruct);
+	err = AUGraphSetNodeInputCallback(graph, inputConverterNode, 0, &playbackCallbackStruct);
 	NSAssert(err == noErr, @"Error setting effects callback.");
 	
+    [self connectOutputBus:0 ofNode:inputConverterNode toInputBus:0 ofNode:outputNode inGraph:graph error:nil];
+    
 	
 	//so far we have not set any property descriptions on the outputAudioUnit, these describe the format of the audio being played
 	
@@ -123,14 +141,22 @@
 	
 	AudioStreamBasicDescription audioStreamBasicDescription;
 	UInt32 audioStreamBasicDescriptionsize = sizeof (AudioStreamBasicDescription);
-	
+	memset(&audioStreamBasicDescription, 0, sizeof(audioStreamBasicDescription));
+    
+    audioStreamBasicDescription.mSampleRate = 44100;
+    audioStreamBasicDescription.mFormatID = kAudioFormatLinearPCM;
+    audioStreamBasicDescription.mFramesPerPacket = 1152;
+    audioStreamBasicDescription.mChannelsPerFrame = 2;
+    
+    NSLog(@"FORMAT ID: %u\n", (unsigned int)audioStreamBasicDescription.mFormatID);
+    
 	//get the description of the format from the audio unit, this will describe what format we are sending the AudioUnit (from our callback)
-	AudioUnitGetProperty(outputUnit,
+	AudioUnitSetProperty(inputConverterUnit,
 						 kAudioUnitProperty_StreamFormat,
 						 kAudioUnitScope_Input,
 						 0, // input bus
 						 &audioStreamBasicDescription,
-						 &audioStreamBasicDescriptionsize);
+						 sizeof(audioStreamBasicDescription));
 	NSLog (@"Output Audio Unit: User input AudioStreamBasicDescription\n Sample Rate: %f\n Channels: %d\n Bits Per Channel: %d",
 		   audioStreamBasicDescription.mSampleRate, audioStreamBasicDescription.mChannelsPerFrame,
 		   audioStreamBasicDescription.mBitsPerChannel);
@@ -192,6 +218,18 @@
 	//this function starts rendering by starting the head node of an audio processing graph. The graph must be initialized before it can be started.
 	err = AUGraphStart(graph);
 	NSAssert(err == noErr, @"Error starting graph.");
+}
+
+-(BOOL)connectOutputBus:(UInt32)sourceOutputBusNumber ofNode:(AUNode)sourceNode toInputBus:(UInt32)destinationInputBusNumber ofNode:(AUNode)destinationNode inGraph:(AUGraph)aGraph error:(NSError **)error {
+	
+	// Connect converter to mixer
+	OSStatus status = AUGraphConnectNodeInput(aGraph, sourceNode, sourceOutputBusNumber, destinationNode, destinationInputBusNumber);
+	if (status != noErr) {
+        NSLog(@"Couldn't connect converter to output\n");
+		return NO;
+    }
+	
+	return YES;
 }
 
 -(UInt32)getNextPacket

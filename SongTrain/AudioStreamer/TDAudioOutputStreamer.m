@@ -66,6 +66,43 @@
     NSError *assetError;
 
     self.assetReader = [AVAssetReader assetReaderWithAsset:asset error:&assetError];
+    
+    AVAssetTrack* songTrack = [asset.tracks objectAtIndex:0];
+    NSArray* formatDesc = songTrack.formatDescriptions;
+    
+    NSLog(@"Number of Tracks: %lu\n", (unsigned long)[asset.tracks count]);
+    NSLog(@"Number of Format Descriptions: %lu\n", (unsigned long)[formatDesc count]);
+    
+    CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[formatDesc objectAtIndex:0];
+    const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (item);
+    NSLog(@"ASBD Sample Rate: %lf\n",bobTheDesc->mSampleRate);
+    NSLog(@"     Format ID: %8x\n",(unsigned int)bobTheDesc->mFormatID);
+    NSLog(@"     Format Flags: %u\n",(unsigned int)bobTheDesc->mFormatFlags);
+    NSLog(@"     Bytes per Packet: %u\n",(unsigned int)bobTheDesc->mBytesPerPacket);
+    NSLog(@"     Frames per Packet: %u\n",(unsigned int)bobTheDesc->mFramesPerPacket);
+    NSLog(@"     Bytes per Frame: %u\n",(unsigned int)bobTheDesc->mBytesPerFrame);
+    NSLog(@"     Channels per Frame: %u\n",(unsigned int)bobTheDesc->mChannelsPerFrame);
+    NSLog(@"     Bits per Channel: %u\n",(unsigned int)bobTheDesc->mBitsPerChannel);
+    
+    
+    /*
+    AudioChannelLayout channelLayout;
+    memset(&channelLayout, 0, sizeof(AudioChannelLayout));
+    channelLayout.mChannelLayoutTag = kAudioChannelLayoutTag_Stereo;
+    
+    
+    NSDictionary *outputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [NSNumber numberWithInt:kAudioFormatLinearPCM], AVFormatIDKey,
+                                   [NSNumber numberWithFloat:44100.0], AVSampleRateKey,
+                                   [NSNumber numberWithInt:2], AVNumberOfChannelsKey,
+                                   [NSData dataWithBytes:&channelLayout length:sizeof(AudioChannelLayout)],
+                                   AVChannelLayoutKey,
+                                   [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
+                                   [NSNumber numberWithBool:NO], AVLinearPCMIsNonInterleaved,
+                                   [NSNumber numberWithBool:NO],AVLinearPCMIsFloatKey,
+                                   [NSNumber numberWithBool:NO], AVLinearPCMIsBigEndianKey,
+                                   nil];
+    */
     self.assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:asset.tracks[0] outputSettings:nil];
     if (![self.assetReader canAddOutput:self.assetOutput]) return;
 

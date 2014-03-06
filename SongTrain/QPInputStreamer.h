@@ -12,7 +12,7 @@
 
 #import "TPCircularBuffer.h"
 
-static const int kBufferLength = 8388608;
+static const int kBufferLength = 32768 * 4;
 
 @interface QPInputStreamer : NSObject
 
