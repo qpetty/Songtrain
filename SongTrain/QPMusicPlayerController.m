@@ -77,6 +77,16 @@
 {
     for (Song *item in songs){
         [_playlist addSongToList:item];
+        /*
+        NSLog(@"ASBD Sample Rate: %lf\n",item.asbd->mSampleRate);
+        NSLog(@"     Format ID: %8x\n",(unsigned int)item.asbd->mFormatID);
+        NSLog(@"     Format Flags: %u\n",(unsigned int)item.asbd->mFormatFlags);
+        NSLog(@"     Bytes per Packet: %u\n",(unsigned int)item.asbd->mBytesPerPacket);
+        NSLog(@"     Frames per Packet: %u\n",(unsigned int)item.asbd->mFramesPerPacket);
+        NSLog(@"     Bytes per Frame: %u\n",(unsigned int)item.asbd->mBytesPerFrame);
+        NSLog(@"     Channels per Frame: %u\n",(unsigned int)item.asbd->mChannelsPerFrame);
+        NSLog(@"     Bits per Channel: %u\n",(unsigned int)item.asbd->mBitsPerChannel);
+         */
     }
     [self.delegate playListHasBeenUpdated];
 }
@@ -135,6 +145,7 @@
      */
     
     streamer = [[QPInputStreamer alloc] init];
+    streamer.currentSong = self.currentSong;
     [streamer setInputStream:inputStream];
 }
 

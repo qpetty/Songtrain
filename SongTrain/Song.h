@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <CoreAudio/CoreAudioTypes.h>
 
 @interface Song : NSObject <NSCoding>
 
@@ -19,6 +20,8 @@
 //Maybe needed not sure yet
 @property (strong, nonatomic) MPMediaItem *media;
 @property (strong, nonatomic) NSURL *url;
+
+@property (nonatomic) AudioStreamBasicDescription *asbd;
 
 @property (nonatomic) int songPosition;
 @property (nonatomic) int totalSongs;

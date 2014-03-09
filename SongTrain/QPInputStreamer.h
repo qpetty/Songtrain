@@ -14,7 +14,14 @@
 
 static const int kBufferLength = 32768 * 4;
 
+struct GraphHelper {
+    AudioConverterRef converter;
+    TPCircularBuffer audioBuffer;
+};
+
 @interface QPInputStreamer : NSObject
+
+@property (nonatomic, retain) Song *currentSong;
 
 - (void)setInputStream:(NSInputStream*)inputStream;
 

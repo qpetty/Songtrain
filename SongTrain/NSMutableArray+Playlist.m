@@ -23,6 +23,26 @@
     if (albumItem)
         nowPlayingSong.albumImage = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
     */
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:nowPlayingSong.url options:nil];
+    AVAssetTrack* songTrack = [asset.tracks objectAtIndex:0];
+    NSArray* formatDesc = songTrack.formatDescriptions;
+    CMAudioFormatDescriptionRef description = (__bridge CMAudioFormatDescriptionRef)[formatDesc objectAtIndex:0];
+    const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (description);
+    
+    /*
+    NSLog(@"ASBD Sample Rate: %lf\n",bobTheDesc->mSampleRate);
+    NSLog(@"     Format ID: %8x\n",(unsigned int)bobTheDesc->mFormatID);
+    NSLog(@"     Format Flags: %u\n",(unsigned int)bobTheDesc->mFormatFlags);
+    NSLog(@"     Bytes per Packet: %u\n",(unsigned int)bobTheDesc->mBytesPerPacket);
+    NSLog(@"     Frames per Packet: %u\n",(unsigned int)bobTheDesc->mFramesPerPacket);
+    NSLog(@"     Bytes per Frame: %u\n",(unsigned int)bobTheDesc->mBytesPerFrame);
+    NSLog(@"     Channels per Frame: %u\n",(unsigned int)bobTheDesc->mChannelsPerFrame);
+    NSLog(@"     Bits per Channel: %u\n",(unsigned int)bobTheDesc->mBitsPerChannel);
+    */
+    
+    memcpy(nowPlayingSong.asbd, bobTheDesc, sizeof(AudioStreamBasicDescription));
+    
     [self addObject:nowPlayingSong];
 }
 
