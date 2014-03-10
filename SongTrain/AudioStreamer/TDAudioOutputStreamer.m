@@ -111,6 +111,13 @@
     NSLog(@"Read Asset");
 }
 
+/*
+ 1. Number of AudioStreamPacketDescriptions
+ 2. AudioStreamPacketDescriptions
+ 3. Size of Audio Data
+ 4. Audio Data
+*/
+
 - (void)sendDataChunk
 {
     CMSampleBufferRef sampleBuffer;
@@ -124,13 +131,30 @@
 
     CMBlockBufferRef blockBuffer;
     AudioBufferList audioBufferList;
-
-    OSStatus err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
+    const AudioStreamPacketDescription *aspd;
+    size_t packetDescriptionSize;
+    
+    OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(sampleBuffer, &aspd, &packetDescriptionSize);
+    UInt32 numOfASPD = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
+    
+    [self.audioStream writeData:(uint8_t*)&numOfASPD maxLength:sizeof(UInt32)];
+    [self.audioStream writeData:(uint8_t*)aspd maxLength:packetDescriptionSize];
+    
+    NSLog(@"Size: %zu, each packetdescription is %lu\n", packetDescriptionSize, sizeof(AudioStreamPacketDescription));
+    
+    err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
 
     if (err) {
         CFRelease(sampleBuffer);
         return;
     }
+    
+    UInt32 audioSize = 0;
+    for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
+        AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
+        audioSize += audioBuffer.mDataByteSize;
+    }
+    [self.audioStream writeData:(uint8_t*)&audioSize maxLength:sizeof(audioSize)];
 
     for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
         AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
