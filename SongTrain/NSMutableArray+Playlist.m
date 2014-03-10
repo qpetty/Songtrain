@@ -31,17 +31,24 @@
     const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (description);
     
     /*
-    NSLog(@"ASBD Sample Rate: %lf\n",bobTheDesc->mSampleRate);
-    NSLog(@"     Format ID: %8x\n",(unsigned int)bobTheDesc->mFormatID);
-    NSLog(@"     Format Flags: %u\n",(unsigned int)bobTheDesc->mFormatFlags);
-    NSLog(@"     Bytes per Packet: %u\n",(unsigned int)bobTheDesc->mBytesPerPacket);
-    NSLog(@"     Frames per Packet: %u\n",(unsigned int)bobTheDesc->mFramesPerPacket);
-    NSLog(@"     Bytes per Frame: %u\n",(unsigned int)bobTheDesc->mBytesPerFrame);
-    NSLog(@"     Channels per Frame: %u\n",(unsigned int)bobTheDesc->mChannelsPerFrame);
-    NSLog(@"     Bits per Channel: %u\n",(unsigned int)bobTheDesc->mBitsPerChannel);
+    NSLog(@"Song Title: %@\n", nowPlayingSong.title);
+    NSLog(@"Looking at URL: %@\n", nowPlayingSong.url);
+    NSLog(@"Tracks Found: %d\n",asset.tracks.count);
+    NSLog(@"Format Descriptions Found: %d\n",formatDesc.count);
     */
     
-    memcpy(nowPlayingSong.asbd, bobTheDesc, sizeof(AudioStreamBasicDescription));
+    if (bobTheDesc) {
+        NSLog(@"ASBD Sample Rate: %lf\n",bobTheDesc->mSampleRate);
+        NSLog(@"     Format ID: %8x\n",(unsigned int)bobTheDesc->mFormatID);
+        NSLog(@"     Format Flags: %u\n",(unsigned int)bobTheDesc->mFormatFlags);
+        NSLog(@"     Bytes per Packet: %u\n",(unsigned int)bobTheDesc->mBytesPerPacket);
+        NSLog(@"     Frames per Packet: %u\n",(unsigned int)bobTheDesc->mFramesPerPacket);
+        NSLog(@"     Bytes per Frame: %u\n",(unsigned int)bobTheDesc->mBytesPerFrame);
+        NSLog(@"     Channels per Frame: %u\n",(unsigned int)bobTheDesc->mChannelsPerFrame);
+        NSLog(@"     Bits per Channel: %u\n",(unsigned int)bobTheDesc->mBitsPerChannel);
+        
+        memcpy(nowPlayingSong.asbd, bobTheDesc, sizeof(AudioStreamBasicDescription));
+    }
     
     [self addObject:nowPlayingSong];
 }
