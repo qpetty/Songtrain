@@ -12,11 +12,17 @@
 
 #import "TPCircularBuffer.h"
 
-static const int kBufferLength = 32768 * 4;
+static const int kBufferLength = 32768 * 16;
 
 struct GraphHelper {
-    AudioConverterRef converter;
-    TPCircularBuffer audioBuffer;
+    AudioConverterRef               converter;
+    TPCircularBuffer                audioBuffer;
+    AudioStreamBasicDescription     *outputDescription;
+    
+    AudioBufferList                 *inputBufferList;
+    
+    AudioStreamPacketDescription    packetDescriptions[256];
+    uint8_t                         conversionBuffer[8192];
 };
 
 @interface QPInputStreamer : NSObject

@@ -64,6 +64,7 @@
 	audioFormat.mBytesPerFrame		= 4;
     
     AudioConverterNew(_currentSong.asbd, &audioFormat, &graphHelp.converter);
+    graphHelp.outputDescription = &audioFormat;
 }
 
 - (void)initBuffer
@@ -76,14 +77,14 @@
     TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
     
     
-    //Fill up buffer here
+    //Get rid of temp buffer
     do {
         TPCircularBufferHead(&graphHelp.audioBuffer, &spaceAvailableInBuffer);
         readBytes = [input read:buffer maxLength:sizeof(buffer)];
         NSLog(@"Adding %zu bytes to the circular buffer with %d filled\n", readBytes, spaceAvailableInBuffer);
         NSLog(@"Buffer length: %d    Buffer fillcount: %d\n", graphHelp.audioBuffer.length, graphHelp.audioBuffer.fillCount);
         TPCircularBufferProduceBytes(&graphHelp.audioBuffer, buffer, (int32_t)readBytes);
-    } while (spaceAvailableInBuffer > 20);
+    } while (spaceAvailableInBuffer > kBufferLength / 2);
     
 }
 
@@ -150,7 +151,23 @@
 	//now lets check the format again
 	NSLog(@"AudioStreamBasicDescription has been set, notice you now see the sample rate.");
 	
-	
+    
+    /*
+    AudioStreamBasicDescription audioStreamBasicDescription;
+	UInt32 audioStreamBasicDescriptionsize = sizeof (AudioStreamBasicDescription);
+    
+    AudioUnitGetProperty(outputUnit,
+						 kAudioUnitProperty_StreamFormat,
+						 kAudioUnitScope_Input,
+						 0, // input bus
+						 &audioStreamBasicDescription,
+						 &audioStreamBasicDescriptionsize);
+	NSLog (@"Output Audio Unit: User input AudioStreamBasicDescription\n Sample Rate: %f\n Channels: %ld\n Bits Per Channel: %ld",
+		   audioStreamBasicDescription.mSampleRate, audioStreamBasicDescription.mChannelsPerFrame,
+		   audioStreamBasicDescription.mBitsPerChannel);
+	*/
+    
+    
 	//we then initiailze the graph, this (from the doco):
 	//Calling this function calls the AudioUnitInitialize function on each opened node or audio unit that is involved in a interaction.
 	//If a node is not involved, it is initialized after it becomes involved in an interaction.
@@ -213,12 +230,19 @@ static OSStatus audioOutputCallback(void *inRefCon,
 	if (inBusNumber == 0){
 		//loop through the buffer and fill the frames, this is really inefficient
 		//should be using a memcpy, but we will leave that for later
-		for (int j = 0; j < inNumberFrames; j++){
-			// get NextPacket returns a 32 bit value, one frame.
-			//frameBuffer[j] = [audioPlayback getNextPacket];
-            UInt32 size = 2;
-            AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &size, ioData, nil);
-		}
+        //NSLog(@"inNumberFrames: %d\n", (unsigned int)inNumberFrames);
+        
+        UInt32 numPacketsNeeded = inNumberFrames / audioPlayback->outputDescription->mFramesPerPacket;
+        //NSLog(@"Need %d packets and possibly wrong division: %d\n", numPacketsNeeded, inNumberFrames / audioPlayback->outputDescription->mFramesPerPacket);
+        
+        //NSLog(@"mData: %d\n", ioData->mBuffers[0].mData);
+        //NSLog(@"AudioBufferList => Number of Buffers: %d First buffer size %d\n", ioData->mNumberBuffers, ioData->mBuffers[0].mDataByteSize);
+        
+        NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
+        OSStatus err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
+        NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
+        
+        NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
 	}
 	
 	//dodgy return :)
@@ -227,8 +251,40 @@ static OSStatus audioOutputCallback(void *inRefCon,
 
 OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription  **outDataPacketDescription, void *inUserData)
 {
+    struct GraphHelper *audioPlayback = (struct GraphHelper *)inUserData;
+    //NSLog(@"If not null expecting audiostreampacketdescriptions: %d\n", outDataPacketDescription);
     
-    NSLog(@"If not null expecting audiostreampacketdescriptions: %d\n", outDataPacketDescription);
+    //NSLog(@"Current Thread: %@\n", [NSThread currentThread]);
+    //NSLog(@"mData beginning converter: %d\n", ioData->mBuffers[0].mData);
+    
+    UInt32 i, dataOffset = 0;
+    for (i = 0; i < *ioNumberDataPackets + 1; i++) {
+        int32_t availableBytes;
+        
+        void *buffer = TPCircularBufferTail(&audioPlayback->audioBuffer, &availableBytes);
+        //TODO: If availableBytes is too small break
+        AudioStreamPacketDescription *aspd = audioPlayback->packetDescriptions + i;
+        //NSLog(@"packetDescripctions: %d      packetDescriptions + i: %d\n", audioPlayback->packetDescriptions, audioPlayback->packetDescriptions + i);
+        memcpy(aspd, buffer, sizeof(AudioStreamPacketDescription));
+        //NSLog(@"Packet Description => DataByteSize %d StartOffset: %lld Variable Frame in Packet: %d\n", aspd->mDataByteSize, aspd->mStartOffset, aspd->mVariableFramesInPacket);
+        
+        TPCircularBufferConsume(&audioPlayback->audioBuffer, sizeof(AudioStreamPacketDescription));
+        
+        buffer = TPCircularBufferTail(&audioPlayback->audioBuffer, &availableBytes);
+        //NSLog(@"i: %d   ioNumberDataPackets: %d   buffer: %d    availableBytes: %d\n", i, *ioNumberDataPackets, buffer, availableBytes);
+        memcpy(audioPlayback->conversionBuffer + dataOffset, buffer, aspd->mDataByteSize);
+        
+        TPCircularBufferConsume(&audioPlayback->audioBuffer, aspd->mDataByteSize);
+        dataOffset += aspd->mDataByteSize;
+    }
+    ioData->mBuffers[0].mData = audioPlayback->conversionBuffer;
+    ioData->mBuffers[0].mDataByteSize = dataOffset;
+    //NSLog(@"data Offset: %d\n", (unsigned int)dataOffset);
+    *ioNumberDataPackets = i;
+    *outDataPacketDescription = audioPlayback->packetDescriptions;
+    
+    //NSLog(@"mData end converter: %d\n", ioData->mBuffers[0].mData);
+    //NSLog(@"data Offset: %d  ioNumberDataPackets: %d mData %d\n", (unsigned int)dataOffset, (unsigned int)*ioNumberDataPackets, ioData->mBuffers[0].mData);
     
     return 0;
 }

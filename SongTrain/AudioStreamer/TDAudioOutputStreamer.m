@@ -137,10 +137,15 @@
     OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(sampleBuffer, &aspd, &packetDescriptionSize);
     UInt32 numOfASPD = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
-    [self.audioStream writeData:(uint8_t*)&numOfASPD maxLength:sizeof(UInt32)];
-    [self.audioStream writeData:(uint8_t*)aspd maxLength:packetDescriptionSize];
+    if (err) {
+        CFRelease(sampleBuffer);
+        return;
+    }
     
-    NSLog(@"Size: %zu, each packetdescription is %lu\n", packetDescriptionSize, sizeof(AudioStreamPacketDescription));
+    //[self.audioStream writeData:(uint8_t*)&numOfASPD maxLength:sizeof(UInt32)];
+    //[self.audioStream writeData:(uint8_t*)aspd maxLength:packetDescriptionSize];
+    
+    //NSLog(@"Size: %zu, each packetdescription is %lu\n", packetDescriptionSize, sizeof(AudioStreamPacketDescription));
     
     err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
 
@@ -148,6 +153,23 @@
         CFRelease(sampleBuffer);
         return;
     }
+    
+    NSLog(@"Number of ASPDs: %d    Number of Buffers: %d\n", numOfASPD, audioBufferList.mNumberBuffers);
+    
+    NSUInteger dataIndex = 0;
+    NSUInteger i;
+    for (i = 0; i < numOfASPD; i++)
+    {
+        [self.audioStream writeData:(uint8_t*)(aspd + i) maxLength:sizeof(AudioStreamPacketDescription)];
+        [self.audioStream writeData:(uint8_t*)(audioBufferList.mBuffers[0].mData + dataIndex) maxLength:(aspd + i)->mDataByteSize];
+        dataIndex += (aspd + i)->mDataByteSize;
+    }
+    
+    //NSLog(@"Audiobufferlist size: %d   dataIndex: %d\n", (unsigned int)audioBufferList.mBuffers[0].mDataByteSize, dataIndex);
+    
+    //NSLog(@"ASPD: %d    ASPD + i: %d\n", aspd, aspd + i);
+    
+    /*
     
     UInt32 audioSize = 0;
     for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
@@ -162,6 +184,7 @@
         NSLog(@"buffer size: %u", (unsigned int)audioBuffer.mDataByteSize);
     }
 
+     */
     CFRelease(blockBuffer);
     CFRelease(sampleBuffer);
 }
