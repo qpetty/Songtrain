@@ -266,6 +266,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         AudioStreamPacketDescription *aspd = audioPlayback->packetDescriptions + i;
         //NSLog(@"packetDescripctions: %d      packetDescriptions + i: %d\n", audioPlayback->packetDescriptions, audioPlayback->packetDescriptions + i);
         memcpy(aspd, buffer, sizeof(AudioStreamPacketDescription));
+        aspd->mStartOffset = dataOffset;
         //NSLog(@"Packet Description => DataByteSize %d StartOffset: %lld Variable Frame in Packet: %d\n", aspd->mDataByteSize, aspd->mStartOffset, aspd->mVariableFramesInPacket);
         
         TPCircularBufferConsume(&audioPlayback->audioBuffer, sizeof(AudioStreamPacketDescription));

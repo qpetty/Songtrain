@@ -12,7 +12,7 @@
 
 #import "TPCircularBuffer.h"
 
-static const int kBufferLength = 32768 * 16;
+static const int kBufferLength = 32768 * 32;
 
 struct GraphHelper {
     AudioConverterRef               converter;
