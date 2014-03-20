@@ -46,6 +46,8 @@
     albumArtwork.delegate = self;
     [self.view addSubview:albumArtwork];
     
+    [musicPlayer addObserver:albumArtwork forKeyPath:@"currentSong" options:0 context:nil];
+    
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
     picker.allowsPickingMultipleItems = YES;
@@ -160,7 +162,7 @@
 {
     NSLog(@"Updating Playlist\n");
     dispatch_async(dispatch_get_main_queue(), ^{
-        [albumArtwork updateSongInfo:musicPlayer.currentSong];
+        //[albumArtwork updateSongInfo:musicPlayer.currentSong];
         [mainTableView reloadData];
     });
 }

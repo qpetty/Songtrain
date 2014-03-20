@@ -33,7 +33,7 @@
         MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
         if (currentItem && sessionManager.currentRole == ServerConnection){
             [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
-            self.currentSong = [_playlist objectAtIndex:0];
+            _currentSong = [_playlist firstObject];
             [self.delegate playListHasBeenUpdated];
         }
         
@@ -48,7 +48,7 @@
     MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
     if (currentItem && sessionManager.currentRole == ServerConnection){
         [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
-        self.currentSong = [_playlist objectAtIndex:0];
+        _currentSong = [_playlist objectAtIndex:0];
         [self.delegate playListHasBeenUpdated];
     }
 }
@@ -78,12 +78,14 @@
     for (Song *item in songs){
         [_playlist addSongToList:item];
     }
+    _currentSong = [_playlist firstObject];
     [self.delegate playListHasBeenUpdated];
 }
 
 - (void)recievedPlaylistFromServer:(NSMutableArray *)songs
 {
     _playlist = songs;
+    _currentSong = [_playlist firstObject];
     [self.delegate playListHasBeenUpdated];
 }
 
@@ -135,7 +137,7 @@
         return;
     }
     
-    self.currentSong = [_playlist firstObject];
+    _currentSong = [_playlist firstObject];
     [self.delegate playListHasBeenUpdated];
     
     NSLog(@"Trying to play: %@\n", self.currentSong);

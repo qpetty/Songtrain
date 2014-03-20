@@ -117,6 +117,12 @@
     return [UIImage imageWithCGImage:imageRef];
 }
 
-
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"currentSong"]) {
+        [self updateSongInfo:((QPMusicPlayerController*)object).currentSong];
+    }
+    NSLog(@"HERE!!!!!!!!!!!!!!!!!\n");
+}
 
 @end

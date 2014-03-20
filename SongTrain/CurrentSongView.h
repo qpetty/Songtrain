@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "UsefulFunctions.h"
+#import "QPMusicPlayerController.h"
 
 enum ButtonNames : NSInteger {
     InfoButton = 1
