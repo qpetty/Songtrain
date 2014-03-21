@@ -37,6 +37,10 @@
 {
     NSLog(@"Allocating and starting music thread\n");
     musicThread = [[NSThread alloc] initWithTarget:self selector:@selector(start) object:nil];
+    TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
+    [self initOutputDescription];
+    [self initAudioGraph];
+    graphHelp.isPlaying = NO;
     [musicThread start];
 }
 
@@ -45,13 +49,12 @@
     [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [input open];
     
-    [self initConverter];
+    AudioConverterNew(_currentSong.asbd, graphHelp.outputDescription, &graphHelp.converter);
     [self initBuffer];
-    [self initAudioGraph];
     while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
 }
 
-- (void)initConverter
+- (void)initOutputDescription
 {
     // Describe format
 	audioFormat.mSampleRate			= 44100.00;
@@ -63,7 +66,6 @@
 	audioFormat.mBytesPerPacket		= 4;
 	audioFormat.mBytesPerFrame		= 4;
     
-    AudioConverterNew(_currentSong.asbd, &audioFormat, &graphHelp.converter);
     graphHelp.outputDescription = &audioFormat;
 }
 
@@ -74,8 +76,6 @@
     
     void *buffer;
     
-    TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
-    
     do {
         buffer = TPCircularBufferHead(&graphHelp.audioBuffer, &spaceAvailableInBuffer);
         readBytes = [input read:buffer maxLength:spaceAvailableInBuffer];
@@ -83,7 +83,7 @@
         NSLog(@"Buffer length: %d    Buffer fillcount: %d\n", graphHelp.audioBuffer.length, graphHelp.audioBuffer.fillCount);
         TPCircularBufferProduce(&graphHelp.audioBuffer, readBytes);
     } while (spaceAvailableInBuffer > kBufferLength / 2);
-    
+    graphHelp.isPlaying = YES;
 }
 
 - (void)initAudioGraph
@@ -221,11 +221,11 @@ static OSStatus audioOutputCallback(void *inRefCon,
 	
 	
 	struct GraphHelper *audioPlayback = (struct GraphHelper *)inRefCon;
-	
+	OSStatus err = -1;
 	//cast the buffer as an UInt32, cause our samples are in that format
 	//UInt32 *frameBuffer = ioData->mBuffers[0].mData;
     
-	if (inBusNumber == 0){
+	if (inBusNumber == 0 && audioPlayback->isPlaying){
 		//loop through the buffer and fill the frames, this is really inefficient
 		//should be using a memcpy, but we will leave that for later
         //NSLog(@"inNumberFrames: %d\n", (unsigned int)inNumberFrames);
@@ -237,19 +237,18 @@ static OSStatus audioOutputCallback(void *inRefCon,
         //NSLog(@"AudioBufferList => Number of Buffers: %d First buffer size %d\n", ioData->mNumberBuffers, ioData->mBuffers[0].mDataByteSize);
         
         NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
-        OSStatus err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
+        err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
         NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
         NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
         
-        if (err) {
-            for (int i = 0; i < ioData->mBuffers[0].mDataByteSize; i++) {
-                *((uint8_t*)(ioData->mBuffers[0].mData + i)) = 0;
-            }
-        }
-        
 	}
-	
+    
+	if (err) {
+        for (int i = 0; i < ioData->mBuffers[0].mDataByteSize; i++) {
+            *((uint8_t*)(ioData->mBuffers[0].mData + i)) = 0;
+        }
+    }
 	//dodgy return :)
 	return 0;
 }

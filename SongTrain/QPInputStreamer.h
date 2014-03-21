@@ -18,6 +18,7 @@ struct GraphHelper {
     AudioConverterRef               converter;
     TPCircularBuffer                audioBuffer;
     AudioStreamBasicDescription     *outputDescription;
+    BOOL                            isPlaying;
     
     AudioBufferList                 *inputBufferList;
     
