@@ -72,18 +72,16 @@
     int32_t spaceAvailableInBuffer;
     size_t readBytes;
     
-    uint8_t buffer[256];
+    void *buffer;
     
     TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
     
-    
-    //Get rid of temp buffer
     do {
-        TPCircularBufferHead(&graphHelp.audioBuffer, &spaceAvailableInBuffer);
-        readBytes = [input read:buffer maxLength:sizeof(buffer)];
+        buffer = TPCircularBufferHead(&graphHelp.audioBuffer, &spaceAvailableInBuffer);
+        readBytes = [input read:buffer maxLength:spaceAvailableInBuffer];
         NSLog(@"Adding %zu bytes to the circular buffer with %d filled\n", readBytes, spaceAvailableInBuffer);
         NSLog(@"Buffer length: %d    Buffer fillcount: %d\n", graphHelp.audioBuffer.length, graphHelp.audioBuffer.fillCount);
-        TPCircularBufferProduceBytes(&graphHelp.audioBuffer, buffer, (int32_t)readBytes);
+        TPCircularBufferProduce(&graphHelp.audioBuffer, readBytes);
     } while (spaceAvailableInBuffer > kBufferLength / 2);
     
 }
@@ -243,6 +241,13 @@ static OSStatus audioOutputCallback(void *inRefCon,
         NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
         NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
+        
+        if (err) {
+            for (int i = 0; i < ioData->mBuffers[0].mDataByteSize; i++) {
+                *((uint8_t*)(ioData->mBuffers[0].mData + i)) = 0;
+            }
+        }
+        
 	}
 	
 	//dodgy return :)
@@ -262,7 +267,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         int32_t availableBytes;
         
         void *buffer = TPCircularBufferTail(&audioPlayback->audioBuffer, &availableBytes);
-        //TODO: If availableBytes is too small break
+        
+        if (availableBytes < sizeof(AudioStreamPacketDescription)) {
+            return -1;
+        }
+        
         AudioStreamPacketDescription *aspd = audioPlayback->packetDescriptions + i;
         //NSLog(@"packetDescripctions: %d      packetDescriptions + i: %d\n", audioPlayback->packetDescriptions, audioPlayback->packetDescriptions + i);
         memcpy(aspd, buffer, sizeof(AudioStreamPacketDescription));
@@ -272,7 +281,9 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         TPCircularBufferConsume(&audioPlayback->audioBuffer, sizeof(AudioStreamPacketDescription));
         
         buffer = TPCircularBufferTail(&audioPlayback->audioBuffer, &availableBytes);
-        //NSLog(@"i: %d   ioNumberDataPackets: %d   buffer: %d    availableBytes: %d\n", i, *ioNumberDataPackets, buffer, availableBytes);
+        if (availableBytes < aspd->mDataByteSize) {
+            return -1;
+        }
         memcpy(audioPlayback->conversionBuffer + dataOffset, buffer, aspd->mDataByteSize);
         
         TPCircularBufferConsume(&audioPlayback->audioBuffer, aspd->mDataByteSize);
