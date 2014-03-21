@@ -38,6 +38,7 @@
         }
         
         currentlyPlaying = NO;
+        streamer = [[QPInputStreamer alloc] init];
     }
     return self;
 }
@@ -124,12 +125,12 @@
     NSLog(@"URL from song: %@\n", singleSong.url);
     [audioOutStream streamAudioFromURL:singleSong.url];
     [audioOutStream start];
-     
+    
     
     /*
     outStreamer = [[QPOutputStreamer alloc] init];
     [outStreamer setOutputStream:outStream withURL:singleSong.url];
-     */
+    */
 }
 
 - (void)recievedStream:(NSInputStream*)inputStream
@@ -144,7 +145,7 @@
     NSLog(@"Received Stream\n");
      */
     
-    streamer = [[QPInputStreamer alloc] init];
+    //streamer = [[QPInputStreamer alloc] init];
     streamer.currentSong = self.currentSong;
     [streamer setInputStream:inputStream];
 }

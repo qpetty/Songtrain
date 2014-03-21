@@ -22,36 +22,56 @@
 }
 
 
+- (id)init {
+    if (self = [super init]) {
+        TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
+        [self initOutputDescription];
+        [self initAudioGraph];
+        graphHelp.isPlaying = NO;
+    }
+    return self;
+}
+
 - (void)setInputStream:(NSInputStream*)inputStream
 {
-    input = inputStream;
-    
-    if (![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
-        return [self performSelectorOnMainThread:@selector(makeThread) withObject:nil waitUntilDone:YES];
-    }
-    
-    [self makeThread];
-}
-
-- (void)makeThread
-{
-    NSLog(@"Allocating and starting music thread\n");
-    musicThread = [[NSThread alloc] initWithTarget:self selector:@selector(start) object:nil];
-    TPCircularBufferInit(&graphHelp.audioBuffer, kBufferLength);
-    [self initOutputDescription];
-    [self initAudioGraph];
-    graphHelp.isPlaying = NO;
-    [musicThread start];
-}
-
-- (void)start
-{
-    [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [input open];
-    
     AudioConverterNew(_currentSong.asbd, graphHelp.outputDescription, &graphHelp.converter);
-    [self initBuffer];
-    while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
+    input = inputStream;
+    input.delegate = self;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [input open];
+    });
+    
+}
+
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+{
+    if (eventCode == NSStreamEventHasBytesAvailable) {
+        int32_t spaceAvailableInBuffer;
+        size_t readBytes;
+        void *buffer;
+        
+        buffer = TPCircularBufferHead(&graphHelp.audioBuffer, &spaceAvailableInBuffer);
+        readBytes = [input read:buffer maxLength:spaceAvailableInBuffer];
+        //NSLog(@"Adding %zu bytes to the circular buffer with %d filled\n", readBytes, spaceAvailableInBuffer);
+        //NSLog(@"Buffer length: %d    Buffer fillcount: %d\n", graphHelp.audioBuffer.length, graphHelp.audioBuffer.fillCount);
+        TPCircularBufferProduce(&graphHelp.audioBuffer, readBytes);
+        
+        if (spaceAvailableInBuffer < kBufferLength / 2)
+        {
+            graphHelp.isPlaying = YES;
+            OSErr err = AUGraphStart(graph);
+            NSAssert(err == noErr, @"Error starting graph.");
+        }
+        else if (graphHelp.audioBuffer.fillCount > kBufferLength * (7.0/8.0))
+        {
+            [input removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        }
+        //NSLog(@"Condition: %d\n", graphHelp.audioBuffer.fillCount > kBufferLength * (7.0/8.0));
+        NSLog(@"Buffer fillcount: %d\n", graphHelp.audioBuffer.fillCount);
+        //NSLog(@"Is main Thread %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
+    }
 }
 
 - (void)initOutputDescription
@@ -150,6 +170,11 @@
 	NSLog(@"AudioStreamBasicDescription has been set, notice you now see the sample rate.");
 	
     
+    
+	UInt32 maxFramesPerSlice = 4096;
+	err = AudioUnitSetProperty(outputUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, sizeof(maxFramesPerSlice));
+	NSAssert(err == noErr, @"Error setting RIO input property.");
+    
     /*
     AudioStreamBasicDescription audioStreamBasicDescription;
 	UInt32 audioStreamBasicDescriptionsize = sizeof (AudioStreamBasicDescription);
@@ -181,8 +206,8 @@
 	//with samples when the play button is hit.
 	//the doco says :
 	//this function starts rendering by starting the head node of an audio processing graph. The graph must be initialized before it can be started.
-	err = AUGraphStart(graph);
-	NSAssert(err == noErr, @"Error starting graph.");
+	//err = AUGraphStart(graph);
+	//NSAssert(err == noErr, @"Error starting graph.");
 }
 
 -(BOOL)connectOutputBus:(UInt32)sourceOutputBusNumber ofNode:(AUNode)sourceNode toInputBus:(UInt32)destinationInputBusNumber ofNode:(AUNode)destinationNode inGraph:(AUGraph)aGraph error:(NSError **)error {
@@ -225,6 +250,8 @@ static OSStatus audioOutputCallback(void *inRefCon,
 	//cast the buffer as an UInt32, cause our samples are in that format
 	//UInt32 *frameBuffer = ioData->mBuffers[0].mData;
     
+    //NSLog(@"Is main Thread %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
+    
 	if (inBusNumber == 0 && audioPlayback->isPlaying){
 		//loop through the buffer and fill the frames, this is really inefficient
 		//should be using a memcpy, but we will leave that for later
@@ -236,12 +263,19 @@ static OSStatus audioOutputCallback(void *inRefCon,
         //NSLog(@"mData: %d\n", ioData->mBuffers[0].mData);
         //NSLog(@"AudioBufferList => Number of Buffers: %d First buffer size %d\n", ioData->mNumberBuffers, ioData->mBuffers[0].mDataByteSize);
         
-        NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
+        //NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
-        NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
+        //NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
         NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
         
+        /*
+        if (audioPlayback->audioBuffer.fillCount < kBufferLength * 0.5) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [input scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            });
+        }
+         */
 	}
     
 	if (err) {
