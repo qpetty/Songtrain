@@ -1,5 +1,5 @@
 //
-//  CustomMusicPickerViewController.h
+//  SongTabViewController.h
 //  SongTrain
 //
 //  Created by Quinton Petty on 4/7/14.
@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "TabViewController.h"
 
-@interface CustomMusicPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SongTabViewController : TabViewController
+
+-(id)initWithQuery:(MPMediaQuery*)query;
 
 @end

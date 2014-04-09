@@ -1,22 +1,18 @@
 //
-//  CustomMusicPickerViewController.m
+//  SongTabViewController.m
 //  SongTrain
 //
 //  Created by Quinton Petty on 4/7/14.
 //  Copyright (c) 2014 Quinton Petty. All rights reserved.
 //
 
-#import "CustomMusicPickerViewController.h"
+#import "SongTabViewController.h"
 
-@interface CustomMusicPickerViewController (){
-    UITableView *wholeTableView;
-    NSArray *queryResults;
-    NSArray *musicItems;
-}
+@interface SongTabViewController ()
 
 @end
 
-@implementation CustomMusicPickerViewController
+@implementation SongTabViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,28 +23,26 @@
     return self;
 }
 
--(id)init{
-    self = [super init];
+-(id)initWithQuery:(MPMediaQuery*)query
+{
+    self = [self init];
     if (self) {
-        [self myInit];
+        if (!query) {
+            query = [[MPMediaQuery alloc] init];
+            
+            /*
+            MPMediaPropertyPredicate *artistPredicate = [MPMediaPropertyPredicate predicateWithValue:@"The Alan Parsons Project" forProperty:MPMediaItemPropertyArtist];
+            [query addFilterPredicate:artistPredicate];
+             */
+        }
+        
+        displayItems = [query items];
     }
     return self;
 }
 
-- (void)myInit
-{
-    wholeTableView = [[UITableView alloc] init];
-    wholeTableView.dataSource = self;
-    wholeTableView.delegate = self;
-    
-    MPMediaQuery *everything = [[MPMediaQuery alloc] init];
-    
-    MPMediaPropertyPredicate *artistPredicate = [MPMediaPropertyPredicate predicateWithValue:@"The Alan Parsons Project" forProperty:MPMediaItemPropertyArtist];
-    [everything addFilterPredicate:artistPredicate];
-    
-    queryResults = [everything items];
-    
     /*
+     queryResults = [query items];
     void (^checkDRM)(id, NSUInteger, BOOL*) = ^(id obj, NSUInteger idx, BOOL *stop) {
         
         MPMediaItem* item = (MPMediaItem*)obj;
@@ -62,22 +56,10 @@
     //[queryResults enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:checkDRM];
     [queryResults enumerateObjectsUsingBlock:checkDRM];
     */
-    musicItems = [everything items];
-    
-    NSLog(@"array size %d\n", musicItems.count);
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self myInit];
-    [self.view addSubview:wholeTableView];
-}
-
--(void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    wholeTableView.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (void)didReceiveMemoryWarning
@@ -91,32 +73,28 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return [super numberOfSectionsInTableView:tableView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [musicItems count];
+    return [super tableView:tableView numberOfRowsInSection:section];
 }
 
 
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
-     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MusicCell"];
+     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
  
-     if (!cell) {
-         cell = [[UITableViewCell alloc] init];
-         cell.backgroundColor = [UIColor clearColor];
+     if ([[displayItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyAssetURL]) {
+         cell.textLabel.text = [[displayItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyTitle];
          cell.textLabel.textColor = [UIColor blackColor];
-         [cell setRestorationIdentifier:@"MusicCell"];
-     }
-     if ([[musicItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyAssetURL]) {
-         cell.textLabel.text = [[musicItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyTitle];
          cell.userInteractionEnabled = YES;
      }
      else{
          cell.textLabel.text = @"DRM shit";
+         cell.textLabel.textColor = [UIColor redColor];
          cell.userInteractionEnabled = NO;
      }
      cell.accessoryType = UITableViewCellAccessoryNone;
