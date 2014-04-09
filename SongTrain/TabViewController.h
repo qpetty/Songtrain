@@ -10,6 +10,7 @@
 
 @interface TabViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>{
     NSArray *displayItems;
+    MPMediaQuery *query;
 }
 
 @end

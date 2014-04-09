@@ -27,7 +27,7 @@
 {
     self = [super init];
     if (self) {
-        MPMediaQuery *query = [MPMediaQuery playlistsQuery];
+        query = [MPMediaQuery playlistsQuery];
         
         [query setGroupingType:MPMediaGroupingArtist];
         [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInt:MPMediaTypeMusic] forProperty:MPMediaItemPropertyMediaType]];
@@ -53,21 +53,37 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [super numberOfSectionsInTableView:tableView];
+    return [[query collectionSections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [super tableView:tableView numberOfRowsInSection:section];
+    return [[[query collectionSections] objectAtIndex:section] range].length;
 }
 
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    NSMutableArray *titles = [[NSMutableArray alloc] init];
+    
+    //[titles addObject:UITableViewIndexSearch];
+    
+    for (MPMediaQuerySection *section in query.itemSections) {
+        [titles addObject:section.title];
+    }
+    return titles;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [[[query collectionSections] objectAtIndex:section] title];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    cell.textLabel.text = [[[displayItems objectAtIndex:[indexPath row]] representativeItem] valueForProperty:MPMediaItemPropertyArtist];
+    NSUInteger ndx = [[[query collectionSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+    
+    cell.textLabel.text = [[[displayItems objectAtIndex:ndx] representativeItem] valueForProperty:MPMediaItemPropertyArtist];
     cell.textLabel.textColor = [UIColor blackColor];
     cell.userInteractionEnabled = YES;
     

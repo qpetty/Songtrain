@@ -23,19 +23,16 @@
     return self;
 }
 
--(id)initWithQuery:(MPMediaQuery*)query
+-(id)initWithQuery:(MPMediaQuery*)mediaQuery
 {
     self = [self init];
     if (self) {
-        if (!query) {
-            query = [[MPMediaQuery alloc] init];
-            
-            /*
-            MPMediaPropertyPredicate *artistPredicate = [MPMediaPropertyPredicate predicateWithValue:@"The Alan Parsons Project" forProperty:MPMediaItemPropertyArtist];
-            [query addFilterPredicate:artistPredicate];
-             */
+        if (mediaQuery) {
+            query = mediaQuery;
         }
-        
+        else{
+            query = [[MPMediaQuery alloc] init];
+        }
         displayItems = [query items];
     }
     return self;
@@ -82,13 +79,29 @@
     return [super tableView:tableView numberOfRowsInSection:section];
 }
 
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    NSMutableArray *titles = [[NSMutableArray alloc] init];
+    
+    //[titles addObject:UITableViewIndexSearch];
+    
+    for (MPMediaQuerySection *section in query.itemSections) {
+        [titles addObject:section.title];
+    }
+    return titles;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [[[query itemSections] objectAtIndex:section] title];
+}
 
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
      UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
  
-     if ([[displayItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyAssetURL]) {
-         cell.textLabel.text = [[displayItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaItemPropertyTitle];
+     NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+     
+     if ([[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyAssetURL]) {
+         cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
          cell.textLabel.textColor = [UIColor blackColor];
          cell.userInteractionEnabled = YES;
      }

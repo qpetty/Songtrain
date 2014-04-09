@@ -27,7 +27,7 @@
 {
     self = [super init];
     if (self) {
-        MPMediaQuery *query = [MPMediaQuery playlistsQuery];
+        query = [MPMediaQuery playlistsQuery];
         
         [query setGroupingType:MPMediaGroupingPlaylist];
         [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInt:MPMediaTypeMusic] forProperty:MPMediaItemPropertyMediaType]];
@@ -52,21 +52,22 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [super numberOfSectionsInTableView:tableView];
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [super tableView:tableView numberOfRowsInSection:section];
+    return [displayItems count];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    cell.textLabel.text = [[displayItems objectAtIndex:[indexPath row]] valueForProperty:MPMediaPlaylistPropertyName];
+    NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+    
+    cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaPlaylistPropertyName];
     cell.textLabel.textColor = [UIColor blackColor];
     cell.userInteractionEnabled = YES;
     
