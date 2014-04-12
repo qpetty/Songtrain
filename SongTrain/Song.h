@@ -11,18 +11,17 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <CoreAudio/CoreAudioTypes.h>
 
-@interface Song : NSObject <NSCoding>
+@interface Song : NSObject <NSCoding>{
+    AudioStreamBasicDescription *inputASBD, *outputASBD;
+}
 
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *artistName;
 @property (strong, nonatomic) UIImage *albumImage;
-@property (strong, nonatomic) MCPeerID *host;
-//Maybe needed not sure yet
-@property (strong, nonatomic) MPMediaItem *media;
 @property (strong, nonatomic) NSURL *url;
 
-@property (nonatomic) AudioStreamBasicDescription *asbd;
+- (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
-@property (nonatomic) int songPosition;
-@property (nonatomic) int totalSongs;
+- (int)getMusicPackets:(UInt32)numOfPackets forBuffer:(AudioBufferList*)ioData;
+
 @end

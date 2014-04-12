@@ -25,7 +25,7 @@
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
-        [musicPlayer resetMusicPlayer];
+        //[musicPlayer resetMusicPlayer];
     }
     return self;
 }
@@ -88,7 +88,7 @@
         [self addToPlaylist];
     }
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
-        [musicPlayer skip];
+        //[musicPlayer skip];
     }
 }
 

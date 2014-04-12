@@ -8,7 +8,10 @@
 
 #import "QPMusicPlayerController.h"
 
-@implementation QPMusicPlayerController
+@implementation QPMusicPlayerController{
+    AUGraph graph;
+    AudioUnit outputUnit;
+}
 
 + (id)musicPlayer {
     static QPMusicPlayerController *sharedMusicPlayer = nil;
@@ -21,24 +24,18 @@
 
 - (id)init {
     if (self = [super init]) {
-        
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
         [audioSession setActive:YES error:nil];
         [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
         
-        sessionManager = [QPSessionManager sessionManager];
-        _playlist = [[NSMutableArray alloc] init];
-        pid = [sessionManager pid];
+        _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
+        //[self initOutputDescription];
+        //[self initAudioGraph];
         
-        MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
-        if (currentItem && sessionManager.currentRole == ServerConnection){
-            [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
-            self.currentSong = [_playlist objectAtIndex:0];
-            [self.delegate playListHasBeenUpdated];
-        }
+        _playlist = [[NSMutableArray alloc] init];
+        [self resetMusicPlayer];
         
         currentlyPlaying = NO;
-        streamer = [[QPInputStreamer alloc] init];
     }
     return self;
 }
@@ -47,195 +44,200 @@
 {
     [_playlist removeAllObjects];
     MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
-    if (currentItem && sessionManager.currentRole == ServerConnection){
-        [_playlist addSongFromMediaItemToList:currentItem withPeerID:pid];
-        self.currentSong = [_playlist objectAtIndex:0];
+    if (currentItem){
+        [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
+        _currentSong = [_playlist objectAtIndex:0];
         [self.delegate playListHasBeenUpdated];
     }
 }
 
-- (void)addSongsToPlaylist:(MPMediaItemCollection*)songs
-{
-    if (sessionManager.currentRole == ClientConnection) {
-        NSMutableArray *proposedSongs = [[NSMutableArray alloc] init];
-        for (MPMediaItem *item in songs.items){
-            [proposedSongs addSongFromMediaItemToList:item withPeerID:pid];
-        }
-        [sessionManager sendData:[SongtrainProtocol dataFromSongArray:proposedSongs] ToPeer:sessionManager.server];
-    }
-    else if (sessionManager.currentRole == ServerConnection) {
-        for (MPMediaItem *item in songs.items){
-            [_playlist addSongFromMediaItemToList:item withPeerID:pid];
-        }
-        [sessionManager sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:_playlist]];
-        [self.delegate playListHasBeenUpdated];
-    }
-    NSLog(@"Finished adding all songs to the playlist\n");
-}
-
-//Should only be called by the server
-- (void)addArrayOfSongsToPlaylist:(NSMutableArray *)songs
+- (void)addSongsToPlaylist:(NSMutableArray*)songs
 {
     for (Song *item in songs){
-        [_playlist addSongToList:item];
-        /*
-        NSLog(@"ASBD Sample Rate: %lf\n",item.asbd->mSampleRate);
-        NSLog(@"     Format ID: %8x\n",(unsigned int)item.asbd->mFormatID);
-        NSLog(@"     Format Flags: %u\n",(unsigned int)item.asbd->mFormatFlags);
-        NSLog(@"     Bytes per Packet: %u\n",(unsigned int)item.asbd->mBytesPerPacket);
-        NSLog(@"     Frames per Packet: %u\n",(unsigned int)item.asbd->mFramesPerPacket);
-        NSLog(@"     Bytes per Frame: %u\n",(unsigned int)item.asbd->mBytesPerFrame);
-        NSLog(@"     Channels per Frame: %u\n",(unsigned int)item.asbd->mChannelsPerFrame);
-        NSLog(@"     Bits per Channel: %u\n",(unsigned int)item.asbd->mBitsPerChannel);
-         */
+        [_playlist addObject:item];
     }
     [self.delegate playListHasBeenUpdated];
-}
 
-- (void)recievedPlaylistFromServer:(NSMutableArray *)songs
-{
-    _playlist = songs;
-    [self.delegate playListHasBeenUpdated];
-}
-
-- (void)removeSongsWithPeerID:(MCPeerID*)peerID
-{
-    int i = 0;
-    while (i < _playlist.count) {
-        //NSLog(@"Looking at song: %@", [playlist objectAtIndex:i]);
-        //NSLog(@"Host is: %@", [[playlist objectAtIndex:i] host]);
-        if ([peerID.displayName isEqualToString:[ (MCPeerID*)[[_playlist objectAtIndex:i] host] displayName]]) {
-            [_playlist removeObjectAtIndex:i];
-        }
-        else{
-            i++;
-        }
-    }
-}
-
-- (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong
-{
-    
-    if (audioOutStream) {
-        [audioOutStream stop];
-    }
-    audioOutStream = [[TDAudioOutputStreamer alloc] initWithOutputStream:outStream];
-    NSLog(@"Trying to play media item: %@\n", singleSong.media);
-    NSLog(@"URL of item: %@\n", [singleSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
-    NSLog(@"URL from song: %@\n", singleSong.url);
-    [audioOutStream streamAudioFromURL:singleSong.url];
-    [audioOutStream start];
-    
-    
-    /*
-    outStreamer = [[QPOutputStreamer alloc] init];
-    [outStreamer setOutputStream:outStream withURL:singleSong.url];
-    */
-}
-
-- (void)recievedStream:(NSInputStream*)inputStream
-{
-    /*
-    if (audioInStream) {
-        [audioInStream stop];
-    }
-    audioInStream = [[TDAudioInputStreamer alloc] initWithInputStream:inputStream];
-    audioInStream.delegate = self;
-    [audioInStream start];
-    NSLog(@"Received Stream\n");
-     */
-    
-    //streamer = [[QPInputStreamer alloc] init];
-    streamer.currentSong = self.currentSong;
-    [streamer setInputStream:inputStream];
+    NSLog(@"Finished adding all songs to the playlist\n");
 }
 
 - (void)play
 {
-    if (currentlyPlaying || !_playlist.count) {
-        //No songs in list
-        NSLog(@"Something is already playing\n");
-        NSLog(@"No Other songs to play\n");
-        return;
+    if ([_playlist firstObject]) {
+        OSErr err = AUGraphStart(graph);
+        NSAssert(err == noErr, @"Error starting graph.");
     }
+}
+
+- (void)initOutputDescription
+{
+    // Describe format
+	_audioFormat->mSampleRate			= 44100.00;
+    _audioFormat->mFormatID             = kAudioFormatLinearPCM;
+	_audioFormat->mFormatFlags          = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+	_audioFormat->mFramesPerPacket      = 1;
+	_audioFormat->mChannelsPerFrame     = 2;
+	_audioFormat->mBitsPerChannel		= 16;
+	_audioFormat->mBytesPerPacket		= 4;
+	_audioFormat->mBytesPerFrame		= 4;
+}
+
+- (void)initAudioGraph
+{
+    //the AUNode
+	AUNode outputNode;
     
-    self.currentSong = [_playlist firstObject];
-    [self.delegate playListHasBeenUpdated];
+	//create the graph
+	OSErr err = noErr;
+	err = NewAUGraph(&graph);
+	//throw an exception if the graph couldn't be created.
+	NSAssert(err == noErr, @"Error creating graph.");
     
-    NSLog(@"Trying to play: %@\n", self.currentSong);
+    //first describe the node, graphs are made up of nodes connected together, in this graph there is only one node.
+	//the descriptions for the components
+    //describe the node, this is our output node it is of type remoteIO
     
-    if (audioPlayer){
-        NSLog(@"Got rid of the Audioplayer\n");
-        [audioPlayer stop];
-        audioPlayer = nil;
-    }
+	AudioComponentDescription outputDescription;
+	outputDescription.componentFlags = 0;
+	outputDescription.componentFlagsMask = 0;
+	outputDescription.componentType = kAudioUnitType_Output;
+	outputDescription.componentSubType = kAudioUnitSubType_RemoteIO;
+	outputDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
     
-    if (audioInStream){
-        NSLog(@"Got rid of the Input Stream\n");
-        [audioInStream stop];
-        audioInStream = nil;
-    }
+	//add the node to the graph.
+	err = AUGraphAddNode(graph, &outputDescription, &outputNode);
+	//throw an exception if we couldnt add it
+	NSAssert(err == noErr, @"Error creating output node.");
     
-    if ([self.currentSong.host.displayName isEqualToString:[pid displayName]]) {
+	//there are three steps, we open the graph, initialise it and start it.
+	//when we open it (from the doco) the audio units belonging to the graph are open but not initialized. Specifically, no resource allocation occurs.
+	err = AUGraphOpen(graph);
+	NSAssert(err == noErr, @"Error opening graph.");
+	
+	//now that the graph is open we can get the AudioUnits that are in the nodes (or node in this case)
+	//get the output AudioUnit from the graph, we supply a node and a description and the graph creates the AudioUnit which
+	//we then request back from the graph, so we can set properties on it, such as its audio format
+	err = AUGraphNodeInfo(graph, outputNode, &outputDescription, &outputUnit);
+	NSAssert(err == noErr, @"Error getting output AudioUnit.");
+	
+	// Set up the master fader callback
+	AURenderCallbackStruct playbackCallbackStruct;
+	playbackCallbackStruct.inputProc = audioOutputCallback;
+	//set the reference to "self" this becomes *inRefCon in the playback callback
+	//as the callback is just a straight C method this is how we can pass it an objective-C class
+	playbackCallbackStruct.inputProcRefCon = (__bridge void*)self;
+	
+	//now set the callback on the output node, this callback gets called whenever the AUGraph needs samples
+	err = AUGraphSetNodeInputCallback(graph, outputNode, 0, &playbackCallbackStruct);
+	NSAssert(err == noErr, @"Error setting effects callback.");
+	
+	//so far we have not set any property descriptions on the outputAudioUnit, these describe the format of the audio being played
+	
+	//set the outputAudioUnit input properties
+	err = AudioUnitSetProperty(outputUnit,
+							   kAudioUnitProperty_StreamFormat,
+							   kAudioUnitScope_Input,
+							   0,
+							   &_audioFormat,
+							   sizeof(_audioFormat));
+	NSAssert(err == noErr, @"Error setting RIO input property.");
+	
+	//now lets check the format again
+	NSLog(@"AudioStreamBasicDescription has been set, notice you now see the sample rate.");
+	
+    
+    
+	UInt32 maxFramesPerSlice = 4096;
+	err = AudioUnitSetProperty(outputUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, &maxFramesPerSlice, sizeof(maxFramesPerSlice));
+	NSAssert(err == noErr, @"Error setting RIO input property.");
+    
+    /*
+     AudioStreamBasicDescription audioStreamBasicDescription;
+     UInt32 audioStreamBasicDescriptionsize = sizeof (AudioStreamBasicDescription);
+     
+     AudioUnitGetProperty(outputUnit,
+     kAudioUnitProperty_StreamFormat,
+     kAudioUnitScope_Input,
+     0, // input bus
+     &audioStreamBasicDescription,
+     &audioStreamBasicDescriptionsize);
+     NSLog (@"Output Audio Unit: User input AudioStreamBasicDescription\n Sample Rate: %f\n Channels: %ld\n Bits Per Channel: %ld",
+     audioStreamBasicDescription.mSampleRate, audioStreamBasicDescription.mChannelsPerFrame,
+     audioStreamBasicDescription.mBitsPerChannel);
+     */
+    
+    
+	//we then initiailze the graph, this (from the doco):
+	//Calling this function calls the AudioUnitInitialize function on each opened node or audio unit that is involved in a interaction.
+	//If a node is not involved, it is initialized after it becomes involved in an interaction.
+	err = AUGraphInitialize(graph);
+	NSAssert(err == noErr, @"Error initializing graph.");
+	
+	//this prints out a description of the graph, showing the nodes and connections, really handy.
+	//this shows in the console (Command-Shift-R to see it)
+	CAShow(graph);
+	
+	//the final step, as soon as this is run, the graph will start requesting samples. some people would put this on the play button
+	//but ive found that sometimes i get a bit of a pause so i let the callback get called from the start and only start filling the buffer
+	//with samples when the play button is hit.
+	//the doco says :
+	//this function starts rendering by starting the head node of an audio processing graph. The graph must be initialized before it can be started.
+	//err = AUGraphStart(graph);
+	//NSAssert(err == noErr, @"Error starting graph.");
+}
+
+static OSStatus audioOutputCallback(void *inRefCon,
+                                    AudioUnitRenderActionFlags *ioActionFlags,
+                                    const AudioTimeStamp *inTimeStamp,
+                                    UInt32 inBusNumber,
+                                    UInt32 inNumberFrames,
+                                    AudioBufferList *ioData) {
+	
+	
+	QPMusicPlayerController *audioPlayback = (__bridge QPMusicPlayerController *)(inRefCon);
+    
+	OSStatus err = -1;
+	//cast the buffer as an UInt32, cause our samples are in that format
+	//UInt32 *frameBuffer = ioData->mBuffers[0].mData;
+    
+    //NSLog(@"Is main Thread %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
+    
+	if (inBusNumber == 0 && audioPlayback->currentlyPlaying){
+		//loop through the buffer and fill the frames, this is really inefficient
+		//should be using a memcpy, but we will leave that for later
+        //NSLog(@"inNumberFrames: %d\n", (unsigned int)inNumberFrames);
         
-        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[[self.currentSong media] valueForProperty:MPMediaItemPropertyAssetURL] error:nil];
-        audioPlayer.delegate = self;
-        [audioPlayer play];
+        UInt32 numPacketsNeeded = inNumberFrames / audioPlayback.audioFormat->mFramesPerPacket;
+        //NSLog(@"Need %d packets and possibly wrong division: %d\n", numPacketsNeeded, inNumberFrames / audioPlayback->outputDescription->mFramesPerPacket);
         
-        timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimeLeft) userInfo:nil repeats:YES];
+        //NSLog(@"mData: %d\n", ioData->mBuffers[0].mData);
+        //NSLog(@"AudioBufferList => Number of Buffers: %d First buffer size %d\n", ioData->mNumberBuffers, ioData->mBuffers[0].mDataByteSize);
         
-        //NSLog(@"Sending meida item: %@\n", nextSong.media);
-        //NSLog(@"URL of item: %@\n", [nextSong.media valueForProperty:MPMediaItemPropertyAssetURL]);
+        //NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
-        NSLog(@"Beginning Local Song\n");
+        err = [audioPlayback.currentSong getMusicPackets:numPacketsNeeded forBuffer:ioData];
+        
+        //err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
+        //NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
+        
+        NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
+	}
+    
+	if (err) {
+        for (int i = 0; i < ioData->mBuffers[0].mDataByteSize; i++) {
+            *((uint8_t*)(ioData->mBuffers[0].mData + i)) = 0;
+        }
     }
-    else{
-        [sessionManager sendData:[SongtrainProtocol dataFromMedia:self.currentSong] ToPeer:self.currentSong.host];
-        NSLog(@"Playing Song from %@\n", self.currentSong.host.displayName);
+	//dodgy return :)
+	return 0;
+}
+
+- (void)dealloc
+{
+    if (_audioFormat){
+        free(_audioFormat);
+        _audioFormat = NULL;
     }
-    currentlyPlaying = YES;
 }
 
-- (void)pause
-{
-    if (audioPlayer)
-        [audioPlayer pause];
-    else if (audioInStream)
-        [audioInStream pause];
-}
-
-- (void)resume
-{
-    if (audioPlayer)
-        [audioPlayer play];
-    else if (audioInStream)
-        [audioInStream resume];
-}
-
-- (void)skip
-{
-    [self finishedPlayingSong];
-}
-
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
-{
-    [self finishedPlayingSong];
-}
-
-- (void)finishedPlayingSong
-{
-    NSLog(@"Finished Song and trying to play next\n");
-    [_playlist removeObjectAtIndex:0];
-    currentlyPlaying = NO;
-    [self play];
-    [self.delegate playListHasBeenUpdated];
-}
-
-- (void)updateTimeLeft
-{
-    NSRange range;
-    range.length = audioPlayer.duration;
-    range.location = audioPlayer.currentTime;
-    self.panel.songDuration = range;
-}
 @end

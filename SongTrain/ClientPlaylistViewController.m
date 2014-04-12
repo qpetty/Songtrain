@@ -48,7 +48,7 @@
 
 - (void)connectedToPeer:(MCPeerID *)peerID
 {
-    [musicPlayer resetMusicPlayer];
+    //musicPlayer resetMusicPlayer];
 }
 
 - (void)disconnectedFromPeer:(MCPeerID *)peerID

@@ -15,8 +15,6 @@
     Song *nowPlayingSong = [[Song alloc] init];
     nowPlayingSong.title = [item valueForProperty:MPMediaItemPropertyTitle];
     nowPlayingSong.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-    nowPlayingSong.host = pid;
-    nowPlayingSong.media = item;
     nowPlayingSong.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
     /*
     MPMediaItemArtwork *albumItem = [item valueForProperty:MPMediaItemPropertyArtwork];
@@ -47,7 +45,7 @@
         NSLog(@"     Channels per Frame: %u\n",(unsigned int)bobTheDesc->mChannelsPerFrame);
         NSLog(@"     Bits per Channel: %u\n",(unsigned int)bobTheDesc->mBitsPerChannel);
         
-        memcpy(nowPlayingSong.asbd, bobTheDesc, sizeof(AudioStreamBasicDescription));
+        //memcpy(nowPlayingSong.asbd, bobTheDesc, sizeof(AudioStreamBasicDescription));
     }
     
     [self addObject:nowPlayingSong];

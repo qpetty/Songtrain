@@ -94,7 +94,7 @@
 
 - (void)disconnectedFromPeer:(MCPeerID*)peerID
 {
-    [musicPlayer removeSongsWithPeerID:peerID];
+    //[musicPlayer removeSongsWithPeerID:peerID];
     dispatch_async(dispatch_get_main_queue(), ^{
         [mainTableView reloadData];
     });

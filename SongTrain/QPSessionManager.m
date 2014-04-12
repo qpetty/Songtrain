@@ -97,7 +97,6 @@
 -(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Got Stream: %@  from %@\n", streamName, [peerID displayName]);
-    [[QPMusicPlayerController musicPlayer] recievedStream:stream];
 }
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
@@ -184,18 +183,18 @@
     
     if (_currentRole == ServerConnection) {
         NSLog(@"Sending ACK from server\n");
-        [[QPMusicPlayerController musicPlayer] addArrayOfSongsToPlaylist:songArray];
+        //[[QPMusicPlayerController musicPlayer] addArrayOfSongsToPlaylist:songArray];
         [self sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:[[QPMusicPlayerController musicPlayer] playlist]]];
     }
     else if (_currentRole == ClientConnection) {
         NSLog(@"Got Playlist from server\n");
-        [[QPMusicPlayerController musicPlayer] recievedPlaylistFromServer:songArray];
+        //[[QPMusicPlayerController musicPlayer] recievedPlaylistFromServer:songArray];
     }
 }
 
 - (void)requestToStartStreaming:(Song*)song
 {
-    [[QPMusicPlayerController musicPlayer] fillOutStream:[mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];
+    //[[QPMusicPlayerController musicPlayer] fillOutStream:[mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];
 }
 - (void)requestToStopStreaming
 {

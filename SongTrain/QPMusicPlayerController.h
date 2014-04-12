@@ -9,12 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-#import "TDAudioStreamer.h"
-#import "NSMutableArray+Playlist.h"
-#import "QPSessionManager.h"
-
-#import "QPInputStreamer.h"
-#import "QPOutputStreamer.h"
+#import "LocalSong.h"
 #import "ControlPanel.h"
 
 @protocol QPMusicPlayerControllerDelegate <NSObject>
@@ -23,38 +18,21 @@
 
 @end
 
-@interface QPMusicPlayerController : NSObject <AVAudioPlayerDelegate, TDAudioInputStreamDelegate>{
-    QPSessionManager *sessionManager;
-    MCPeerID *pid;
-    
-    TDAudioInputStreamer *audioInStream;
-    TDAudioOutputStreamer *audioOutStream;
-    AVAudioPlayer *audioPlayer;
-    
-    QPInputStreamer *streamer;
-    QPOutputStreamer *outStreamer;
-    
+@interface QPMusicPlayerController : NSObject{
     NSTimer *timer;
     BOOL currentlyPlaying;
 }
 
 @property (weak, nonatomic) id <QPMusicPlayerControllerDelegate> delegate;
-@property (nonatomic, retain) Song *currentSong;
+@property (nonatomic, retain, readonly) Song *currentSong;
 @property (nonatomic, retain) NSMutableArray *playlist;
 @property (weak, nonatomic) ControlPanel *panel;
 
+@property (nonatomic) AudioStreamBasicDescription *audioFormat;
+
 + (id)musicPlayer;
+- (void)addSongsToPlaylist:(NSMutableArray*)songs;
 
-- (void)addSongsToPlaylist:(MPMediaItemCollection*)songs;
-- (void)addArrayOfSongsToPlaylist:(NSMutableArray *)songs;
-- (void)recievedPlaylistFromServer:(NSMutableArray *)songs;
-
-- (void)resetMusicPlayer;
-
-- (void)removeSongsWithPeerID:(MCPeerID*)peerID;
-
-- (void)recievedStream:(NSInputStream*)inputStream;
-- (void)fillOutStream:(NSOutputStream*)outStream FromSong:(Song*)singleSong;
-
-- (void)skip;
+- (void)play;
+//- (void)skip;
 @end
