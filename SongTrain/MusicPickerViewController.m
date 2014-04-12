@@ -34,16 +34,19 @@
     
     PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
     playListViewController.title = @"Playlists";
+    playListViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     UINavigationController *playlists = [[UINavigationController alloc] initWithRootViewController:playListViewController];
     playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
     
     ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
     artistViewController.title = @"Artists";
+    artistViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     UINavigationController *artists = [[UINavigationController alloc] initWithRootViewController:artistViewController];
     artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
+    songViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     UINavigationController *songs = [[UINavigationController alloc] initWithRootViewController:songViewController];
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
     
