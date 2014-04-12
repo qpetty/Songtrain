@@ -29,8 +29,8 @@
         [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
         
         _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
-        //[self initOutputDescription];
-        //[self initAudioGraph];
+        [self initOutputDescription];
+        [self initAudioGraph];
         
         _playlist = [[NSMutableArray alloc] init];
         [self resetMusicPlayer];
@@ -138,8 +138,8 @@
 							   kAudioUnitProperty_StreamFormat,
 							   kAudioUnitScope_Input,
 							   0,
-							   &_audioFormat,
-							   sizeof(_audioFormat));
+							   _audioFormat,
+							   sizeof(AudioStreamBasicDescription));
 	NSAssert(err == noErr, @"Error setting RIO input property.");
 	
 	//now lets check the format again

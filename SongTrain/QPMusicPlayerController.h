@@ -28,7 +28,7 @@
 @property (nonatomic, retain) NSMutableArray *playlist;
 @property (weak, nonatomic) ControlPanel *panel;
 
-@property (nonatomic) AudioStreamBasicDescription *audioFormat;
+@property (nonatomic, readonly) AudioStreamBasicDescription *audioFormat;
 
 + (id)musicPlayer;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
