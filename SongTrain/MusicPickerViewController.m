@@ -8,7 +8,9 @@
 
 #import "MusicPickerViewController.h"
 
-@interface MusicPickerViewController ()
+@interface MusicPickerViewController (){
+    NSMutableArray *allMediaItems;
+}
 
 @end
 
@@ -27,14 +29,23 @@
 {
     [super viewDidLoad];
     
-    PlaylistTabViewController *playlists = [[PlaylistTabViewController alloc] init];
-    playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Playlists" image:nil selectedImage:nil];
+    self.view.backgroundColor = [UIColor whiteColor];
+    allMediaItems = [[NSMutableArray alloc] init];
     
-    ArtistTabViewController *artists = [[ArtistTabViewController alloc] init];
-    artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Artists" image:nil selectedImage:nil];
+    PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
+    playListViewController.title = @"Playlists";
+    UINavigationController *playlists = [[UINavigationController alloc] initWithRootViewController:playListViewController];
+    playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
     
-    SongTabViewController *songs = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
-    songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Songs" image:nil selectedImage:nil];
+    ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
+    artistViewController.title = @"Artists";
+    UINavigationController *artists = [[UINavigationController alloc] initWithRootViewController:artistViewController];
+    artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
+    
+    SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
+    songViewController.title = @"Songs";
+    UINavigationController *songs = [[UINavigationController alloc] initWithRootViewController:songViewController];
+    songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
     
     NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, nil];
     
@@ -45,6 +56,31 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)addItem:(MPMediaItem*)item
+{
+    [allMediaItems addObject:item];
+}
+
+- (void)removeItem:(MPMediaItem*)item
+{
+    [allMediaItems removeObject:item];
+}
+
+- (BOOL)isItemSelected:(MPMediaItem*)item
+{
+    return [allMediaItems containsObject:item];
+}
+
+- (void)done
+{
+    if ([allMediaItems count]) {
+        [self.delegate mediaPicker:(MPMediaPickerController*)self didPickMediaItems:[MPMediaItemCollection collectionWithItems:allMediaItems]];
+    }
+    else {
+        [self.delegate mediaPickerDidCancel:(MPMediaPickerController*)self];
+    }
 }
 
 /*

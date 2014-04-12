@@ -75,6 +75,22 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    MPMediaQuery *artistQuery = [[MPMediaQuery alloc] init];
+    NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+    NSString *playlistName = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaPlaylistPropertyName];
+    
+    [artistQuery addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:playlistName forProperty:MPMediaPlaylistPropertyName]];
+    //[artistQuery setGroupingType:MPMediaGroupingAlbum];
+    
+    SongTabViewController *songsView = [[SongTabViewController alloc] initWithQuery:artistQuery];
+    songsView.title = playlistName;
+    [self.navigationController pushViewController:songsView animated:YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 /*
 #pragma mark - Navigation
 

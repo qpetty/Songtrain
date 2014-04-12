@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TabViewController.h"
+#import "SongTabViewController.h"
 
 @interface ArtistTabViewController : TabViewController
 

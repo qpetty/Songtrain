@@ -12,6 +12,18 @@
 #import "PlaylistTabViewController.h"
 #import "ArtistTabViewController.h"
 
+@class MusicPickerViewController;
+
+@protocol MusicPickerViewController <UITabBarControllerDelegate, MPMediaPickerControllerDelegate>
+
+@end
+
 @interface MusicPickerViewController : UITabBarController
+
+@property (weak, nonatomic) id <MusicPickerViewController> delegate;
+
+- (void)addItem:(MPMediaItem*)item;
+- (void)removeItem:(MPMediaItem*)item;
+- (BOOL)isItemSelected:(MPMediaItem*)item;
 
 @end

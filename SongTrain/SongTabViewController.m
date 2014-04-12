@@ -104,6 +104,13 @@
          cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
          cell.textLabel.textColor = [UIColor blackColor];
          cell.userInteractionEnabled = YES;
+         if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
+             cell.backgroundColor = [UIColor greenColor];
+         }
+         else {
+             cell.backgroundColor = [UIColor whiteColor];
+         }
+         //NSLog(@"%@\n", [((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]] ? @"YES" : @"NO");
      }
      else{
          cell.textLabel.text = @"DRM shit";
@@ -114,6 +121,18 @@
      return cell;
  }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+    
+    if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
+        [((MusicPickerViewController*)self.tabBarController) removeItem:[displayItems objectAtIndex:ndx]];
+    }
+    else {
+        [((MusicPickerViewController*)self.tabBarController) addItem:[displayItems objectAtIndex:ndx]];
+    }
+    [tableView reloadData];
+}
 
 /*
 #pragma mark - Navigation
