@@ -13,6 +13,7 @@
 
 @end
 
+
 @implementation PlaylistViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -26,6 +27,8 @@
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
         [musicPlayer resetMusicPlayer];
+        [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
+
     }
     return self;
 }
@@ -45,6 +48,16 @@
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     albumArtwork.delegate = self;
     [self.view addSubview:albumArtwork];
+    
+    // Tracks and Passengers selector
+    tableviewMenu = [[UISegmentedControl alloc] initWithItems:@[@"Tracks", @"Passengers"]];
+    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 3, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 10, self.view.bounds.size.width - 6, 20);
+    [tableviewMenu setSelectedSegmentIndex:0];
+    [tableviewMenu setTintColor:UIColorFromRGB(0x6F95D3)];
+    [self.view addSubview:tableviewMenu];
+    
+
+    [tableviewMenu addTarget:self action:@selector(tracksAndPassengersSegment) forControlEvents:UIControlEventValueChanged];
     
     //Initialize Media picker
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
@@ -73,8 +86,15 @@
     panel.delegate = self;
     [self.view addSubview:panel];
     
+
+
     // Allow musicplayercontroller to update control panel
     musicPlayer.panel = panel;
+}
+
+- (void)tracksAndPassengersSegment
+{
+    [mainTableView reloadData];
 }
 
 - (void)addToPlaylist
@@ -122,6 +142,19 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
+    if (tableviewMenu.selectedSegmentIndex) {
+        
+        if (sessionManager.connectedPeersArray.count) {
+            cell.textLabel.text = [[sessionManager.connectedPeersArray objectAtIndex:[indexPath row]] displayName];
+        }
+        else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.textLabel.text = @"No Passengers in Train";
+            cell.detailTextLabel.text = @"";
+        }
+        return cell;
+        
+    }
     if (musicPlayer.playlist.count > 1){
         cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] title];
         cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] artistName];
@@ -151,6 +184,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (tableviewMenu.selectedSegmentIndex) {
+        return sessionManager.peerArray.count > 1 ? sessionManager.peerArray.count - 1 : 1;
+    }
+
     if(musicPlayer.playlist.count > 1)
         return musicPlayer.playlist.count - 1;
     return 1;
@@ -170,4 +207,10 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [mainTableView reloadData];
+}
+
 @end

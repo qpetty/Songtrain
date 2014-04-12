@@ -49,12 +49,37 @@
     [self.navigationController.navigationBar addSubview:djButton];
     [djButton setContentMode:UIViewContentModeScaleAspectFit];
 
-    [djButton setImage:[UIImage imageNamed:@"dj_click"] forState:UIControlStateNormal];
-    [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateSelected];
+    [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
+    [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
+    [djButton addTarget:self action:@selector(djMode) forControlEvents:UIControlEventTouchUpInside];
+    setEditing = NO;
 
     //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
+    
+    [tableviewMenu addTarget:self action:@selector(turnOffEditOnUISegementSwitch) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)djMode
+{
+    if (tableviewMenu.selectedSegmentIndex) {
+        if (sessionManager.connectedPeersArray.count) {
+            setEditing = !setEditing;
+            [mainTableView setEditing:setEditing];
+        }
+    } else {
+        if (musicPlayer.playlist.count) {
+            setEditing = !setEditing;
+            [mainTableView setEditing:setEditing];
+        }
+    }
+
+}
+
+- (void)turnOffEditOnUISegementSwitch
+{
+    [mainTableView setEditing:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -99,5 +124,7 @@
         [mainTableView reloadData];
     });
 }
+
+
 
 @end

@@ -28,6 +28,8 @@
         
         _peerArray = [[NSMutableArray alloc] init];
         
+        _connectedPeersArray = [[NSMutableArray alloc] init];
+        
         mainSession = [[MCSession alloc] initWithPeer:self.pid];
         mainSession.delegate = self;
         
@@ -81,6 +83,7 @@
         if (_currentRole == ClientConnection) {
             _server = peerID;
         }
+        [[self mutableArrayValueForKey:@"connectedPeersArray"] addObject:peerID];
         [self.delegate connectedToPeer:peerID];
   
     } else if (state == MCSessionStateNotConnected) {
@@ -90,6 +93,7 @@
             _server = nil;
             _currentRole = NotConnected;
         }
+        [[self mutableArrayValueForKey:@"connectedPeersArray"] removeObject:peerID];
         [self.delegate disconnectedFromPeer:peerID];
     }
 }

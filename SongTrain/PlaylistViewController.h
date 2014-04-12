@@ -35,6 +35,7 @@
     InfoViewController *infoView;
     GrayTableView *mainTableView;
     ControlPanel *panel;
+    UISegmentedControl *tableviewMenu;
     
     UIButton *addToList;
 }

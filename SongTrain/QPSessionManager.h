@@ -42,6 +42,7 @@ enum CurrentConnectionRole : NSInteger {
 @property (atomic, retain, readonly) MCPeerID *server;
 @property (atomic, retain, readonly) NSMutableArray *peerArray;
 @property (atomic, assign, readonly) NSUInteger currentRole;
+@property (atomic, retain) NSMutableArray *connectedPeersArray;
 
 + (id)sessionManager;
 

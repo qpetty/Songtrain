@@ -11,6 +11,7 @@
 
 @interface ServerPlaylistViewController : PlaylistViewController {
     UIButton *playButton, *skipButton, *djButton;
+    BOOL setEditing;
 }
 
 @end
