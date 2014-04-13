@@ -26,7 +26,7 @@
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
-        [musicPlayer resetMusicPlayer];
+        //[musicPlayer resetMusicPlayer];
         [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
 
     }
