@@ -10,7 +10,7 @@
 #import "PlaylistViewController.h"
 
 @interface ServerPlaylistViewController : PlaylistViewController {
-    UIButton *playButton, *skipButton, *djButton;
+    UIButton *skipButton, *djButton;
     BOOL setEditing;
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "ControlPanel.h"
+#import "QPMusicPlayerController.h"
 
 #define BUTTON_SIZE 30
 #define LABEL_SIZE 100
@@ -59,15 +60,27 @@
         
         //Create Time Label
         
-        location = CGRectMake((frame.size.width / 2.0) - (LABEL_SIZE / 2.0),
+        location = CGRectMake((frame.size.width  / 4.0) - (LABEL_SIZE / 8.0),
                               (frame.size.height / 2.0) - (BUTTON_SIZE / 2.0),
                               LABEL_SIZE,
                               BUTTON_SIZE);
+
         timeLabel = [[UILabel alloc] initWithFrame:location];
-        timeLabel.text = @"0:00-0:00";
+        timeLabel.text = @"0:32\n4:21";
+        timeLabel.adjustsFontSizeToFitWidth = YES;
         timeLabel.textColor = [UIColor whiteColor];
+        timeLabel.numberOfLines = 0;
         timeLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:timeLabel];
+        
+        location = CGRectMake((frame.size.width  * 3 / 4.0) - (LABEL_SIZE * 7 / 8.0),
+                              (frame.size.height   / 2.0) - (BUTTON_SIZE / 2.0),
+                              LABEL_SIZE,
+                              BUTTON_SIZE);
+        playButton = [[UIButton alloc] initWithFrame:location];
+        [playButton setTitle:@"Play" forState:UIControlStateNormal];
+        [playButton addTarget:[QPMusicPlayerController musicPlayer] action:@selector(play) forControlEvents:UIControlEventTouchDown];
+        [self addSubview:playButton];
     }
     return self;
 }
@@ -86,7 +99,7 @@
         currentMinutes++;
         songDuration.location -= 60;
     }
-    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu - %d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
+    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu\n%d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
 }
 
 @end

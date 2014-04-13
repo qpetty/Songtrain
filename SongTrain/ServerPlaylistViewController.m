@@ -13,7 +13,7 @@
 #define BUTTON_SIZE 30
 
 @interface ServerPlaylistViewController ()
-
+@property BOOL djEditing;
 @end
 
 @implementation ServerPlaylistViewController
@@ -34,10 +34,7 @@
     
     CGRect location = CGRectMake(0, albumArtwork.frame.origin.y + albumArtwork.frame.size.height, 50, 50);
     
-    playButton = [[UIButton alloc] initWithFrame:location];
-    [playButton setTitle:@"Play" forState:UIControlStateNormal];
-    [playButton addTarget:musicPlayer action:@selector(play) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:playButton];
+    self.djEditing = NO;
     
     // Add Dj button for host, I think that's the only person who should have it, right?
     // TODO: reposition the dj button, alter size, ui changes and what not
@@ -61,6 +58,18 @@
 
 - (void)djMode
 {
+    if (!self.djEditing) {
+        [UIView animateWithDuration:0.5 animations:^{
+            djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+        }];
+        self.djEditing = !self.djEditing;
+    } else {
+        [UIView animateWithDuration:0.5 animations:^{
+            djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                        self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+        }];
+        self.djEditing = !self.djEditing;
+    }
     if (tableviewMenu.selectedSegmentIndex) {
         if (sessionManager.connectedPeersArray.count) {
             setEditing = !setEditing;
