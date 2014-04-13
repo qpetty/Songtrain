@@ -24,9 +24,12 @@
 
 #import "TDAudioStreamer.h"
 
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate>{
+#import "MusicPickerViewController.h"
+
+@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate, MusicPickerViewController>{
     
-    MPMediaPickerController *picker;
+    //MPMediaPickerController *picker;
+    MusicPickerViewController *picker;
     
     QPMusicPlayerController *musicPlayer;
     QPSessionManager *sessionManager;

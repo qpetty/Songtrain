@@ -55,6 +55,11 @@
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
 		69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48A318F9DDE700E48B98 /* LocalSong.m */; };
+		69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */; };
+		69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */; };
+		69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */; };
+		69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BE18FA09E500E48B98 /* SongTabViewController.m */; };
+		69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48C018FA09E500E48B98 /* TabViewController.m */; };
 		CA7044AA18A6D7D7009B6A1D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044A918A6D7D7009B6A1D /* splash.png */; };
 		CA7044AC18A6D80F009B6A1D /* name.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044AB18A6D80F009B6A1D /* name.png */; };
 		CAA2F08D18AC256600E24534 /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA2F08C18AC256600E24534 /* Animator.m */; };
@@ -156,6 +161,16 @@
 		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
 		69FF48A218F9DDE700E48B98 /* LocalSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSong.h; sourceTree = "<group>"; };
 		69FF48A318F9DDE700E48B98 /* LocalSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSong.m; sourceTree = "<group>"; };
+		69FF48B718FA09E500E48B98 /* ArtistTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistTabViewController.h; sourceTree = "<group>"; };
+		69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistTabViewController.m; sourceTree = "<group>"; };
+		69FF48B918FA09E500E48B98 /* MusicPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicPickerViewController.h; sourceTree = "<group>"; };
+		69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicPickerViewController.m; sourceTree = "<group>"; };
+		69FF48BB18FA09E500E48B98 /* PlaylistTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistTabViewController.h; sourceTree = "<group>"; };
+		69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistTabViewController.m; sourceTree = "<group>"; };
+		69FF48BD18FA09E500E48B98 /* SongTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SongTabViewController.h; sourceTree = "<group>"; };
+		69FF48BE18FA09E500E48B98 /* SongTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongTabViewController.m; sourceTree = "<group>"; };
+		69FF48BF18FA09E500E48B98 /* TabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabViewController.h; sourceTree = "<group>"; };
+		69FF48C018FA09E500E48B98 /* TabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabViewController.m; sourceTree = "<group>"; };
 		CA7044A918A6D7D7009B6A1D /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		CA7044AB18A6D80F009B6A1D /* name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = name.png; sourceTree = "<group>"; };
 		CAA2F08B18AC256600E24534 /* Animator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animator.h; sourceTree = "<group>"; };
@@ -249,6 +264,7 @@
 				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
 				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
 				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
+				69FF48B618FA09E500E48B98 /* MusicPicker */,
 				6933394118A9ABEE001A7AC8 /* Network Data */,
 				6970F4C118A6A0BE00EAB82A /* AudioStreamer */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
@@ -401,6 +417,23 @@
 			name = "UI Views";
 			sourceTree = "<group>";
 		};
+		69FF48B618FA09E500E48B98 /* MusicPicker */ = {
+			isa = PBXGroup;
+			children = (
+				69FF48B718FA09E500E48B98 /* ArtistTabViewController.h */,
+				69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */,
+				69FF48B918FA09E500E48B98 /* MusicPickerViewController.h */,
+				69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */,
+				69FF48BB18FA09E500E48B98 /* PlaylistTabViewController.h */,
+				69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */,
+				69FF48BD18FA09E500E48B98 /* SongTabViewController.h */,
+				69FF48BE18FA09E500E48B98 /* SongTabViewController.m */,
+				69FF48BF18FA09E500E48B98 /* TabViewController.h */,
+				69FF48C018FA09E500E48B98 /* TabViewController.m */,
+			);
+			path = MusicPicker;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -503,8 +536,11 @@
 			files = (
 				69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */,
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
+				69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */,
 				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
+				69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */,
 				6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */,
+				69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */,
 				6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */,
 				6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
@@ -518,6 +554,7 @@
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
 				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
+				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
 				6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
@@ -527,6 +564,7 @@
 				6970F4E318A6A0BE00EAB82A /* TDAudioStream.m in Sources */,
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
+				69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */,
 				6970F4E418A6A0BE00EAB82A /* TDAudioInputStreamer.m in Sources */,
 				6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */,
 				6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */,

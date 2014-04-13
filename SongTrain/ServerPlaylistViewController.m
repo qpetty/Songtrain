@@ -32,8 +32,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    picker.delegate = self;
-    
     CGRect location = CGRectMake(0, albumArtwork.frame.origin.y + albumArtwork.frame.size.height, 50, 50);
     
     playButton = [[UIButton alloc] initWithFrame:location];
@@ -77,7 +75,13 @@
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
-    [musicPlayer addSongsToPlaylist:mediaItemCollection];
+    
+    NSMutableArray *newSongs = [[NSMutableArray alloc] init];
+    for (MPMediaItem *item in mediaItemCollection.items) {
+        [newSongs addObject:[[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item]];
+    }
+    
+    [musicPlayer addSongsToPlaylist:newSongs];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
