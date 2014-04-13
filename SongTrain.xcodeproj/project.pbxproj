@@ -44,7 +44,9 @@
 		6970F4ED18A6ABFA00EAB82A /* SongtrainProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */; };
 		6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */; };
 		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
+		6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */; };
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
+		69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */; };
 		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
 		69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA718A038FA00483DD8 /* CoreAudio.framework */; };
 		69BE4FB518A1ABBC00483DD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */; };
@@ -52,6 +54,12 @@
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
+		69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48A318F9DDE700E48B98 /* LocalSong.m */; };
+		69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */; };
+		69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */; };
+		69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */; };
+		69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BE18FA09E500E48B98 /* SongTabViewController.m */; };
+		69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48C018FA09E500E48B98 /* TabViewController.m */; };
 		CA7044AA18A6D7D7009B6A1D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044A918A6D7D7009B6A1D /* splash.png */; };
 		CA7044AC18A6D80F009B6A1D /* name.png in Resources */ = {isa = PBXBuildFile; fileRef = CA7044AB18A6D80F009B6A1D /* name.png */; };
 		CAA2F08D18AC256600E24534 /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA2F08C18AC256600E24534 /* Animator.m */; };
@@ -133,8 +141,12 @@
 		6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Playlist.m"; sourceTree = "<group>"; };
 		6970F4F718A8514B00EAB82A /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
 		6970F4F818A8514B00EAB82A /* ControlPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlPanel.m; sourceTree = "<group>"; };
+		6976E0C418BB35D900A919B3 /* QPOutputStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPOutputStreamer.h; sourceTree = "<group>"; };
+		6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPOutputStreamer.m; sourceTree = "<group>"; };
 		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
+		69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
+		69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPCircularBuffer.h; sourceTree = "<group>"; };
 		69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		69BE4FA718A038FA00483DD8 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -147,6 +159,18 @@
 		69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPlaylistViewController.m; sourceTree = "<group>"; };
 		69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPlaylistViewController.h; sourceTree = "<group>"; };
 		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
+		69FF48A218F9DDE700E48B98 /* LocalSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSong.h; sourceTree = "<group>"; };
+		69FF48A318F9DDE700E48B98 /* LocalSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSong.m; sourceTree = "<group>"; };
+		69FF48B718FA09E500E48B98 /* ArtistTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistTabViewController.h; sourceTree = "<group>"; };
+		69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistTabViewController.m; sourceTree = "<group>"; };
+		69FF48B918FA09E500E48B98 /* MusicPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicPickerViewController.h; sourceTree = "<group>"; };
+		69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicPickerViewController.m; sourceTree = "<group>"; };
+		69FF48BB18FA09E500E48B98 /* PlaylistTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistTabViewController.h; sourceTree = "<group>"; };
+		69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistTabViewController.m; sourceTree = "<group>"; };
+		69FF48BD18FA09E500E48B98 /* SongTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SongTabViewController.h; sourceTree = "<group>"; };
+		69FF48BE18FA09E500E48B98 /* SongTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongTabViewController.m; sourceTree = "<group>"; };
+		69FF48BF18FA09E500E48B98 /* TabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabViewController.h; sourceTree = "<group>"; };
+		69FF48C018FA09E500E48B98 /* TabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabViewController.m; sourceTree = "<group>"; };
 		CA7044A918A6D7D7009B6A1D /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		CA7044AB18A6D80F009B6A1D /* name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = name.png; sourceTree = "<group>"; };
 		CAA2F08B18AC256600E24534 /* Animator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animator.h; sourceTree = "<group>"; };
@@ -234,8 +258,13 @@
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
 				6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */,
 				6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */,
+				6976E0C418BB35D900A919B3 /* QPOutputStreamer.h */,
+				6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */,
 				6933394518A9B487001A7AC8 /* QPSessionManager.h */,
 				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
+				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
+				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
+				69FF48B618FA09E500E48B98 /* MusicPicker */,
 				6933394118A9ABEE001A7AC8 /* Network Data */,
 				6970F4C118A6A0BE00EAB82A /* AudioStreamer */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
@@ -292,6 +321,8 @@
 				6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */,
 				697CF6AA1898794F00CF4DC7 /* Song.h */,
 				697CF6AB1898794F00CF4DC7 /* Song.m */,
+				69FF48A218F9DDE700E48B98 /* LocalSong.h */,
+				69FF48A318F9DDE700E48B98 /* LocalSong.m */,
 				6970F4E818A6A90000EAB82A /* SingleMessage.h */,
 				6970F4E918A6A90000EAB82A /* SingleMessage.m */,
 			);
@@ -386,6 +417,23 @@
 			name = "UI Views";
 			sourceTree = "<group>";
 		};
+		69FF48B618FA09E500E48B98 /* MusicPicker */ = {
+			isa = PBXGroup;
+			children = (
+				69FF48B718FA09E500E48B98 /* ArtistTabViewController.h */,
+				69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */,
+				69FF48B918FA09E500E48B98 /* MusicPickerViewController.h */,
+				69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */,
+				69FF48BB18FA09E500E48B98 /* PlaylistTabViewController.h */,
+				69FF48BC18FA09E500E48B98 /* PlaylistTabViewController.m */,
+				69FF48BD18FA09E500E48B98 /* SongTabViewController.h */,
+				69FF48BE18FA09E500E48B98 /* SongTabViewController.m */,
+				69FF48BF18FA09E500E48B98 /* TabViewController.h */,
+				69FF48C018FA09E500E48B98 /* TabViewController.m */,
+			);
+			path = MusicPicker;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -430,7 +478,7 @@
 		69327D9F188F0F16001AB7F5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Quinton Petty";
 				TargetAttributes = {
 					69327DA6188F0F16001AB7F5 = {
@@ -489,8 +537,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */,
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
+				69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */,
 				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
+				69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */,
+				6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */,
+				69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */,
 				6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */,
 				6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
@@ -504,14 +557,17 @@
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
 				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
+				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
 				6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
+				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
 				6970F4E018A6A0BE00EAB82A /* TDAudioQueueBufferManager.m in Sources */,
 				6970F4E518A6A0BE00EAB82A /* TDAudioOutputStreamer.m in Sources */,
 				6970F4ED18A6ABFA00EAB82A /* SongtrainProtocol.m in Sources */,
 				6970F4E318A6A0BE00EAB82A /* TDAudioStream.m in Sources */,
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
+				69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */,
 				6970F4E418A6A0BE00EAB82A /* TDAudioInputStreamer.m in Sources */,
 				6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */,
 				6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */,
@@ -572,7 +628,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -612,7 +667,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -677,7 +731,6 @@
 		69327DDD188F0F16001AB7F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SongTrain.app/SongTrain";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -700,7 +753,6 @@
 		69327DDE188F0F16001AB7F5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SongTrain.app/SongTrain";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

@@ -10,18 +10,37 @@
 
 @implementation Song
 
+-(instancetype)init
+{
+     if(self = [super init])
+     {
+         outputASBD = malloc(sizeof(AudioStreamBasicDescription));
+         inputASBD = malloc(sizeof(AudioStreamBasicDescription));
+     }
+    return self;
+}
+
+- (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
+{
+    if(self = [self init])
+    {
+        memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
+    }
+    return self;
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
-    if(self = [super init])
+    if(self = [self init])
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
         self.albumImage = [aDecoder decodeObjectForKey:@"image"];
-        self.host = [aDecoder decodeObjectForKey:@"host"];
-        self.media = [aDecoder decodeObjectForKey:@"media"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
-        _songPosition = [aDecoder decodeIntForKey:@"songPosition"];
-        _totalSongs = [aDecoder decodeIntForKey:@"totalSongs"];
+        
+        NSUInteger size;
+        void *temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"asbd" returnedLength:&size];
+        memcpy(outputASBD, temp, sizeof(AudioStreamBasicDescription));
     }
     return self;
 }
@@ -31,11 +50,26 @@
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
     [aCoder encodeObject:self.albumImage forKey:@"image"];
-    [aCoder encodeObject:self.host forKey:@"host"];
-    [aCoder encodeObject:self.media forKey:@"media"];
     [aCoder encodeObject:self.url forKey:@"url"];
-    [aCoder encodeInt:_songPosition forKey:@"songPosition"];
-    [aCoder encodeInt:_totalSongs forKey:@"totalSongs"];
+    
+    [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"asbd"];
+}
+
+- (int)getMusicPackets:(UInt32)numOfPackets forBuffer:(AudioBufferList*)ioData
+{
+    return -1;
+}
+
+- (void)dealloc
+{
+    if (outputASBD){
+        free(outputASBD);
+        outputASBD = NULL;
+    }
+    if (inputASBD){
+        free(inputASBD);
+        inputASBD = NULL;
+    }
 }
 
 @end

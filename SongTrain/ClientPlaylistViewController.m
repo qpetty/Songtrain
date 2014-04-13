@@ -28,7 +28,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    picker.delegate = self;
 	// Do any additional setup after loading the view.
 }
 
@@ -40,7 +39,7 @@
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
-    [musicPlayer addSongsToPlaylist:mediaItemCollection];
+    //TODO: Send song to server
     
     NSLog(@"Sending some data\n");
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -48,7 +47,7 @@
 
 - (void)connectedToPeer:(MCPeerID *)peerID
 {
-    [musicPlayer resetMusicPlayer];
+    //musicPlayer resetMusicPlayer];
 }
 
 - (void)disconnectedFromPeer:(MCPeerID *)peerID

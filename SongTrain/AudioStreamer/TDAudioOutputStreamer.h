@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <CoreAudio/CoreAudioTypes.h>
+
 @class AVURLAsset;
 
 @interface TDAudioOutputStreamer : NSObject

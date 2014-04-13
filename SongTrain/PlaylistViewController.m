@@ -60,10 +60,15 @@
     [tableviewMenu addTarget:self action:@selector(tracksAndPassengersSegment) forControlEvents:UIControlEventValueChanged];
     
     //Initialize Media picker
+    /*
     picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
     picker.allowsPickingMultipleItems = YES;
     picker.showsCloudItems = NO;
     picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
+    */
+    
+    picker = [[MusicPickerViewController alloc] init];
+    picker.delegate = self;
     
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
@@ -108,7 +113,7 @@
         [self addToPlaylist];
     }
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
-        [musicPlayer skip];
+        //[musicPlayer skip];
     }
 }
 
