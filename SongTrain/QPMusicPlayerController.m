@@ -11,6 +11,8 @@
 @implementation QPMusicPlayerController{
     AUGraph graph;
     AudioUnit outputUnit;
+    
+    MPNowPlayingInfoCenter *nowPlayingCenter;
 }
 
 + (id)musicPlayer {
@@ -28,13 +30,16 @@
         [audioSession setActive:YES error:nil];
         [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
         
+        //[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+        
         _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
         [self initOutputDescription];
         [self initAudioGraph];
         
         _playlist = [[NSMutableArray alloc] init];
-        [self resetMusicPlayer];
+        nowPlayingCenter = [MPNowPlayingInfoCenter defaultCenter];
         
+        [self resetMusicPlayer];
         currentlyPlaying = NO;
     }
     return self;
@@ -47,6 +52,7 @@
     if (currentItem){
         [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
         _currentSong = [_playlist objectAtIndex:0];
+        [self updateNowPlaying];
         [self.delegate playListHasBeenUpdated];
     }
 }
@@ -65,15 +71,30 @@
 - (void)play
 {
     NSLog(@"Pressed Play with playlist size %d\n", _playlist.count);
-    if ([_playlist count]) {
-        _currentSong = [_playlist firstObject];
-        [_playlist removeObjectAtIndex:0];
+    if (currentlyPlaying == NO) {
+        [self skip];
         OSErr err = AUGraphStart(graph);
         NSLog(@"%@", _currentSong.url.path);
         
         NSAssert(err == noErr, @"Error starting graph.");
         currentlyPlaying = YES;
     }
+}
+
+- (void)skip
+{
+    if ([_playlist count]) {
+        _currentSong = [_playlist firstObject];
+        [_playlist removeObjectAtIndex:0];
+        [self updateNowPlaying];
+    }
+}
+
+- (void)updateNowPlaying
+{
+    NSDictionary *info = @{MPMediaItemPropertyTitle: _currentSong.title,
+                          MPMediaItemPropertyArtist: _currentSong.artistName};
+    [nowPlayingCenter setNowPlayingInfo:info];
 }
 
 - (void)initOutputDescription
@@ -225,6 +246,13 @@ static OSStatus audioOutputCallback(void *inRefCon,
         //NSLog(@"address %d\n", &numPacketsNeeded);
         
         err = [audioPlayback.currentSong getMusicPackets:&numPacketsNeeded forBuffer:ioData];
+        
+        if (err == -2) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [audioPlayback skip];
+            });
+        }
+        
         NSLog(@"Song: %@\n", audioPlayback.currentSong.title);
         //err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
         //NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);

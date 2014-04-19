@@ -75,8 +75,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     song->sampleBuffer = [song->assetOutput copyNextSampleBuffer];
     
     if (song->sampleBuffer == NULL || CMSampleBufferGetNumSamples(song->sampleBuffer) == 0) {
-        CFRelease(song->sampleBuffer);
-        return -1;
+        if (song->sampleBuffer)
+            CFRelease(song->sampleBuffer);
+        song->sampleBuffer = NULL;
+        song->blockBuffer = NULL;
+        return -2;
     }
     
     
@@ -98,7 +101,9 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     if (err) {
         CFRelease(song->sampleBuffer);
-        return -1;
+        song->sampleBuffer = NULL;
+        song->blockBuffer = NULL;
+        return -2;
     }
     
     //[self.audioStream writeData:(uint8_t*)&numOfASPD maxLength:sizeof(UInt32)];
@@ -110,7 +115,9 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     if (err) {
         CFRelease(song->sampleBuffer);
-        return -1;
+        song->sampleBuffer = NULL;
+        song->blockBuffer = NULL;
+        return -2;
     }
     
     return 0;
