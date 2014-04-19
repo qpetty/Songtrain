@@ -482,7 +482,7 @@
 				ORGANIZATIONNAME = "Quinton Petty";
 				TargetAttributes = {
 					69327DA6188F0F16001AB7F5 = {
-						DevelopmentTeam = 4SAU2A56Y4;
+						DevelopmentTeam = JX9WQKUYGV;
 					};
 					69327DC7188F0F16001AB7F5 = {
 						TestTargetID = 69327DA6188F0F16001AB7F5;
