@@ -13,6 +13,10 @@
     AVURLAsset *assetURL;
     AVAssetReaderTrackOutput *assetOutput;
     AVAssetReader *assetReader;
+    
+    CMSampleBufferRef sampleBuffer;
+    CMBlockBufferRef blockBuffer;
+    AudioStreamPacketDescription aspds[256];
 }
 
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item {
@@ -21,7 +25,13 @@
         self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         
+        sampleBuffer = NULL;
+        blockBuffer = NULL;
+        
         assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
+        NSError *assetError;
+        assetReader = [AVAssetReader assetReaderWithAsset:assetURL error:&assetError];
+        
         CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
         const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (item);
         
@@ -39,33 +49,55 @@
     return self;
 }
 
-- (int)getMusicPackets:(UInt32)numOfPackets forBuffer:(AudioBufferList*)ioData
+- (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    return AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void *)(self), &numOfPackets, ioData, nil);
+    //printf("get packets");
+    //return AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void *)(self), &numOfPackets, ioData, nil);
+    //LocalSong *audioPlayback = (__bridge LocalSong *)object;
+    OSStatus err = AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
+    NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    return err;
 }
 
 OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription  **outDataPacketDescription, void *inUserData)
 {
-    LocalSong *audioPlayback = (__bridge LocalSong *)inUserData;
+    LocalSong *song = (__bridge LocalSong *)inUserData;
     
-    CMSampleBufferRef sampleBuffer;
+    //CMSampleBufferRef sampleBuffer;
     
-    sampleBuffer = [audioPlayback->assetOutput copyNextSampleBuffer];
+    if (song->sampleBuffer) {
+        CFRelease(song->sampleBuffer);
+    }
+    if (song->blockBuffer) {
+        CFRelease(song->blockBuffer);
+    }
     
-    if (sampleBuffer == NULL || CMSampleBufferGetNumSamples(sampleBuffer) == 0) {
-        CFRelease(sampleBuffer);
+    song->sampleBuffer = [song->assetOutput copyNextSampleBuffer];
+    
+    if (song->sampleBuffer == NULL || CMSampleBufferGetNumSamples(song->sampleBuffer) == 0) {
+        CFRelease(song->sampleBuffer);
         return -1;
     }
     
-    CMBlockBufferRef blockBuffer;
+    
+    //CMBlockBufferRef blockBuffer;
     //AudioBufferList audioBufferList;
-    const AudioStreamPacketDescription *aspd = *outDataPacketDescription;
+    //const AudioStreamPacketDescription *aspd = *outDataPacketDescription;
     size_t packetDescriptionSize;
     
-    OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(sampleBuffer, &aspd, &packetDescriptionSize);
+    //OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(song->sampleBuffer, &aspd, &packetDescriptionSize);
+    
+    *outDataPacketDescription = song->aspds;
+    OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptions(song->sampleBuffer, sizeof(song->aspds), song->aspds, NULL);
+    
+    CMSampleBufferGetAudioStreamPacketDescriptionsPtr(song->sampleBuffer, NULL, &packetDescriptionSize);
+    *ioNumberDataPackets = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
+    
+    //printf("number: %d\n", *ioNumberDataPackets);
+    //*ioNumberDataPackets = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     if (err) {
-        CFRelease(sampleBuffer);
+        CFRelease(song->sampleBuffer);
         return -1;
     }
     
@@ -74,15 +106,12 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     //NSLog(@"Size: %zu, each packetdescription is %lu\n", packetDescriptionSize, sizeof(AudioStreamPacketDescription));
     
-    err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, ioData, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
+    err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(song->sampleBuffer, NULL, ioData, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &song->blockBuffer);
     
     if (err) {
-        CFRelease(sampleBuffer);
+        CFRelease(song->sampleBuffer);
         return -1;
     }
-
-    CFRelease(blockBuffer);
-    CFRelease(sampleBuffer);
     
     return 0;
 }

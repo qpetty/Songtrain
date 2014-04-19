@@ -54,6 +54,7 @@
 - (void)addSongsToPlaylist:(NSMutableArray*)songs
 {
     for (Song *item in songs){
+        //NSLog(@"%@", item.url.path);
         [_playlist addObject:item];
     }
     [self.delegate playListHasBeenUpdated];
@@ -63,9 +64,15 @@
 
 - (void)play
 {
-    if ([_playlist firstObject]) {
+    NSLog(@"Pressed Play with playlist size %d\n", _playlist.count);
+    if ([_playlist count]) {
+        _currentSong = [_playlist firstObject];
+        [_playlist removeObjectAtIndex:0];
         OSErr err = AUGraphStart(graph);
+        NSLog(@"%@", _currentSong.url.path);
+        
         NSAssert(err == noErr, @"Error starting graph.");
+        currentlyPlaying = YES;
     }
 }
 
@@ -215,12 +222,16 @@ static OSStatus audioOutputCallback(void *inRefCon,
         
         //NSLog(@"ioData before: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
-        err = [audioPlayback.currentSong getMusicPackets:numPacketsNeeded forBuffer:ioData];
+        //NSLog(@"address %d\n", &numPacketsNeeded);
         
+        err = [audioPlayback.currentSong getMusicPackets:&numPacketsNeeded forBuffer:ioData];
+        NSLog(@"Song: %@\n", audioPlayback.currentSong.title);
         //err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
         //NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
-        NSLog(@"Just called fill complex buffer with error: %d\n", (int)err);
+        char error[6];
+        FormatError(error, err);
+        NSLog(@"Just called fill complex buffer with error: %s\n", error);
 	}
     
 	if (err) {
@@ -229,7 +240,20 @@ static OSStatus audioOutputCallback(void *inRefCon,
         }
     }
 	//dodgy return :)
-	return 0;
+	return err;
+}
+
+static char *FormatError(char *str, OSStatus error)
+{
+    // see if it appears to be a 4-char-code
+    *(UInt32 *)(str + 1) = CFSwapInt32HostToBig(error);
+    if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
+        str[0] = str[5] = '\'';
+        str[6] = '\0';
+    } else
+        // no, format it as an integer
+        sprintf(str, "%d", (int)error);
+    return str;
 }
 
 - (void)dealloc
