@@ -13,6 +13,9 @@
     AudioUnit outputUnit;
     
     MPNowPlayingInfoCenter *nowPlayingCenter;
+    
+    BOOL currentlyPlaying;
+    NSTimer *timer;
 }
 
 + (id)musicPlayer {
@@ -38,6 +41,7 @@
         
         _playlist = [[NSMutableArray alloc] init];
         nowPlayingCenter = [MPNowPlayingInfoCenter defaultCenter];
+        timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(addOneToTime) userInfo:NULL repeats:YES];
         
         [self resetMusicPlayer];
         currentlyPlaying = NO;
@@ -73,6 +77,10 @@
     if (currentlyPlaying == NO) {
         [self skip];
         OSErr err = AUGraphStart(graph);
+        
+        //[timer invalidate];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+        
         NSLog(@"%@", _currentSong.url.path);
         
         NSAssert(err == noErr, @"Error starting graph.");
@@ -87,6 +95,12 @@
         _currentSong = [_playlist firstObject];
         [self didChangeValueForKey:@"currentSong"];
         [_playlist removeObjectAtIndex:0];
+        
+        [self willChangeValueForKey:@"currentSongTime"];
+        _currentSongTime.location = 0;
+        _currentSongTime.length = _currentSong.songLength;
+        [self didChangeValueForKey:@"currentSongTime"];
+        
         [self updateNowPlaying];
     }
 }
@@ -96,6 +110,15 @@
     NSDictionary *info = @{MPMediaItemPropertyTitle: _currentSong.title,
                           MPMediaItemPropertyArtist: _currentSong.artistName};
     [nowPlayingCenter setNowPlayingInfo:info];
+}
+
+- (void)addOneToTime
+{
+    [self willChangeValueForKey:@"currentSongTime"];
+    _currentSongTime.location++;
+    [self didChangeValueForKey:@"currentSongTime"];
+    
+    NSLog(@"HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 }
 
 - (void)initOutputDescription
@@ -254,13 +277,16 @@ static OSStatus audioOutputCallback(void *inRefCon,
             });
         }
         
-        NSLog(@"Song: %@\n", audioPlayback.currentSong.title);
         //err = AudioConverterFillComplexBuffer(audioPlayback->converter, converterInputCallback, audioPlayback, &numPacketsNeeded, ioData, nil);
         //NSLog(@"ioData after: size:%d   data:%d\n", ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mData);
         
-        char error[6];
-        FormatError(error, err);
-        NSLog(@"Just called fill complex buffer with error: %s\n", error);
+        //NSLog(@"Song: %@\n", audioPlayback.currentSong.title);
+        
+        if (err) {
+            char error[6];
+            FormatError(error, err);
+            NSLog(@"Just called fill complex buffer with error: %s\n", error);
+        }
 	}
     
 	if (err) {

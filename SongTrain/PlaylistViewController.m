@@ -29,6 +29,7 @@
         //[musicPlayer resetMusicPlayer];
         [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
         [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+        [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -220,9 +221,11 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (object == musicPlayer) {
-            [albumArtwork updateSongInfo:musicPlayer.currentSong];
+            if ([keyPath isEqualToString:@"currentSong"]) {
+                [albumArtwork updateSongInfo:musicPlayer.currentSong];
+            }
+            [panel setSongDuration:musicPlayer.currentSongTime];
         }
-        NSLog(@"HERE!!!!!!!!!!!!!!!!!!!!\n");
         [mainTableView reloadData];
     });
 }

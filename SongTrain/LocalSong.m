@@ -24,6 +24,7 @@
         self.title = [item valueForProperty:MPMediaItemPropertyTitle];
         self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         
         sampleBuffer = NULL;
         blockBuffer = NULL;

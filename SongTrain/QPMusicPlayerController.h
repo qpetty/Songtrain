@@ -18,13 +18,11 @@
 
 @end
 
-@interface QPMusicPlayerController : NSObject{
-    NSTimer *timer;
-    BOOL currentlyPlaying;
-}
+@interface QPMusicPlayerController : NSObject
 
 @property (weak, nonatomic) id <QPMusicPlayerControllerDelegate> delegate;
 @property (nonatomic, retain, readonly) Song *currentSong;
+@property (atomic, assign, readonly) NSRange currentSongTime;
 @property (nonatomic, retain) NSMutableArray *playlist;
 @property (weak, nonatomic) ControlPanel *panel;
 
