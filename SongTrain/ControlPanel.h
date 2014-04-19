@@ -23,6 +23,7 @@ enum ControlPanelButtonNames : NSInteger {
     UIButton *addButton;
     UIButton *skipButton;
     UILabel *timeLabel;
+    UIButton *playButton;
     
     UIProgressView *songProgress;
 }

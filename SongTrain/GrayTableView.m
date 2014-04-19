@@ -29,11 +29,6 @@
 -(void)reloadData
 {
     [super reloadData];
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-    [UIView setAnimationDuration:0.5];
-    
     CGRect newFrame = self.frame;
     double newHeight = 0;
     
@@ -50,8 +45,6 @@
     
     newFrame.size.height = newHeight;
     self.frame = newFrame;
-    
-    [UIView commitAnimations];
 }
 
 
