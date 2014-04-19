@@ -34,5 +34,5 @@
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
 
 - (void)play;
-//- (void)skip;
+- (void)skip;
 @end
