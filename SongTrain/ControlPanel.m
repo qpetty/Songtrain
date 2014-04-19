@@ -78,8 +78,9 @@
                               LABEL_SIZE,
                               BUTTON_SIZE);
         playButton = [[UIButton alloc] initWithFrame:location];
+        playButton.tag = PlayButton;
         [playButton setTitle:@"Play" forState:UIControlStateNormal];
-        [playButton addTarget:[QPMusicPlayerController musicPlayer] action:@selector(play) forControlEvents:UIControlEventTouchDown];
+        [playButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:playButton];
     }
     return self;

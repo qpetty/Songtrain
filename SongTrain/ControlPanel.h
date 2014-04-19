@@ -10,7 +10,8 @@
 
 enum ControlPanelButtonNames : NSInteger {
     AddButton = 1,
-    SkipButton
+    SkipButton,
+    PlayButton
 };
 
 @protocol ControlPanelDelegate <NSObject>

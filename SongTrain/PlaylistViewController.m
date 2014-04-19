@@ -112,8 +112,11 @@
     if (sender.tag == AddButton) {
         [self addToPlaylist];
     }
+    else if (sender.tag == PlayButton && sessionManager.currentRole == ServerConnection) {
+        [musicPlayer play];
+    }
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
-        //[musicPlayer skip];
+        [musicPlayer skip];
     }
 }
 
