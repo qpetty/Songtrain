@@ -51,8 +51,7 @@
     MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
     if (currentItem){
         [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
-        _currentSong = [_playlist objectAtIndex:0];
-        [self updateNowPlaying];
+        [self skip];
         [self.delegate playListHasBeenUpdated];
     }
 }
@@ -84,7 +83,9 @@
 - (void)skip
 {
     if ([_playlist count]) {
+        [self willChangeValueForKey:@"currentSong"];
         _currentSong = [_playlist firstObject];
+        [self didChangeValueForKey:@"currentSong"];
         [_playlist removeObjectAtIndex:0];
         [self updateNowPlaying];
     }

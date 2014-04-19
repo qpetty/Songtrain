@@ -28,7 +28,7 @@
         sessionManager.delegate = self;
         //[musicPlayer resetMusicPlayer];
         [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
-
+        [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -163,9 +163,9 @@
         return cell;
         
     }
-    if (musicPlayer.playlist.count > 1){
-        cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] title];
-        cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row] + 1] artistName];
+    if (musicPlayer.playlist.count){
+        cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
+        cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] artistName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
     }
@@ -196,8 +196,8 @@
         return sessionManager.peerArray.count > 1 ? sessionManager.peerArray.count - 1 : 1;
     }
 
-    if(musicPlayer.playlist.count > 1)
-        return musicPlayer.playlist.count - 1;
+    if(musicPlayer.playlist.count)
+        return musicPlayer.playlist.count;
     return 1;
 }
 
@@ -205,7 +205,7 @@
 {
     NSLog(@"Updating Playlist\n");
     dispatch_async(dispatch_get_main_queue(), ^{
-        [albumArtwork updateSongInfo:musicPlayer.currentSong];
+        //[albumArtwork updateSongInfo:musicPlayer.currentSong];
         [mainTableView reloadData];
     });
 }
@@ -219,6 +219,10 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (object == musicPlayer) {
+            [albumArtwork updateSongInfo:musicPlayer.currentSong];
+        }
+        NSLog(@"HERE!!!!!!!!!!!!!!!!!!!!\n");
         [mainTableView reloadData];
     });
 }
