@@ -91,8 +91,6 @@
     panel = [[ControlPanel alloc] initWithFrame:location];
     panel.delegate = self;
     [self.view addSubview:panel];
-    
-
 
     // Allow musicplayercontroller to update control panel
     musicPlayer.panel = panel;

@@ -17,6 +17,8 @@
     //Sets status bar to white text
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:UIColorFromRGB(0x7FA8D7)];
+    
+     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     return YES;
 }
 							
@@ -45,6 +47,31 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event
+{
+    if (event.type == UIEventTypeRemoteControl) {
+        switch (event.subtype) {
+            case UIEventSubtypeRemoteControlPlay:
+                [[QPMusicPlayerController musicPlayer] play];
+                break;
+            
+            case UIEventSubtypeRemoteControlPause:
+                [[QPMusicPlayerController musicPlayer] play];
+                break;
+                
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                break;
+                
+            case UIEventSubtypeRemoteControlNextTrack:
+                [[QPMusicPlayerController musicPlayer] skip];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 @end

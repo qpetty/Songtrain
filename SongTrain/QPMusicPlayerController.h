@@ -31,7 +31,7 @@
 
 @property (nonatomic, readonly) AudioStreamBasicDescription *audioFormat;
 
-+ (id)musicPlayer;
++ (instancetype)musicPlayer;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
 
 - (void)play;

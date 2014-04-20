@@ -16,7 +16,7 @@
     NSTimer *timer;
 }
 
-+ (id)musicPlayer {
++ (instancetype)musicPlayer {
     static QPMusicPlayerController *sharedMusicPlayer = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -30,8 +30,6 @@
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
         [audioSession setActive:YES error:nil];
         [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-        
-        //[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
         
         _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
         [self initOutputDescription];
@@ -73,6 +71,9 @@
 {
     NSLog(@"Pressed Play with playlist size %d\n", _playlist.count);
     if (_currentlyPlaying == NO) {
+        if (![_playlist count] && !self.currentSong)
+            return;
+        
         if (!_currentSong) {
             [self skip];
         }
@@ -317,6 +318,11 @@ static char *FormatError(char *str, OSStatus error)
         // no, format it as an integer
         sprintf(str, "%d", (int)error);
     return str;
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 - (void)dealloc
