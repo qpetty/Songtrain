@@ -13,8 +13,6 @@
     AudioUnit outputUnit;
     
     MPNowPlayingInfoCenter *nowPlayingCenter;
-    
-    BOOL currentlyPlaying;
     NSTimer *timer;
 }
 
@@ -41,10 +39,10 @@
         
         _playlist = [[NSMutableArray alloc] init];
         nowPlayingCenter = [MPNowPlayingInfoCenter defaultCenter];
-        timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(addOneToTime) userInfo:NULL repeats:YES];
+        timer = nil;
         
         [self resetMusicPlayer];
-        currentlyPlaying = NO;
+        _currentlyPlaying = NO;
     }
     return self;
 }
@@ -74,17 +72,27 @@
 - (void)play
 {
     NSLog(@"Pressed Play with playlist size %d\n", _playlist.count);
-    if (currentlyPlaying == NO) {
-        [self skip];
+    if (_currentlyPlaying == NO) {
+        if (!_currentSong) {
+            [self skip];
+        }
         OSErr err = AUGraphStart(graph);
         
-        //[timer invalidate];
-        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-        
-        NSLog(@"%@", _currentSong.url.path);
+        timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(addOneToTime) userInfo:nil repeats:YES];
+        //NSLog(@"%@", _currentSong.url.path);
         
         NSAssert(err == noErr, @"Error starting graph.");
-        currentlyPlaying = YES;
+        _currentlyPlaying = YES;
+    }
+    else {
+        AUGraphStop(graph);
+        
+        if (timer) {
+            [timer invalidate];
+            timer = nil;
+        }
+        
+        _currentlyPlaying = NO;
     }
 }
 
@@ -93,8 +101,8 @@
     if ([_playlist count]) {
         [self willChangeValueForKey:@"currentSong"];
         _currentSong = [_playlist firstObject];
-        [self didChangeValueForKey:@"currentSong"];
         [_playlist removeObjectAtIndex:0];
+        [self didChangeValueForKey:@"currentSong"];
         
         [self willChangeValueForKey:@"currentSongTime"];
         _currentSongTime.location = 0;
@@ -116,9 +124,9 @@
 {
     [self willChangeValueForKey:@"currentSongTime"];
     _currentSongTime.location++;
+    if(_currentSongTime.location > _currentSongTime.length)
+        _currentSongTime.location = _currentSongTime.length;
     [self didChangeValueForKey:@"currentSongTime"];
-    
-    NSLog(@"HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 }
 
 - (void)initOutputDescription
@@ -254,7 +262,7 @@ static OSStatus audioOutputCallback(void *inRefCon,
     
     //NSLog(@"Is main Thread %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
     
-	if (inBusNumber == 0 && audioPlayback->currentlyPlaying){
+	if (inBusNumber == 0 && audioPlayback.currentlyPlaying){
 		//loop through the buffer and fill the frames, this is really inefficient
 		//should be using a memcpy, but we will leave that for later
         //NSLog(@"inNumberFrames: %d\n", (unsigned int)inNumberFrames);

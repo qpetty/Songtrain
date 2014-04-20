@@ -52,19 +52,14 @@
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    //printf("get packets");
-    //return AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void *)(self), &numOfPackets, ioData, nil);
-    //LocalSong *audioPlayback = (__bridge LocalSong *)object;
     OSStatus err = AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
-    NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
     return err;
 }
 
 OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription  **outDataPacketDescription, void *inUserData)
 {
     LocalSong *song = (__bridge LocalSong *)inUserData;
-    
-    //CMSampleBufferRef sampleBuffer;
     
     if (song->sampleBuffer) {
         CFRelease(song->sampleBuffer);
@@ -83,13 +78,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         return -2;
     }
     
-    
-    //CMBlockBufferRef blockBuffer;
-    //AudioBufferList audioBufferList;
-    //const AudioStreamPacketDescription *aspd = *outDataPacketDescription;
     size_t packetDescriptionSize;
-    
-    //OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(song->sampleBuffer, &aspd, &packetDescriptionSize);
     
     *outDataPacketDescription = song->aspds;
     OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptions(song->sampleBuffer, sizeof(song->aspds), song->aspds, NULL);
@@ -98,7 +87,6 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     *ioNumberDataPackets = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     //printf("number: %d\n", *ioNumberDataPackets);
-    //*ioNumberDataPackets = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     if (err) {
         CFRelease(song->sampleBuffer);
@@ -106,11 +94,6 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         song->blockBuffer = NULL;
         return -2;
     }
-    
-    //[self.audioStream writeData:(uint8_t*)&numOfASPD maxLength:sizeof(UInt32)];
-    //[self.audioStream writeData:(uint8_t*)aspd maxLength:packetDescriptionSize];
-    
-    //NSLog(@"Size: %zu, each packetdescription is %lu\n", packetDescriptionSize, sizeof(AudioStreamPacketDescription));
     
     err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(song->sampleBuffer, NULL, ioData, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &song->blockBuffer);
     

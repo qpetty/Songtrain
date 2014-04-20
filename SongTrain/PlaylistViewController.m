@@ -115,6 +115,12 @@
     }
     else if (sender.tag == PlayButton && sessionManager.currentRole == ServerConnection) {
         [musicPlayer play];
+        if (musicPlayer.currentlyPlaying) {
+            [sender setTitle:@"Pause" forState:UIControlStateNormal];
+        }
+        else {
+            [sender setTitle:@"Play" forState:UIControlStateNormal];
+        }
     }
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
         [musicPlayer skip];
