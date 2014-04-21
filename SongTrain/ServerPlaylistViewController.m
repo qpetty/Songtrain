@@ -53,35 +53,29 @@
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     
-    [tableviewMenu addTarget:self action:@selector(turnOffEditOnUISegementSwitch) forControlEvents:UIControlEventValueChanged];
+    //[tableviewMenu addTarget:self action:@selector(turnOffEditOnUISegementSwitch) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)djMode
 {
-    if (!self.djEditing) {
-        [UIView animateWithDuration:0.5 animations:^{
-            djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
-        }];
-        self.djEditing = !self.djEditing;
-    } else {
+    if (self.djEditing) {
         [UIView animateWithDuration:0.5 animations:^{
             djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                         self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
         }];
-        self.djEditing = !self.djEditing;
     }
-    if (tableviewMenu.selectedSegmentIndex) {
-        if (sessionManager.connectedPeersArray.count) {
-            setEditing = !setEditing;
-            [mainTableView setEditing:setEditing];
-        }
-    } else {
-        if (musicPlayer.playlist.count) {
-            setEditing = !setEditing;
-            [mainTableView setEditing:setEditing];
-        }
+    else {
+        [UIView animateWithDuration:0.5 animations:^{
+            djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+        }];
     }
-
+    
+    self.djEditing = !self.djEditing;
+    
+    if ((tableviewMenu.selectedSegmentIndex && sessionManager.connectedPeersArray.count) || musicPlayer.playlist.count) {
+        setEditing = !setEditing;
+        [mainTableView setEditing:setEditing animated:YES];
+    }
 }
 
 - (void)turnOffEditOnUISegementSwitch
@@ -99,6 +93,37 @@
 {
     [super viewWillAppear:animated];
     djButton.hidden = NO;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete && musicPlayer.playlist.count == 1) {
+        [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
+        [tableView reloadData];
+        [self djMode];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        [((GrayTableView*)tableView) adjustHeight];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (musicPlayer.playlist.count)
+        return YES;
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    [musicPlayer.playlist exchangeObjectAtIndex:sourceIndexPath.row withObjectAtIndex:destinationIndexPath.row];
 }
 
 - (void)didReceiveMemoryWarning

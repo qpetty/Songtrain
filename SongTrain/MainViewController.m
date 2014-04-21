@@ -163,7 +163,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"peerCell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] init];
-        cell.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (sessionManager.peerArray.count > 0){

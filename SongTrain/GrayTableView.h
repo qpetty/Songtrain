@@ -12,4 +12,6 @@
     double maxHeight;
 }
 
+- (void)adjustHeight;
+
 @end

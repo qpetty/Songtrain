@@ -27,9 +27,11 @@
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
         //[musicPlayer resetMusicPlayer];
+        /*
         [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
         [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
         [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
+         */
     }
     return self;
 }
@@ -96,6 +98,22 @@
     musicPlayer.panel = panel;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [sessionManager removeObserver:self forKeyPath:@"connectedPeersArray"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
+}
+
 - (void)tracksAndPassengersSegment
 {
     [mainTableView reloadData];
@@ -152,7 +170,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-        cell.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (tableviewMenu.selectedSegmentIndex) {
@@ -201,9 +219,7 @@
         return sessionManager.peerArray.count > 1 ? sessionManager.peerArray.count - 1 : 1;
     }
 
-    if(musicPlayer.playlist.count)
-        return musicPlayer.playlist.count;
-    return 1;
+    return musicPlayer.playlist.count ? musicPlayer.playlist.count : 1;
 }
 
 - (void)playListHasBeenUpdated
@@ -224,13 +240,16 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (object == musicPlayer) {
-            if ([keyPath isEqualToString:@"currentSong"]) {
-                [albumArtwork updateSongInfo:musicPlayer.currentSong];
-            }
+        if (object == musicPlayer && [keyPath isEqualToString:@"currentSongTime"]) {
             [panel setSongDuration:musicPlayer.currentSongTime];
         }
-        [mainTableView reloadData];
+        else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
+            [albumArtwork updateSongInfo:musicPlayer.currentSong];
+            [mainTableView reloadData];
+        }
+        else {
+            [mainTableView reloadData];
+        }
     });
 }
 
