@@ -42,6 +42,12 @@
     [self.view addSubview:wholeTableView];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [wholeTableView reloadData];
+}
+
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];

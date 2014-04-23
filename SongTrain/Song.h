@@ -20,8 +20,10 @@
 @property (strong, nonatomic) UIImage *albumImage;
 @property (strong, nonatomic) NSURL *url;
 
+@property (nonatomic) int songLength;
+
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
-- (int)getMusicPackets:(UInt32)numOfPackets forBuffer:(AudioBufferList*)ioData;
+- (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;
 
 @end

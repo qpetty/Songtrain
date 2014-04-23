@@ -16,12 +16,13 @@
     maxHeight = frame.size.height;
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
+        self.backgroundColor = [UIColor clearColor];
         [self.layer setBorderWidth:0.5f];
         [self.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
         self.separatorColor = UIColorFromRGB(0x252525);
         self.scrollEnabled = NO;
-
+        
+        self.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     }
     return self;
 }
@@ -29,23 +30,21 @@
 -(void)reloadData
 {
     [super reloadData];
-    CGRect newFrame = self.frame;
+    [self adjustHeight];
+}
+
+- (void)adjustHeight
+{
     double newHeight = 0;
     
     for (int i = 0; i < [self numberOfSections]; i++) {
         newHeight += self.rowHeight * [self numberOfRowsInSection:i];
     }
     
-    if (newHeight > maxHeight){
-        newHeight = maxHeight;
+    if (newHeight > maxHeight)
         self.scrollEnabled = YES;
-    }
     else
         self.scrollEnabled = NO;
-    
-    newFrame.size.height = newHeight;
-    self.frame = newFrame;
 }
-
 
 @end

@@ -38,6 +38,8 @@
         self.albumImage = [aDecoder decodeObjectForKey:@"image"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
         
+        _songLength = [aDecoder decodeIntForKey:@"songLength"];
+        
         NSUInteger size;
         void *temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"asbd" returnedLength:&size];
         memcpy(outputASBD, temp, sizeof(AudioStreamBasicDescription));
@@ -52,10 +54,12 @@
     [aCoder encodeObject:self.albumImage forKey:@"image"];
     [aCoder encodeObject:self.url forKey:@"url"];
     
+    [aCoder encodeInt:_songLength forKey:@"songLength"];
+    
     [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"asbd"];
 }
 
-- (int)getMusicPackets:(UInt32)numOfPackets forBuffer:(AudioBufferList*)ioData
+- (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
     return -1;
 }

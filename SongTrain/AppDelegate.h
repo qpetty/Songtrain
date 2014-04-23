@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#include "QPMusicPlayerController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
