@@ -39,6 +39,7 @@
     GrayTableView *mainTableView;
     ControlPanel *panel;
     UISegmentedControl *tableviewMenu;
+    UIView* tableviewMenuBackground;
     
     UIButton *addToList;
 }
