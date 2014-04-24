@@ -26,7 +26,6 @@
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
-        //[musicPlayer resetMusicPlayer];
         /*
         [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
         [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
@@ -112,6 +111,9 @@
     [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
+    
+    [albumArtwork updateSongInfo:musicPlayer.currentSong];
+    [mainTableView reloadData];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -146,11 +148,8 @@
             [sender setTitle:@"Play" forState:UIControlStateNormal];
         }
     }
-    else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
+    else if (sender.tag == SkipButton) {
         [musicPlayer skip];
-    }
-    else if (sender.tag == SkipButton && sessionManager.currentRole == ClientConnection) {
-        NSLog(@"Vote to Skip\n");
     }
 }
 
@@ -250,9 +249,6 @@
             [panel setSongDuration:musicPlayer.currentSongTime];
         }
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
-            if (sessionManager.currentRole == ServerConnection) {
-                [sessionManager nextSong:musicPlayer.currentSong];
-            }
             [albumArtwork updateSongInfo:musicPlayer.currentSong];
             [mainTableView reloadData];
         }

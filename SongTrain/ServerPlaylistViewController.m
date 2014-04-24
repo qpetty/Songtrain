@@ -158,6 +158,10 @@
     //NSLog(@"connectedToPeer");
     if (musicPlayer.playlist.count) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (musicPlayer.currentSong) {
+                [sessionManager addSong:musicPlayer.currentSong toPeer:peerID];
+                [sessionManager nextSong:musicPlayer.currentSong];
+            }
             for (Song* s in musicPlayer.playlist) {
                 [sessionManager addSong:s toPeer:peerID];
             }

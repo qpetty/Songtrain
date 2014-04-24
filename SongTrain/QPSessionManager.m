@@ -52,11 +52,14 @@
     _currentRole = ServerConnection;
     [browse stopBrowsingForPeers];
     [advert startAdvertisingPeer];
+    [[QPMusicPlayerController musicPlayer] resetToServer];
+    [[QPMusicPlayerController musicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
+    [[QPMusicPlayerController musicPlayer] resetToClient];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
 
@@ -66,6 +69,9 @@
     [_peerArray removeAllObjects];
     [advert stopAdvertisingPeer];
     [browse startBrowsingForPeers];
+    if (_currentRole == ServerConnection) {
+        [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSong"];
+    }
     _currentRole = NotConnected;
 }
 
@@ -129,7 +135,7 @@
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
-            [[QPMusicPlayerController musicPlayer] skip];
+            [[QPMusicPlayerController musicPlayer] nextSong];
         }
         else if (mess.message == RemoveSong && _currentRole == ClientConnection) {
             [[QPMusicPlayerController musicPlayer] removeSongFromPlaylist:mess.firstIndex];
@@ -258,4 +264,14 @@
 {
     //[[QPMusicPlayerController musicPlayer] stopOutStream];
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([keyPath isEqualToString:@"currentSong"]) {
+            [self nextSong:[QPMusicPlayerController musicPlayer].currentSong];
+        }
+    });
+}
+
 @end

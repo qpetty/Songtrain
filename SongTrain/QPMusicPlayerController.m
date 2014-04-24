@@ -14,6 +14,8 @@
     
     MPNowPlayingInfoCenter *nowPlayingCenter;
     NSTimer *timer;
+    
+    BOOL isServer;
 }
 
 + (instancetype)musicPlayer {
@@ -39,21 +41,31 @@
         nowPlayingCenter = [MPNowPlayingInfoCenter defaultCenter];
         timer = nil;
         
-        [self resetMusicPlayer];
         _currentlyPlaying = NO;
+        isServer = YES;
     }
     return self;
 }
 
-- (void)resetMusicPlayer
+- (void)resetToServer
 {
     [_playlist removeAllObjects];
+    AUGraphStop(graph);
+    isServer = YES;
+    
     MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
     if (currentItem){
         [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
         [self skip];
         [self.delegate playListHasBeenUpdated];
     }
+}
+
+- (void)resetToClient
+{
+    [_playlist removeAllObjects];
+    AUGraphStart(graph);
+    isServer = NO;
 }
 
 - (void)addSongToPlaylist:(Song*)song
@@ -90,7 +102,6 @@
 
 - (void)play
 {
-    NSLog(@"Pressed Play with playlist size %d\n", _playlist.count);
     if (_currentlyPlaying == NO) {
         if (![_playlist count] && !self.currentSong)
             return;
@@ -119,6 +130,16 @@
 }
 
 - (void)skip
+{
+    if (isServer) {
+        [self nextSong];
+    }
+    else {
+        NSLog(@"Count vote\n");
+    }
+}
+
+- (void)nextSong
 {
     if ([_playlist count]) {
         [self willChangeValueForKey:@"currentSong"];

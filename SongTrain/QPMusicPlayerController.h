@@ -33,6 +33,9 @@
 
 + (instancetype)musicPlayer;
 
+- (void)resetToServer;
+- (void)resetToClient;
+
 - (void)addSongToPlaylist:(Song*)song;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
 - (void)removeSongFromPlaylist:(NSUInteger)ndx;
@@ -40,4 +43,5 @@
 
 - (void)play;
 - (void)skip;
+- (void)nextSong;
 @end
