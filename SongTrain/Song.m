@@ -35,7 +35,7 @@
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
-        self.albumImage = [aDecoder decodeObjectForKey:@"image"];
+        //self.albumImage = [aDecoder decodeObjectForKey:@"image"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
         
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
@@ -51,7 +51,7 @@
 {
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
-    [aCoder encodeObject:self.albumImage forKey:@"image"];
+    //[aCoder encodeObject:self.albumImage forKey:@"image"];
     [aCoder encodeObject:self.url forKey:@"url"];
     
     [aCoder encodeInt:_songLength forKey:@"songLength"];

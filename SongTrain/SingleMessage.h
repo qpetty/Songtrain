@@ -12,7 +12,8 @@ enum MessageTypes : NSInteger {
     AddSong = 1,
     RemoveSong,
     SwitchSong,
-    SkipSong
+    SkipSong,
+    AlbumRequest
 };
 
 @interface SingleMessage : NSObject

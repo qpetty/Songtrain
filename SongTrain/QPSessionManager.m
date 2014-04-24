@@ -256,6 +256,17 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
+/*
+- (void)requestAlbumArtwork:(NSUInteger)ndx fromPeer:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AlbumRequest;
+    //message.song = song;
+    message.firstIndex = ndx;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+*/
+
 - (void)requestToStartStreaming:(Song*)song
 {
     //[[QPMusicPlayerController musicPlayer] fillOutStream:[mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];

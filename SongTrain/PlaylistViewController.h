@@ -17,7 +17,6 @@
 #import "GrayTableView.h"
 #import "ControlPanel.h"
 
-#import "SongtrainProtocol.h"
 #import "NSMutableArray+Playlist.h"
 #import "QPMusicPlayerController.h"
 #import "QPSessionManager.h"

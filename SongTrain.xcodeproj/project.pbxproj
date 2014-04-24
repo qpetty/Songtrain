@@ -41,7 +41,6 @@
 		6970F4E618A6A0BE00EAB82A /* TDAudioStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D918A6A0BE00EAB82A /* TDAudioStreamer.m */; };
 		6970F4E718A6A0BE00EAB82A /* TDAudioStreamerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4DB18A6A0BE00EAB82A /* TDAudioStreamerConstants.m */; };
 		6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4E918A6A90000EAB82A /* SingleMessage.m */; };
-		6970F4ED18A6ABFA00EAB82A /* SongtrainProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */; };
 		6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */; };
 		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
 		6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */; };
@@ -135,8 +134,6 @@
 		6970F4DB18A6A0BE00EAB82A /* TDAudioStreamerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioStreamerConstants.m; sourceTree = "<group>"; };
 		6970F4E818A6A90000EAB82A /* SingleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMessage.h; sourceTree = "<group>"; };
 		6970F4E918A6A90000EAB82A /* SingleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleMessage.m; sourceTree = "<group>"; };
-		6970F4EB18A6ABFA00EAB82A /* SongtrainProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SongtrainProtocol.h; sourceTree = "<group>"; };
-		6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongtrainProtocol.m; sourceTree = "<group>"; };
 		6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Playlist.h"; sourceTree = "<group>"; };
 		6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Playlist.m"; sourceTree = "<group>"; };
 		6970F4F718A8514B00EAB82A /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
@@ -317,8 +314,6 @@
 		6933394118A9ABEE001A7AC8 /* Network Data */ = {
 			isa = PBXGroup;
 			children = (
-				6970F4EB18A6ABFA00EAB82A /* SongtrainProtocol.h */,
-				6970F4EC18A6ABFA00EAB82A /* SongtrainProtocol.m */,
 				697CF6AA1898794F00CF4DC7 /* Song.h */,
 				697CF6AB1898794F00CF4DC7 /* Song.m */,
 				69FF48A218F9DDE700E48B98 /* LocalSong.h */,
@@ -563,7 +558,6 @@
 				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
 				6970F4E018A6A0BE00EAB82A /* TDAudioQueueBufferManager.m in Sources */,
 				6970F4E518A6A0BE00EAB82A /* TDAudioOutputStreamer.m in Sources */,
-				6970F4ED18A6ABFA00EAB82A /* SongtrainProtocol.m in Sources */,
 				6970F4E318A6A0BE00EAB82A /* TDAudioStream.m in Sources */,
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,

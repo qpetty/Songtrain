@@ -17,7 +17,7 @@
 
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *artistName;
-@property (strong, nonatomic) UIImage *albumImage;
+@property (strong, nonatomic, getter=getAlbumImage) UIImage *albumImage;
 @property (strong, nonatomic) NSURL *url;
 
 @property (nonatomic) int songLength;

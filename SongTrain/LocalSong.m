@@ -17,6 +17,8 @@
     CMSampleBufferRef sampleBuffer;
     CMBlockBufferRef blockBuffer;
     AudioStreamPacketDescription aspds[256];
+    
+    MPMediaItem *mediaItem;
 }
 
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item {
@@ -25,6 +27,8 @@
         self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
+        
+        mediaItem = item;
         
         sampleBuffer = NULL;
         blockBuffer = NULL;
@@ -105,6 +109,17 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     }
     
     return 0;
+}
+
+- (UIImage*)getAlbumImage
+{
+    MPMediaItemArtwork *albumItem = [mediaItem valueForProperty:MPMediaItemPropertyArtwork];
+    if (albumItem)
+        return [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+    else {
+        NSLog(@"No Current Image\n");
+        return nil;
+    }
 }
 
 @end

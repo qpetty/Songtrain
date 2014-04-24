@@ -55,5 +55,6 @@ enum CurrentConnectionRole : NSInteger {
 - (void)addSongToAllPeers:(Song*)song;
 - (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx;
 - (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y;
+//- (void)requestAlbumArtwork:(NSUInteger)ndx fromPeer:(MCPeerID*)peer;
 
 @end
