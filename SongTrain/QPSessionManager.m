@@ -57,7 +57,6 @@
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
-    [advert stopAdvertisingPeer];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
 
@@ -65,6 +64,7 @@
 {
     [mainSession disconnect];
     [_peerArray removeAllObjects];
+    [advert stopAdvertisingPeer];
     [browse startBrowsingForPeers];
     _currentRole = NotConnected;
 }
@@ -79,6 +79,7 @@
         
         if (_currentRole == ClientConnection) {
             _server = peerID;
+            [browse stopBrowsingForPeers];
         }
         [[self mutableArrayValueForKey:@"connectedPeersArray"] addObject:peerID];
         [self.delegate connectedToPeer:peerID];
@@ -89,6 +90,7 @@
         if (_currentRole == ClientConnection) {
             _server = nil;
             _currentRole = NotConnected;
+            [browse startBrowsingForPeers];
         }
         [[self mutableArrayValueForKey:@"connectedPeersArray"] removeObject:peerID];
         [self.delegate disconnectedFromPeer:peerID];
