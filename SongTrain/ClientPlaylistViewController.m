@@ -42,6 +42,12 @@
     //TODO: Send song to server
     
     NSLog(@"Sending some data\n");
+    
+    for (MPMediaItem *item in mediaItemCollection.items) {
+        LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
+        [sessionManager addSongToServer:tempSong];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

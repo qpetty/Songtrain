@@ -14,16 +14,32 @@
 {
     if(self = [super init])
     {
-        _message = [aDecoder decodeIntForKey:@"message"];
-        self.data = [aDecoder decodeObjectForKey:@"data"];
+        self.message = [aDecoder decodeIntForKey:@"message"];
+        self.song = [aDecoder decodeObjectForKey:@"song"];
+        
+        if (self.message == RemoveSong) {
+            self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
+        }
+        else if (self.message == SwitchSong) {
+            self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
+            self.secondIndex = [aDecoder decodeIntForKey:@"2ndx"];
+        }
     }
     return self;
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:_message forKey:@"message"];
-    [aCoder encodeObject:self.data forKey:@"data"];
+    [aCoder encodeInteger:self.message forKey:@"message"];
+    [aCoder encodeObject:self.song forKey:@"song"];
+    
+    if (self.message == RemoveSong) {
+        [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
+    }
+    else if (self.message == SwitchSong) {
+        [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
+        [aCoder encodeInteger:self.secondIndex forKey:@"2ndx"];
+    }
 }
 
 

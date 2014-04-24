@@ -103,14 +103,15 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete && musicPlayer.playlist.count == 1) {
-        [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
-        [tableView reloadData];
+        [musicPlayer removeSongFromPlaylist:[indexPath row]];
         [self djMode];
+        [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
     }
     else if (editingStyle == UITableViewCellEditingStyleDelete) {
         [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         [((GrayTableView*)tableView) adjustHeight];
+        [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
     }
 }
 
@@ -123,7 +124,12 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    [musicPlayer.playlist exchangeObjectAtIndex:sourceIndexPath.row withObjectAtIndex:destinationIndexPath.row];
+    Song *tempSong = [musicPlayer.playlist objectAtIndex:sourceIndexPath.row];
+    [musicPlayer.playlist removeObjectAtIndex:sourceIndexPath.row];
+    [musicPlayer.playlist insertObject:tempSong atIndex:destinationIndexPath.row];
+    
+    [sessionManager switchSongFrom:sourceIndexPath.row to:destinationIndexPath.row];
+    NSLog(@"first: %ld   second: %ld\n", (long)sourceIndexPath.row, (long)destinationIndexPath.row);
 }
 
 - (void)didReceiveMemoryWarning
@@ -137,7 +143,9 @@
     
     NSMutableArray *newSongs = [[NSMutableArray alloc] init];
     for (MPMediaItem *item in mediaItemCollection.items) {
-        [newSongs addObject:[[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item]];
+        LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
+        [newSongs addObject:tempSong];
+        [sessionManager addSongToAllPeers:tempSong];
     }
     
     [musicPlayer addSongsToPlaylist:newSongs];
@@ -150,7 +158,9 @@
     //NSLog(@"connectedToPeer");
     if (musicPlayer.playlist.count) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [sessionManager sendData:[SongtrainProtocol dataFromSongArray:musicPlayer.playlist] ToPeer:peerID];
+            for (Song* s in musicPlayer.playlist) {
+                [sessionManager addSong:s toPeer:peerID];
+            }
         });
     }
 }

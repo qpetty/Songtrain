@@ -149,16 +149,16 @@
     else if (sender.tag == SkipButton && sessionManager.currentRole == ServerConnection) {
         [musicPlayer skip];
     }
+    else if (sender.tag == SkipButton && sessionManager.currentRole == ClientConnection) {
+        NSLog(@"Vote to Skip\n");
+    }
 }
 
 - (void)buttonPressed:(UIButton*)sender withSong:(Song *)song
 {
     if (sender.tag == InfoButton) {
         NSLog(@"Info Button pressed\n");
-        //TODO: Memory allocation, only want one InfoViewController
-        if (!infoView)
-            infoView = [[InfoViewController alloc] initWithSong:song];
-        [self.navigationController pushViewController:infoView animated:YES];
+        [self.navigationController pushViewController:[[InfoViewController alloc] initWithSong:song] animated:YES];
     }
 }
 
@@ -213,9 +213,7 @@
 {
     NSLog(@"Selected: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
     
-    if (!infoView)
-        infoView = [[InfoViewController alloc] init];
-    [infoView updateSong:[musicPlayer.playlist objectAtIndex:[indexPath row] + 1]];
+    InfoViewController *infoView = [[InfoViewController alloc] initWithSong:[musicPlayer.playlist objectAtIndex:[indexPath row]]];
     [self.navigationController pushViewController:infoView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -252,6 +250,9 @@
             [panel setSongDuration:musicPlayer.currentSongTime];
         }
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
+            if (sessionManager.currentRole == ServerConnection) {
+                [sessionManager nextSong:musicPlayer.currentSong];
+            }
             [albumArtwork updateSongInfo:musicPlayer.currentSong];
             [mainTableView reloadData];
         }

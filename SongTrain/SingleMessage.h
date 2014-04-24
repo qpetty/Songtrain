@@ -8,9 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+enum MessageTypes : NSInteger {
+    AddSong = 1,
+    RemoveSong,
+    SwitchSong,
+    SkipSong
+};
+
 @interface SingleMessage : NSObject
 
 @property (nonatomic) NSInteger message;
-@property (strong, nonatomic) NSData *data;
+@property (strong, nonatomic) Song *song;
+@property (nonatomic) NSInteger firstIndex, secondIndex;
 
 @end

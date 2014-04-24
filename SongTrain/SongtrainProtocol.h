@@ -10,12 +10,13 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "SingleMessage.h"
 
+/*
 enum MessageTypes : NSInteger {
     SongArray = 1,
     StartStreaming,
     StopStreaming
 };
-
+*/
 @protocol SongtrainProtocolDelegate <NSObject>
 
 - (void)receivedSongArray:(NSMutableArray*)songArray;
@@ -30,8 +31,9 @@ enum MessageTypes : NSInteger {
 
 @property (weak, nonatomic) id <SongtrainProtocolDelegate> delegate;
 
+/*
 -(void)messageToParse:(NSData*)data;
 +(NSData*)dataFromSongArray:(NSMutableArray*)array;
 +(NSData*)dataFromMedia:(Song*)item;
-
+*/
 @end

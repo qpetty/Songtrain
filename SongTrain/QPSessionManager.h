@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Quinton Petty. All rights reserved.
 //
 
-#import "SongtrainProtocol.h"
+#import "SingleMessage.h"
+#import "QPMusicPlayerController.h"
 
 enum CurrentConnectionRole : NSInteger {
     NotConnected = 1,
@@ -26,12 +27,10 @@ enum CurrentConnectionRole : NSInteger {
 
 @class QPMusicPlayerController;
 
-@interface QPSessionManager : NSObject <MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, SongtrainProtocolDelegate>{
+@interface QPSessionManager : NSObject <MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate>{
     MCNearbyServiceBrowser *browse;
     MCNearbyServiceAdvertiser *advert;
     NSString *service;
-    
-    SongtrainProtocol *trainProtocol;
     
     MCSession *mainSession;
 }
@@ -50,6 +49,11 @@ enum CurrentConnectionRole : NSInteger {
 - (void)connectToPeer:(MCPeerID*)peerID;
 - (void)restartSession;
 
-- (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID;
-- (void)sendDataToAllPeers:(NSData*)data;
+- (void)nextSong:(Song*)song;
+- (void)addSongToServer:(Song*)song;
+- (void)addSong:(Song*)song toPeer:(MCPeerID*)peer;
+- (void)addSongToAllPeers:(Song*)song;
+- (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx;
+- (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y;
+
 @end

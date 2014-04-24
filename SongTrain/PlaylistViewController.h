@@ -35,7 +35,6 @@
     QPSessionManager *sessionManager;
     
     CurrentSongView *albumArtwork;
-    InfoViewController *infoView;
     GrayTableView *mainTableView;
     ControlPanel *panel;
     UISegmentedControl *tableviewMenu;

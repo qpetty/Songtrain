@@ -56,6 +56,12 @@
     }
 }
 
+- (void)addSongToPlaylist:(Song*)song
+{
+    [_playlist addObject:song];
+    [self.delegate playListHasBeenUpdated];
+}
+
 - (void)addSongsToPlaylist:(NSMutableArray*)songs
 {
     for (Song *item in songs){
@@ -65,6 +71,21 @@
     [self.delegate playListHasBeenUpdated];
 
     NSLog(@"Finished adding all songs to the playlist\n");
+}
+
+- (void)removeSongFromPlaylist:(NSUInteger)ndx
+{
+    [_playlist removeObjectAtIndex:ndx];
+    [self.delegate playListHasBeenUpdated];
+}
+
+- (void)switchSongFromIndex:(NSUInteger)ndx to:(NSUInteger)ndx2
+{
+    Song *tempSong = [_playlist objectAtIndex:ndx];
+    [_playlist removeObjectAtIndex:ndx];
+    [_playlist insertObject:tempSong atIndex:ndx2];
+    
+    [self.delegate playListHasBeenUpdated];
 }
 
 - (void)play

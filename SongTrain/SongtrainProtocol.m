@@ -10,6 +10,7 @@
 
 @implementation SongtrainProtocol
 
+/*
 -(void)messageToParse:(NSData*)data
 {
     SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -40,5 +41,5 @@
     message.data = [NSKeyedArchiver archivedDataWithRootObject:item];
     return [NSKeyedArchiver archivedDataWithRootObject:message];
 }
-
+*/
 @end

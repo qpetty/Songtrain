@@ -33,9 +33,6 @@
         mainSession = [[MCSession alloc] initWithPeer:self.pid];
         mainSession.delegate = self;
         
-        trainProtocol = [[SongtrainProtocol alloc] init];
-        trainProtocol.delegate = self;
-        
         browse = [[MCNearbyServiceBrowser alloc] initWithPeer:self.pid serviceType:service];
         browse.delegate = self;
         
@@ -119,7 +116,27 @@
     
     NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
     
-    [trainProtocol messageToParse:data];
+    SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (mess.message == AddSong && _currentRole == ServerConnection) {
+            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
+            [self addSongToAllPeers:mess.song];
+        }
+        else if (mess.message == AddSong && _currentRole == ClientConnection) {
+            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
+        }
+        else if (mess.message == SkipSong && _currentRole == ClientConnection) {
+            [[QPMusicPlayerController musicPlayer] skip];
+        }
+        else if (mess.message == RemoveSong && _currentRole == ClientConnection) {
+            [[QPMusicPlayerController musicPlayer] removeSongFromPlaylist:mess.firstIndex];
+        }
+        else if (mess.message == SwitchSong && _currentRole == ClientConnection) {
+            NSLog(@"first: %ld   second: %ld\n", (long)mess.firstIndex, (long)mess.secondIndex);
+            [[QPMusicPlayerController musicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
+        }
+    });
 }
 
 #pragma mark - Advertising Methods
@@ -166,7 +183,7 @@
         NSLog(@"Error: %@\n", error.localizedDescription);
     }
     
-    NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
+    //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)sendDataToAllPeers:(NSData*)data
@@ -179,21 +196,56 @@
     NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
-- (void)receivedSongArray:(NSMutableArray *)songArray
+- (void)nextSong:(Song*)song
 {
-    NSLog(@"Recieved Song Array\n");
-    
-    NSLog(@"Thread: %@\n", [[NSThread currentThread] name]);
-    
-    if (_currentRole == ServerConnection) {
-        NSLog(@"Sending ACK from server\n");
-        //[[QPMusicPlayerController musicPlayer] addArrayOfSongsToPlaylist:songArray];
-        [self sendDataToAllPeers:[SongtrainProtocol dataFromSongArray:[[QPMusicPlayerController musicPlayer] playlist]]];
-    }
-    else if (_currentRole == ClientConnection) {
-        NSLog(@"Got Playlist from server\n");
-        //[[QPMusicPlayerController musicPlayer] recievedPlaylistFromServer:songArray];
-    }
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = SkipSong;
+    message.song = song;
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
+}
+
+- (void)addSongToServer:(Song*)song
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AddSong;
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:self.server];
+}
+
+- (void)addSong:(Song*)song toPeer:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AddSong;
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+
+- (void)addSongToAllPeers:(Song*)song
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AddSong;
+    message.song = song;
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
+}
+
+//- (void)removeSongFromAllPeers:(Song*)song atIndex:(NSUInteger)ndx
+- (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = RemoveSong;
+    //message.song = song;
+    message.firstIndex = ndx;
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
+}
+
+- (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = SwitchSong;
+    //message.song = song;
+    message.firstIndex = x;
+    message.secondIndex = y;
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
 - (void)requestToStartStreaming:(Song*)song
