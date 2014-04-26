@@ -62,6 +62,9 @@
         
         self.showArtwork = YES;
         
+        self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(10, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
+        [self addSubview:self.tinyAlbumView];
+        
     }
     return self;
 }
@@ -86,18 +89,24 @@
     currentSong = song;
     songTitle.text = currentSong.title;
     songArtist.text = currentSong.artistName;
-    if (self.showArtwork)
+    if (self.showArtwork) {
         self.image = [self cropAlbumImage:currentSong.albumImage];
-    else
+        self.tinyAlbumView.image = currentSong.albumImage;
+    } else {
         self.image = nil;
+        self.tinyAlbumView.image = nil;
+    }
 }
 
 - (void)setIsShowArtwork:(BOOL)show
 {
-    if (show)
+    if (show) {
         self.image = [self cropAlbumImage:currentSong.albumImage];
-    else
+        self.tinyAlbumView.image = currentSong.albumImage;
+    } else {
         self.image = nil;
+        self.tinyAlbumView.image = nil;
+    }
     _showArtwork = show;
 }
 

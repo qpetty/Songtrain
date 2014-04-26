@@ -31,6 +31,7 @@ enum ButtonNames : NSInteger {
 @property (weak, nonatomic) id <CurrentSongViewDelegate> delegate;
 @property (nonatomic, assign, setter = setIsShowArtwork:) BOOL showArtwork;
 @property (nonatomic, assign, setter = setIsShowInfoButton:) BOOL showInfoButton;
+@property (strong) UIImageView *tinyAlbumView;
 
 - (id)initWithSong:(Song*)song andFrame:(CGRect)frame;
 - (void)updateSongInfo:(Song*)song;
