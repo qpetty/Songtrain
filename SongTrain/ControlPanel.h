@@ -31,7 +31,9 @@ enum ControlPanelButtonNames : NSInteger {
 
 @property (weak, nonatomic) id <ControlPanelDelegate> delegate;
 @property (nonatomic, assign, setter = setSongDuration:) NSRange songDuration;
+@property (nonatomic, assign, setter = setIsPlaying:) BOOL isPlaying;
 
+- (void)setIsPlaying:(BOOL)isPlaying;
 - (void)setSongDuration:(NSRange)songDuration;
 
 @end

@@ -86,6 +86,16 @@
     return self;
 }
 
+- (void)setIsPlaying:(BOOL)isPlaying
+{
+    if (isPlaying) {
+        [playButton setTitle:@"Pause" forState:UIControlStateNormal];
+    }
+    else {
+        [playButton setTitle:@"Play" forState:UIControlStateNormal];
+    }
+}
+
 - (void)setSongDuration:(NSRange)songDuration
 {
     songProgress.progress = (float)songDuration.location / (float)songDuration.length;

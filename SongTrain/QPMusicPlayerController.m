@@ -115,7 +115,10 @@
         //NSLog(@"%@", _currentSong.url.path);
         
         NSAssert(err == noErr, @"Error starting graph.");
+        
+        [self willChangeValueForKey:@"currentlyPlaying"];
         _currentlyPlaying = YES;
+        [self didChangeValueForKey:@"currentlyPlaying"];
     }
     else {
         AUGraphStop(graph);
@@ -125,7 +128,9 @@
             timer = nil;
         }
         
+        [self willChangeValueForKey:@"currentlyPlaying"];
         _currentlyPlaying = NO;
+        [self didChangeValueForKey:@"currentlyPlaying"];
     }
 }
 
