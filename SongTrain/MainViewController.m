@@ -54,7 +54,6 @@
     musicPlayer = [QPMusicPlayerController musicPlayer];
     
     self.albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
-    self.albumArtwork.delegate = self;
 
     if (musicPlayer.currentSong) {
         [self.albumArtwork updateSongInfo:musicPlayer.currentSong];
@@ -138,17 +137,6 @@
     ServerPlaylistViewController *newViewController = [[ServerPlaylistViewController alloc] init];
     sessionManager.delegate = newViewController;
     [self.navigationController pushViewController:newViewController animated:YES];
-}
-
-- (void)buttonPressed:(UIButton *)sender withSong:(Song *)song
-{
-    if (sender.tag == InfoButton) {
-        NSLog(@"Info Button pressed\n");
-        //TODO: Memory allocation, only want one InfoViewController
-        infoView = [[InfoViewController alloc] initWithSong:song];
-        [self.navigationController pushViewController:infoView animated:YES];
-    }
-
 }
 
 - (void)availablePeersUpdated:(NSMutableArray *)peerArray

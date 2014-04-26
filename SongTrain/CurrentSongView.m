@@ -51,15 +51,6 @@
         //Add buttons
         //Info Button
         
-        infoButton = [[UIButton alloc] initWithFrame:CGRectMake(frame.size.width * (9.0 / 10.0) - BUTTON_SIZE,
-                                                                frame.size.height / 2 - BUTTON_SIZE / 2,
-                                                                BUTTON_SIZE,
-                                                                BUTTON_SIZE)];
-        infoButton.tag = InfoButton;
-        [infoButton setImage:[UIImage imageNamed:@"infoButton"] forState:UIControlStateNormal];
-        [infoButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
-        [self addSubview:infoButton];
-        
         self.showArtwork = YES;
         
         self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(10, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
@@ -77,11 +68,6 @@
     }
     
     return self;
-}
-
-- (void)buttonPressed:(UIButton*)button
-{
-    [self.delegate buttonPressed:button withSong:currentSong];
 }
 
 - (void)updateSongInfo:(Song*)song
@@ -108,15 +94,6 @@
         self.tinyAlbumView.image = nil;
     }
     _showArtwork = show;
-}
-
-- (void)setIsShowInfoButton:(BOOL)show
-{
-    if (show)
-        infoButton.hidden = NO;
-    else
-        infoButton.hidden = YES;
-    _showInfoButton = show;
 }
 
 - (UIImage*)cropAlbumImage:(UIImage*)image
