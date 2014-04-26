@@ -48,7 +48,6 @@
                                  ARTWORK_HEIGHT);
     
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
-    albumArtwork.delegate = self;
     [self.view addSubview:albumArtwork];
     
     // Tracks and Passengers selector background
@@ -154,14 +153,6 @@
     }
 }
 
-- (void)buttonPressed:(UIButton*)sender withSong:(Song *)song
-{
-    if (sender.tag == InfoButton) {
-        NSLog(@"Info Button pressed\n");
-        [self.navigationController pushViewController:[[InfoViewController alloc] initWithSong:song] animated:YES];
-    }
-}
-
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
 }
@@ -180,6 +171,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.userInteractionEnabled = NO;
     }
     if (tableviewMenu.selectedSegmentIndex) {
         
@@ -197,26 +190,12 @@
     if (musicPlayer.playlist.count){
         cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
         cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] artistName];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.userInteractionEnabled = YES;
     }
     else{
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.userInteractionEnabled = NO;
         cell.textLabel.text = @"No Songs in Queue";
         cell.detailTextLabel.text = @"";
     }
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"Selected: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
-    
-    InfoViewController *infoView = [[InfoViewController alloc] initWithSong:[musicPlayer.playlist objectAtIndex:[indexPath row]]];
-    [self.navigationController pushViewController:infoView animated:YES];
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

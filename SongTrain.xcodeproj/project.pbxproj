@@ -49,7 +49,6 @@
 		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
 		69BE4FA818A038FA00483DD8 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA718A038FA00483DD8 /* CoreAudio.framework */; };
 		69BE4FB518A1ABBC00483DD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */; };
-		69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8B1893637D00B957DB /* InfoViewController.m */; };
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
@@ -148,8 +147,6 @@
 		69BE4FA718A038FA00483DD8 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		69BE4FB418A1ABBC00483DD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		69C04C891893624900B957DB /* UsefulFunctions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UsefulFunctions.h; sourceTree = "<group>"; };
-		69C04C8A1893637D00B957DB /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
-		69C04C8B1893637D00B957DB /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		69C04C8D18962EC800B957DB /* PlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
 		69C04C8E18962EC800B957DB /* PlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistViewController.m; sourceTree = "<group>"; };
 		69CAC9A9189EE18100C9B02A /* ClientPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPlaylistViewController.h; sourceTree = "<group>"; };
@@ -391,8 +388,6 @@
 				69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */,
 				69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */,
 				69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */,
-				69C04C8A1893637D00B957DB /* InfoViewController.h */,
-				69C04C8B1893637D00B957DB /* InfoViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -567,7 +562,6 @@
 				6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */,
 				6970F4E118A6A0BE00EAB82A /* TDAudioQueueController.m in Sources */,
 				697CF6AC1898794F00CF4DC7 /* Song.m in Sources */,
-				69C04C8C1893637D00B957DB /* InfoViewController.m in Sources */,
 				69327DB7188F0F16001AB7F5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

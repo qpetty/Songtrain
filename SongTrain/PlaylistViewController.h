@@ -13,7 +13,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "UsefulFunctions.h"
 #import "CurrentSongView.h"
-#import "InfoViewController.h"
 #import "GrayTableView.h"
 #import "ControlPanel.h"
 
@@ -25,7 +24,7 @@
 
 #import "MusicPickerViewController.h"
 
-@interface PlaylistViewController : UIViewController <CurrentSongViewDelegate, ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate, MusicPickerViewController>{
+@interface PlaylistViewController : UIViewController <ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate, MusicPickerViewController>{
     
     //MPMediaPickerController *picker;
     MusicPickerViewController *picker;

@@ -16,20 +16,17 @@
 #import "CurrentSongView.h"
 #import "SingleCellButton.h"
 #import "GrayTableView.h"
-#import "InfoViewController.h"
 #import "Animator.h"
 #import "ServerPlaylistViewController.h"
 #import "ClientPlaylistViewController.h"
-#import "InfoViewController.h"
 
 #import "ControlPanel.h"
 
 #define HEIGHT_BEFORE_TABLEVIEW 60
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, CurrentSongViewDelegate, ControlPanelDelegate, UINavigationControllerDelegate>{
+@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, ControlPanelDelegate, UINavigationControllerDelegate>{
     
     UILabel *label;
-    InfoViewController *infoView;
     GrayTableView *mainTableView;
     ControlPanel *panel;
     
