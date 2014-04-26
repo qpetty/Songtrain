@@ -26,11 +26,6 @@
         musicPlayer.delegate = self;
         sessionManager = [QPSessionManager sessionManager];
         sessionManager.delegate = self;
-        /*
-        [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
-        [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
-        [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
-         */
     }
     return self;
 }
@@ -70,13 +65,6 @@
     [tableviewMenu addTarget:self action:@selector(tracksAndPassengersSegment) forControlEvents:UIControlEventValueChanged];
     
     //Initialize Media picker
-    /*
-    picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
-    picker.allowsPickingMultipleItems = YES;
-    picker.showsCloudItems = NO;
-    picker.prompt = NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
-    */
-    
     picker = [[MusicPickerViewController alloc] init];
     picker.delegate = self;
     
@@ -110,8 +98,10 @@
     [super viewWillAppear:animated];
     [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentlyPlaying" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     
+    panel.isPlaying = musicPlayer.currentlyPlaying;
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     [mainTableView reloadData];
 }
@@ -121,6 +111,7 @@
     [super viewDidDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"connectedPeersArray"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentlyPlaying"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
 }
 
@@ -141,12 +132,6 @@
     }
     else if (sender.tag == PlayButton && sessionManager.currentRole == ServerConnection) {
         [musicPlayer play];
-        if (musicPlayer.currentlyPlaying) {
-            [sender setTitle:@"Pause" forState:UIControlStateNormal];
-        }
-        else {
-            [sender setTitle:@"Play" forState:UIControlStateNormal];
-        }
     }
     else if (sender.tag == SkipButton) {
         [musicPlayer skip];
@@ -168,7 +153,7 @@
     NSString *identifier = @"Peer cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -185,7 +170,6 @@
             cell.detailTextLabel.text = @"";
         }
         return cell;
-        
     }
     if (musicPlayer.playlist.count){
         cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
@@ -198,6 +182,11 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 48;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableviewMenu.selectedSegmentIndex) {
@@ -207,11 +196,20 @@
     return musicPlayer.playlist.count ? musicPlayer.playlist.count : 1;
 }
 
+- (void)connectedToPeer:(MCPeerID *)peerID
+{
+    
+}
+
+- (void)disconnectedFromPeer:(MCPeerID *)peerID
+{
+    
+}
+
 - (void)playListHasBeenUpdated
 {
     NSLog(@"Updating Playlist\n");
     dispatch_async(dispatch_get_main_queue(), ^{
-        //[albumArtwork updateSongInfo:musicPlayer.currentSong];
         [mainTableView reloadData];
     });
 }
@@ -227,6 +225,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (object == musicPlayer && [keyPath isEqualToString:@"currentSongTime"]) {
             [panel setSongDuration:musicPlayer.currentSongTime];
+        }
+        else if (object == musicPlayer && [keyPath isEqualToString:@"currentlyPlaying"]) {
+            panel.isPlaying = musicPlayer.currentlyPlaying;
         }
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
             [albumArtwork updateSongInfo:musicPlayer.currentSong];

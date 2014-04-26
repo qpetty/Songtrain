@@ -26,7 +26,6 @@
 
 @interface PlaylistViewController : UIViewController <ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate, MusicPickerViewController>{
     
-    //MPMediaPickerController *picker;
     MusicPickerViewController *picker;
     
     QPMusicPlayerController *musicPlayer;
