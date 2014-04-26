@@ -153,7 +153,7 @@
     NSString *identifier = @"Peer cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -170,7 +170,6 @@
             cell.detailTextLabel.text = @"";
         }
         return cell;
-        
     }
     if (musicPlayer.playlist.count){
         cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
@@ -183,6 +182,11 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 48;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableviewMenu.selectedSegmentIndex) {
@@ -190,6 +194,16 @@
     }
 
     return musicPlayer.playlist.count ? musicPlayer.playlist.count : 1;
+}
+
+- (void)connectedToPeer:(MCPeerID *)peerID
+{
+    
+}
+
+- (void)disconnectedFromPeer:(MCPeerID *)peerID
+{
+    
 }
 
 - (void)playListHasBeenUpdated
