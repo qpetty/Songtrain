@@ -22,14 +22,18 @@
         self.tintColor = UIColorFromRGB(0x797979);
         self.backgroundColor = UIColorFromRGB(0x464646);
         
+        //Add Tiny Album Cover
+        self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(18, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
+        [self addSubview:self.tinyAlbumView];
+        
         //Song Title
         songTitle = [[UILabel alloc] init];
         [self addSubview:songTitle];
         songTitle.textColor = [UIColor whiteColor];
-        [songTitle setFont:[UIFont systemFontOfSize:26]];
+        [songTitle setFont:[UIFont systemFontOfSize:18]];
         
-        songTitle.frame = CGRectMake(15,
-                                     songTitle.superview.frame.size.height / 3 ,
+        songTitle.frame = CGRectMake(self.tinyAlbumView.frame.size.width + self.tinyAlbumView.frame.origin.x + 15,
+                                     self.tinyAlbumView.frame.origin.y + self.tinyAlbumView.frame.size.height/2,
                                      songTitle.superview.frame.size.width * 0.6,
                                      songTitle.superview.frame.size.height / 4);
         
@@ -37,7 +41,7 @@
         songArtist = [[UILabel alloc] init];
         [self addSubview:songArtist];
         songArtist.textColor = [UIColor whiteColor];
-        [songArtist setFont:[UIFont systemFontOfSize:16]];
+        [songArtist setFont:[UIFont systemFontOfSize:14]];
         
         songArtist.frame = CGRectMake(songTitle.frame.origin.x,
                                       songTitle.frame.origin.y + songTitle.frame.size.height,
@@ -48,13 +52,9 @@
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.clipsToBounds = YES;
         
-        //Add buttons
-        //Info Button
-        
         self.showArtwork = YES;
         
-        self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(10, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
-        [self addSubview:self.tinyAlbumView];
+
         
     }
     return self;
