@@ -157,7 +157,8 @@
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.userInteractionEnabled = NO;
+        cell.userInteractionEnabled = YES;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     if (tableviewMenu.selectedSegmentIndex) {
         
