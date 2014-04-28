@@ -46,7 +46,7 @@
     [self.view addSubview:albumArtwork];
     
     // Tracks and Passengers selector background
-    tableviewMenuBackground = [[UIView alloc] initWithFrame:CGRectMake(location.origin.x, location.origin.y + location.size.height, self.view.frame.size.width, 40)];
+    tableviewMenuBackground = [[UIView alloc] initWithFrame:CGRectMake(location.origin.x, location.origin.y + location.size.height, self.view.frame.size.width, 44)];
 
     tableviewMenuBackground.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
     [tableviewMenuBackground.layer setBorderWidth:0.0f];
@@ -55,7 +55,7 @@
     
     // Tracks and Passengers selector
     tableviewMenu = [[UISegmentedControl alloc] initWithItems:@[@"Tracks", @"Passengers"]];
-    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 3, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 10, self.view.bounds.size.width - 6, 20);
+    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 3, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 6, 26);
     
     [tableviewMenu setSelectedSegmentIndex:0];
     [tableviewMenu setTintColor:UIColorFromRGB(0x6F95D3)];

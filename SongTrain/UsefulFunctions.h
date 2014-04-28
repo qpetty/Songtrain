@@ -17,7 +17,7 @@
 #endif
 
 #define ARTWORK_HEIGHT 88.0
-#define SINGLE_TABLEVIEWCELL_HEIGHT 44.0
+#define SINGLE_TABLEVIEWCELL_HEIGHT 45.0
 
 
 #define SERVICE_TYPE @"Songtrain"
