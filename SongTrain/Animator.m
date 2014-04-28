@@ -52,7 +52,7 @@
         newView = [[UIImageView alloc] initWithFrame:toViewController.view.bounds];
 
         
-        newView.frame = CGRectMake(fromViewController.view.bounds.origin.x - 30, fromViewController.view.bounds.origin.y - 15, fromViewController.view.bounds.size.width * 1.5 + 60, fromViewController.view.bounds.size.height + 30);
+        newView.frame = CGRectMake(fromViewController.view.bounds.origin.x - 30, fromViewController.view.bounds.origin.y - 15, fromViewController.view.bounds.size.width * 1.5 + 60, fromViewController.view.bounds.size.height + 40);
         newView.image = blurredImage;
         [container addSubview:newView];
         self.firstTime = NO;

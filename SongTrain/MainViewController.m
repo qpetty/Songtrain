@@ -38,7 +38,7 @@
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
 
     newView = [[UIImageView alloc] initWithFrame:self.view.frame];
-    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 30);
+    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 40);
     newView.image = blurredImage;
     [self.view addSubview:newView];
 
@@ -62,7 +62,9 @@
         // Put Label here.
         songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
         UIImageView *header = [[UIImageView alloc] initWithImage:songNotPlayingHeader];
-        header.frame = CGRectMake(self.view.bounds.size.width/4, self.view.bounds.size.height/6, self.view.bounds.size.width/2, self.view.bounds.size.height/15);
+        
+        header.frame = CGRectMake(self.view.bounds.size.width/3, self.view.bounds.size.height/6, self.view.bounds.size.width/3, self.view.bounds.size.height/20);
+        
         [self.view addSubview:header];
     }
 
