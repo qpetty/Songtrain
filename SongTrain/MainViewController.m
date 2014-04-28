@@ -76,7 +76,6 @@
                           self.view.bounds.size.width,
                           SINGLE_TABLEVIEWCELL_HEIGHT);
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
-    self.createTrainButton.frame = location;
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
     self.createTrainButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;

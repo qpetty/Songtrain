@@ -70,9 +70,9 @@
     
     //Create TableView
     location = CGRectMake(self.view.bounds.origin.x,
-                          albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 40,
+                          tableviewMenuBackground.frame.origin.y + tableviewMenuBackground.frame.size.height,
                           self.view.bounds.size.width,
-                          self.view.bounds.size.height - (2 * albumArtwork.frame.origin.y) - albumArtwork.frame.size.height - 40);
+                          self.view.bounds.size.height - (2 * albumArtwork.frame.origin.y) - albumArtwork.frame.size.height - tableviewMenuBackground.frame.size.height);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     mainTableView.delegate = self;
     mainTableView.dataSource = self;
