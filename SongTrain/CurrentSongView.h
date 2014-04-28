@@ -14,6 +14,7 @@
     Song *currentSong;
     UILabel *songTitle;
     UILabel *songArtist;
+    UIView *blurFilter;
 }
 
 @property (nonatomic, assign, setter = setIsShowArtwork:) BOOL showArtwork;

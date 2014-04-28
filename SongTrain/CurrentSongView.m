@@ -22,6 +22,11 @@
         self.tintColor = UIColorFromRGB(0x797979);
         self.backgroundColor = UIColorFromRGB(0x464646);
         
+        //Blur Filter
+        blurFilter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        blurFilter.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
+        [self addSubview:blurFilter];
+        
         //Add Tiny Album Cover
         self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(18, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
         [self addSubview:self.tinyAlbumView];
@@ -51,11 +56,9 @@
         //Song Album Artwork Setup
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.clipsToBounds = YES;
-        
         self.showArtwork = YES;
         
 
-        
     }
     return self;
 }

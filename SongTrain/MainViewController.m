@@ -83,7 +83,8 @@
     location = CGRectMake(self.view.frame.origin.x,
                           self.createTrainButton.frame.origin.y + self.createTrainButton.frame.size.height + HEIGHT_BEFORE_TABLEVIEW,
                           self.view.frame.size.width,
-                          self.view.frame.size.height - self.createTrainButton.frame.origin.y - self.createTrainButton.frame.size.height - HEIGHT_BEFORE_TABLEVIEW - self.albumArtwork.frame.origin.y);
+                          self.view.frame.size.height - self.createTrainButton.frame.origin.y - self.createTrainButton.frame.size.height);
+                          //- HEIGHT_BEFORE_TABLEVIEW);// - self.albumArtwork.frame.origin.y);
     mainTableView = [[GrayTableView alloc] initWithFrame:location];
     [self.view addSubview:mainTableView];
     
@@ -109,9 +110,9 @@
                           self.view.frame.size.width,
                           self.albumArtwork.frame.origin.y);
     
-    panel = [[ControlPanel alloc] initWithFrame:location];
+    /*panel = [[ControlPanel alloc] initWithFrame:location];
     //panel.delegate = self;
-    [self.view addSubview:panel];
+    [self.view addSubview:panel];*/
     
     // Hide annoying line
     self.navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
