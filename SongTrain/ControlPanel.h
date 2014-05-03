@@ -23,7 +23,7 @@ enum ControlPanelButtonNames : NSInteger {
 @interface ControlPanel : UIImageView{
     UIButton *addButton;
     UIButton *skipButton;
-    UILabel *timeLabel;
+    UILabel *topLabel, *bottomLabel;
     UIButton *playButton;
     
     UIProgressView *songProgress;

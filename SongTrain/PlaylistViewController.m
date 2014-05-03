@@ -55,7 +55,8 @@
     
     // Tracks and Passengers selector
     tableviewMenu = [[UISegmentedControl alloc] initWithItems:@[@"Tracks", @"Passengers"]];
-    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 3, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 6, 26);
+    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 7, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 14, tableviewMenuBackground.frame.size.height - 14);
+    NSLog(@"origin x: %f\n", self.view.bounds.origin.x + 3);
     
     [tableviewMenu setSelectedSegmentIndex:0];
     [tableviewMenu setTintColor:UIColorFromRGB(0x6F95D3)];
@@ -225,7 +226,6 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    NSLog(@"Updateing %@\n", keyPath);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (object == musicPlayer && [keyPath isEqualToString:@"currentSongTime"]) {
             [panel setSongDuration:musicPlayer.currentSongTime];
