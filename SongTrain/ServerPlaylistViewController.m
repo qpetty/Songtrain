@@ -46,11 +46,11 @@
 
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
-    [djButton addTarget:self action:@selector(djMode) forControlEvents:UIControlEventTouchUpInside];
-    setEditing = NO;
-    if (!musicPlayer.playlist.count) {
-        [djButton setEnabled:NO];
-    }
+    [djButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
+    //setEditing = NO;
+    [self djUpdate:nil];
+
+    
     //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
@@ -58,29 +58,37 @@
     //[tableviewMenu addTarget:self action:@selector(turnOffEditOnUISegementSwitch) forControlEvents:UIControlEventValueChanged];
 }
 
-- (void)djMode
+- (void)djUpdate:(UIButton*)sender
 {
-    if (!musicPlayer.playlist.count) {
-        return;
-    }
-
-    if (self.djEditing) {
-        [UIView animateWithDuration:0.5 animations:^{
-            djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
-                                        self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
-        }];
-    }
-    else {
-        [UIView animateWithDuration:0.5 animations:^{
-            djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
-        }];
-    }
-    
-    self.djEditing = !self.djEditing;
-    
-    if ((tableviewMenu.selectedSegmentIndex && sessionManager.connectedPeersArray.count) || musicPlayer.playlist.count) {
-        setEditing = !setEditing;
-        [mainTableView setEditing:setEditing animated:YES];
+    if (sender) {
+        // User clicked djButton
+        if ([mainTableView isEditing]) {
+            [UIView animateWithDuration:0.5 animations:^{
+                djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                            self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+            }];
+            [mainTableView setEditing:NO];
+        } else {
+            [UIView animateWithDuration:0.5 animations:^{
+                djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+            }];
+            [mainTableView setEditing:YES];
+        }
+        [self djUpdate:nil];
+        
+    } else {
+        // User did not click djButton
+        if (musicPlayer.playlist.count == 0) {
+            [mainTableView setEditing:NO];
+            [UIView animateWithDuration:0.5 animations:^{
+                djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                            self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+            }];
+            [djButton setEnabled:NO];
+        } else {
+            [djButton setEnabled:YES];
+        }
+        
     }
 }
 
@@ -110,7 +118,6 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete && musicPlayer.playlist.count == 1) {
         [musicPlayer removeSongFromPlaylist:[indexPath row]];
-        [self djMode];
         [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
     }
     else if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -119,6 +126,7 @@
         [((GrayTableView*)tableView) adjustHeight];
         [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
     }
+    [self djUpdate:nil];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
@@ -156,11 +164,7 @@
     
     [musicPlayer addSongsToPlaylist:newSongs];
     
-    if (musicPlayer.playlist.count) {
-        [djButton setEnabled:YES];
-    } else {
-        [djButton setEnabled:NO];
-    }
+    [self djUpdate:nil];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -192,10 +196,15 @@
 - (void)playListHasBeenUpdated
 {
     [super playListHasBeenUpdated];
-    [self djMode];
+    [self djUpdate:nil];
  
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    [self djUpdate:nil];
+}
 
 
 @end
