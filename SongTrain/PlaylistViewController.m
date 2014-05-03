@@ -239,6 +239,7 @@
         }
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong.albumImage"]) {
             [albumArtwork updateSongInfo:musicPlayer.currentSong];
+            [musicPlayer updateNowPlaying];
         }
         else {
             [mainTableView reloadData];

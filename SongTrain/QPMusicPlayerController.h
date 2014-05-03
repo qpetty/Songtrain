@@ -45,4 +45,6 @@
 - (void)play;
 - (void)skip;
 - (void)nextSong;
+
+- (void)updateNowPlaying;
 @end
