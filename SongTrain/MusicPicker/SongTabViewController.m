@@ -108,7 +108,7 @@
              cell.backgroundColor = [UIColor greenColor];
          }
          else {
-             cell.backgroundColor = [UIColor whiteColor];
+             cell.backgroundColor = [UIColor clearColor];
          }
          //NSLog(@"%@\n", [((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]] ? @"YES" : @"NO");
      }

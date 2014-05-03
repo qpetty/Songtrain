@@ -32,6 +32,9 @@
         wholeTableView = [[UITableView alloc] init];
         wholeTableView.dataSource = self;
         wholeTableView.delegate = self;
+        wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
+        [wholeTableView setBackgroundColor: [UIColor clearColor]];
+        
     }
     return self;
 }
