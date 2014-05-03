@@ -126,13 +126,55 @@
     
     SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     
+    if (mess.message == AlbumRequest) {
+        //send album
+        NSLog(@"Got request for album image\n");
+        
+        if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
+            [self sendAlbumArtwork: [[QPMusicPlayerController musicPlayer] currentSong] to:peerID];
+            return;
+        }
+        
+        for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
+            if ([song.url isEqual:mess.song.url]) {
+                [self sendAlbumArtwork:song to:peerID];
+                break;
+            }
+        }
+        return;
+    }
+    else if (mess.message == AlbumImage) {
+        
+        //NSLog(@"Comparing %@ and %@\n", [[[QPMusicPlayerController musicPlayer] currentSong] title], mess.song.title);
+        
+        if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
+            [[QPMusicPlayerController musicPlayer] currentSong].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
+            NSLog(@"Unarchieved %@\n", [NSKeyedUnarchiver unarchiveObjectWithData:mess.data]);
+            NSLog(@"Adding Image to current Song, Image: %@\n", [[QPMusicPlayerController musicPlayer] currentSong].albumImage);
+            
+            //[[[QPMusicPlayerController musicPlayer] currentSong] setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
+            return;
+        }
+        
+        for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
+            if ([song.url isEqual:mess.song.url]) {
+                NSLog(@"Adding Image to song in playlist\n");
+                song.albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
+                //[song setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
+                break;
+            }
+        }
+        return;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         if (mess.message == AddSong && _currentRole == ServerConnection) {
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
             [self addSongToAllPeers:mess.song];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
-            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
+            RemoteSong *recievedSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
+            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:recievedSong];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
             [[QPMusicPlayerController musicPlayer] nextSong];
@@ -256,16 +298,30 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
-/*
-- (void)requestAlbumArtwork:(NSUInteger)ndx fromPeer:(MCPeerID*)peer
+- (void)requestAlbumArtwork:(RemoteSong*)song
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = AlbumRequest;
-    //message.song = song;
-    message.firstIndex = ndx;
-    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
+    NSLog(@"Requesting album artwork\n");
 }
-*/
+
+- (void)sendAlbumArtwork:(Song*)song to:(MCPeerID*)peer
+{
+    if (song.albumImage == nil){
+        NSLog(@"No Album Image to send\n");
+        return;
+    }
+    
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AlbumImage;
+    message.song = song;
+    message.data = [NSKeyedArchiver archivedDataWithRootObject:song.albumImage];
+    
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+    NSLog(@"Sending Image %@\n", song.albumImage);
+}
 
 - (void)requestToStartStreaming:(Song*)song
 {

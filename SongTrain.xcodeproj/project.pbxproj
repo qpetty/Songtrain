@@ -52,6 +52,7 @@
 		69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C04C8E18962EC800B957DB /* PlaylistViewController.m */; };
 		69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */; };
 		69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */; };
+		69F85E2619149C4A001A7A45 /* RemoteSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F85E2519149C4A001A7A45 /* RemoteSong.m */; };
 		69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48A318F9DDE700E48B98 /* LocalSong.m */; };
 		69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48B818FA09E500E48B98 /* ArtistTabViewController.m */; };
 		69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FF48BA18FA09E500E48B98 /* MusicPickerViewController.m */; };
@@ -153,6 +154,8 @@
 		69CAC9AA189EE18100C9B02A /* ClientPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPlaylistViewController.m; sourceTree = "<group>"; };
 		69CAC9AC189EE19600C9B02A /* ServerPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPlaylistViewController.h; sourceTree = "<group>"; };
 		69CAC9AD189EE19600C9B02A /* ServerPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPlaylistViewController.m; sourceTree = "<group>"; };
+		69F85E2419149C4A001A7A45 /* RemoteSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoteSong.h; sourceTree = "<group>"; };
+		69F85E2519149C4A001A7A45 /* RemoteSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemoteSong.m; sourceTree = "<group>"; };
 		69FF48A218F9DDE700E48B98 /* LocalSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSong.h; sourceTree = "<group>"; };
 		69FF48A318F9DDE700E48B98 /* LocalSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSong.m; sourceTree = "<group>"; };
 		69FF48B718FA09E500E48B98 /* ArtistTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistTabViewController.h; sourceTree = "<group>"; };
@@ -315,6 +318,8 @@
 				697CF6AB1898794F00CF4DC7 /* Song.m */,
 				69FF48A218F9DDE700E48B98 /* LocalSong.h */,
 				69FF48A318F9DDE700E48B98 /* LocalSong.m */,
+				69F85E2419149C4A001A7A45 /* RemoteSong.h */,
+				69F85E2519149C4A001A7A45 /* RemoteSong.m */,
 				6970F4E818A6A90000EAB82A /* SingleMessage.h */,
 				6970F4E918A6A90000EAB82A /* SingleMessage.m */,
 			);
@@ -472,7 +477,7 @@
 				ORGANIZATIONNAME = "Quinton Petty";
 				TargetAttributes = {
 					69327DA6188F0F16001AB7F5 = {
-						DevelopmentTeam = 4SAU2A56Y4;
+						DevelopmentTeam = JX9WQKUYGV;
 					};
 					69327DC7188F0F16001AB7F5 = {
 						TestTargetID = 69327DA6188F0F16001AB7F5;
@@ -532,6 +537,7 @@
 				69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */,
 				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
 				69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */,
+				69F85E2619149C4A001A7A45 /* RemoteSong.m in Sources */,
 				6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */,
 				69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */,
 				6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */,
@@ -690,12 +696,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
+				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -706,12 +712,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
+				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

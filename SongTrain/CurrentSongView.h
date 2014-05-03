@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
+#import "QPMusicPlayerController.h"
 #import "UsefulFunctions.h"
 
 @interface CurrentSongView : UIImageView{

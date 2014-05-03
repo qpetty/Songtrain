@@ -98,6 +98,7 @@
     [super viewWillAppear:animated];
     [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentlyPlaying" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -111,6 +112,7 @@
     [super viewDidDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"connectedPeersArray"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
     [musicPlayer removeObserver:self forKeyPath:@"currentlyPlaying"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
 }
@@ -223,6 +225,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    NSLog(@"Updateing %@\n", keyPath);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (object == musicPlayer && [keyPath isEqualToString:@"currentSongTime"]) {
             [panel setSongDuration:musicPlayer.currentSongTime];
@@ -233,6 +236,9 @@
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
             [albumArtwork updateSongInfo:musicPlayer.currentSong];
             [mainTableView reloadData];
+        }
+        else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong.albumImage"]) {
+            [albumArtwork updateSongInfo:musicPlayer.currentSong];
         }
         else {
             [mainTableView reloadData];

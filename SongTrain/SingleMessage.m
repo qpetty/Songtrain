@@ -24,6 +24,9 @@
             self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
             self.secondIndex = [aDecoder decodeIntForKey:@"2ndx"];
         }
+        else if (self.message == AlbumImage) {
+            self.data = [aDecoder decodeObjectForKey:@"data"];
+        }
     }
     return self;
 }
@@ -39,6 +42,9 @@
     else if (self.message == SwitchSong) {
         [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
         [aCoder encodeInteger:self.secondIndex forKey:@"2ndx"];
+    }
+    else if (self.message == AlbumImage) {
+        [aCoder encodeObject:self.data forKey:@"data"];
     }
 }
 

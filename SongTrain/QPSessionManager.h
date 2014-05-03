@@ -25,6 +25,7 @@ enum CurrentConnectionRole : NSInteger {
 
 @end
 
+@class RemoteSong;
 @class QPMusicPlayerController;
 
 @interface QPSessionManager : NSObject <MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate>{
@@ -55,6 +56,6 @@ enum CurrentConnectionRole : NSInteger {
 - (void)addSongToAllPeers:(Song*)song;
 - (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx;
 - (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y;
-//- (void)requestAlbumArtwork:(NSUInteger)ndx fromPeer:(MCPeerID*)peer;
+- (void)requestAlbumArtwork:(RemoteSong*)song;
 
 @end

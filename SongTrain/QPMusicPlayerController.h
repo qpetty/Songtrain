@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "LocalSong.h"
+#import "RemoteSong.h"
 #import "ControlPanel.h"
 
 @protocol QPMusicPlayerControllerDelegate <NSObject>

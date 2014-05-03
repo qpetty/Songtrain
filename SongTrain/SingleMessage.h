@@ -13,7 +13,8 @@ enum MessageTypes : NSInteger {
     RemoveSong,
     SwitchSong,
     SkipSong,
-    AlbumRequest
+    AlbumRequest,
+    AlbumImage
 };
 
 @interface SingleMessage : NSObject
@@ -21,5 +22,6 @@ enum MessageTypes : NSInteger {
 @property (nonatomic) NSInteger message;
 @property (strong, nonatomic) Song *song;
 @property (nonatomic) NSInteger firstIndex, secondIndex;
+@property (strong, nonatomic) NSData *data;
 
 @end

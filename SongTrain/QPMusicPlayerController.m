@@ -163,8 +163,12 @@
 
 - (void)updateNowPlaying
 {
+    //Implement a default album artwork here
+    //MPMediaItemArtwork *art = [[MPMediaItemArtwork alloc] initWithImage:_currentSong.albumImage];
+    
     NSDictionary *info = @{MPMediaItemPropertyTitle: _currentSong.title,
-                          MPMediaItemPropertyArtist: _currentSong.artistName};
+                           MPMediaItemPropertyArtist: _currentSong.artistName};
+                          //MPMediaItemPropertyArtwork: art};
     [nowPlayingCenter setNowPlayingInfo:info];
 }
 
