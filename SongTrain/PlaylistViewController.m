@@ -170,8 +170,8 @@
         else {
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.textLabel.text = @"No Passengers in Train";
-            cell.detailTextLabel.text = @"";
         }
+        cell.detailTextLabel.text = @"";
         return cell;
     }
     if (musicPlayer.playlist.count){

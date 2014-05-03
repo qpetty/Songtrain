@@ -128,7 +128,7 @@
     
     if (mess.message == AlbumRequest) {
         //send album
-        NSLog(@"Got request for album image\n");
+        //NSLog(@"Got request for album image\n");
         
         if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
             [self sendAlbumArtwork: [[QPMusicPlayerController musicPlayer] currentSong] to:peerID];
@@ -149,8 +149,8 @@
         
         if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
             [[QPMusicPlayerController musicPlayer] currentSong].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
-            NSLog(@"Unarchieved %@\n", [NSKeyedUnarchiver unarchiveObjectWithData:mess.data]);
-            NSLog(@"Adding Image to current Song, Image: %@\n", [[QPMusicPlayerController musicPlayer] currentSong].albumImage);
+            //NSLog(@"Unarchieved %@\n", [NSKeyedUnarchiver unarchiveObjectWithData:mess.data]);
+            //NSLog(@"Adding Image to current Song, Image: %@\n", [[QPMusicPlayerController musicPlayer] currentSong].albumImage);
             
             //[[[QPMusicPlayerController musicPlayer] currentSong] setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
             return;
@@ -238,12 +238,9 @@
 
 - (void)sendDataToAllPeers:(NSData*)data
 {
-    for (MCPeerID *peer in mainSession.connectedPeers) {
-        NSLog(@"Sending Data to %@\n", peer.displayName);
-    }
     [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
     NSLog(@"Sent Data to All Peers\n");
-    NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
+    //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)nextSong:(Song*)song
@@ -304,7 +301,7 @@
     message.message = AlbumRequest;
     message.song = song;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
-    NSLog(@"Requesting album artwork\n");
+    //NSLog(@"Requesting album artwork\n");
 }
 
 - (void)sendAlbumArtwork:(Song*)song to:(MCPeerID*)peer
@@ -320,7 +317,7 @@
     message.data = [NSKeyedArchiver archivedDataWithRootObject:song.albumImage];
     
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
-    NSLog(@"Sending Image %@\n", song.albumImage);
+    //NSLog(@"Sending Image %@\n", song.albumImage);
 }
 
 - (void)requestToStartStreaming:(Song*)song
