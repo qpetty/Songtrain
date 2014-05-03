@@ -48,7 +48,9 @@
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
     [djButton addTarget:self action:@selector(djMode) forControlEvents:UIControlEventTouchUpInside];
     setEditing = NO;
-
+    if (!musicPlayer.playlist.count) {
+        [djButton setEnabled:NO];
+    }
     //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
@@ -58,6 +60,10 @@
 
 - (void)djMode
 {
+    if (!musicPlayer.playlist.count) {
+        return;
+    }
+
     if (self.djEditing) {
         [UIView animateWithDuration:0.5 animations:^{
             djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
@@ -150,6 +156,12 @@
     
     [musicPlayer addSongsToPlaylist:newSongs];
     
+    if (musicPlayer.playlist.count) {
+        [djButton setEnabled:YES];
+    } else {
+        [djButton setEnabled:NO];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -175,6 +187,13 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [mainTableView reloadData];
     });
+}
+
+- (void)playListHasBeenUpdated
+{
+    [super playListHasBeenUpdated];
+    [self djMode];
+ 
 }
 
 

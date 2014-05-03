@@ -54,7 +54,7 @@
     isServer = YES;
     
     MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
-    if (currentItem){
+    if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
         [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
         [self skip];
         [self.delegate playListHasBeenUpdated];

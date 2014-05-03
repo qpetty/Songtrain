@@ -66,7 +66,7 @@
                               BUTTON_SIZE);
 
         timeLabel = [[UILabel alloc] initWithFrame:location];
-        timeLabel.text = @"0:32\n4:21";
+        timeLabel.text = @"0:00\n0:00";
         timeLabel.adjustsFontSizeToFitWidth = YES;
         timeLabel.textColor = [UIColor whiteColor];
         timeLabel.numberOfLines = 0;
