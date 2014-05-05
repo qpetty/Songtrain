@@ -477,7 +477,7 @@
 				ORGANIZATIONNAME = "Quinton Petty";
 				TargetAttributes = {
 					69327DA6188F0F16001AB7F5 = {
-						DevelopmentTeam = JX9WQKUYGV;
+						DevelopmentTeam = 4SAU2A56Y4;
 					};
 					69327DC7188F0F16001AB7F5 = {
 						TestTargetID = 69327DA6188F0F16001AB7F5;
@@ -701,7 +701,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -717,7 +717,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

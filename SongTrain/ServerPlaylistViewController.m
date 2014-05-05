@@ -47,54 +47,89 @@
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
     [djButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
-    //setEditing = NO;
     [self djUpdate:nil];
-
-    
-    //[djButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     
-    //[tableviewMenu addTarget:self action:@selector(turnOffEditOnUISegementSwitch) forControlEvents:UIControlEventValueChanged];
+    [tableviewMenu addTarget:self action:@selector(segmentChanged) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)djUpdate:(UIButton*)sender
 {
-    if (sender) {
-        // User clicked djButton
-        if ([mainTableView isEditing]) {
-            [UIView animateWithDuration:0.5 animations:^{
-                djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
-                                            self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
-            }];
-            [mainTableView setEditing:NO];
-        } else {
-            [UIView animateWithDuration:0.5 animations:^{
-                djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
-            }];
-            [mainTableView setEditing:YES];
-        }
-        [self djUpdate:nil];
+    // Tracks segment selected else Passengers segment selected
+    if ([tableviewMenu selectedSegmentIndex] == 0) {
         
+    
+        if (sender) {
+            // User clicked djButton
+            if ([mainTableView isEditing]) {
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                                self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                }];
+                [mainTableView setEditing:NO];
+            } else {
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+                }];
+                [mainTableView setEditing:YES];
+            }
+            [self djUpdate:nil];
+            
+        } else {
+            // User did not click djButton
+            if (musicPlayer.playlist.count == 0) {
+                [mainTableView setEditing:NO];
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                                self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                }];
+                [djButton setEnabled:NO];
+            } else {
+                [djButton setEnabled:YES];
+            }
+            
+        }
     } else {
-        // User did not click djButton
-        if (musicPlayer.playlist.count == 0) {
-            [mainTableView setEditing:NO];
-            [UIView animateWithDuration:0.5 animations:^{
-                djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
-                                            self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
-            }];
-            [djButton setEnabled:NO];
+        if (sender) {
+            if ([mainTableView isEditing]) {
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                                self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                }];
+                [mainTableView setEditing:NO];
+            } else {
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+                }];
+                [mainTableView setEditing:YES];
+            }
+            [self djUpdate:nil];
+            
         } else {
-            [djButton setEnabled:YES];
+            // User did not click djButton
+            if (sessionManager.connectedPeersArray.count == 0) {
+                [mainTableView setEditing:NO];
+                [UIView animateWithDuration:0.5 animations:^{
+                    djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
+                                                self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                }];
+                [djButton setEnabled:NO];
+            } else {
+                [djButton setEnabled:YES];
+            }
         }
-        
     }
 }
 
-- (void)turnOffEditOnUISegementSwitch
+/*- (void)turnOffEditOnUISegementSwitch
 {
     [mainTableView setEditing:NO];
+}*/
+
+- (void)segmentChanged
+{
+    [self djUpdate:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

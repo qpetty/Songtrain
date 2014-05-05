@@ -9,8 +9,8 @@
 
 #import "Animator.h"
 
-#define TRANSITION_TIME 0.5
-#define NUMBER_OF_VIEWS 3.0
+#define TRANSITION_TIME 0.34
+#define NUMBER_OF_VIEWS 2.0
 
 @implementation Animator
 
