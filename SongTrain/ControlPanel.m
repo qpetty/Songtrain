@@ -9,8 +9,9 @@
 #import "ControlPanel.h"
 #import "QPMusicPlayerController.h"
 
-#define BUTTON_SIZE 30
+#define BUTTON_SIZE 40
 #define LABEL_SIZE 100
+#define LABEL_HEIGHT 30
 
 @implementation ControlPanel
 
@@ -19,6 +20,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
+        
+        [self.layer setBorderWidth:0];
         
         //Create Add button
         
@@ -32,7 +35,7 @@
         [addButton setContentMode:UIViewContentModeScaleAspectFit];
         
         [addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
-        [addButton setImage:[UIImage imageNamed:@"add_click"] forState:UIControlStateSelected];
+        //[addButton setImage:[UIImage imageNamed:@"add_click"] forState:UIControlStateSelected];
         [addButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
 
         // Create Skip Button
@@ -47,7 +50,7 @@
         [skipButton setContentMode:UIViewContentModeScaleAspectFit];
 
         [skipButton setImage:[UIImage imageNamed:@"skip"] forState:UIControlStateNormal];
-        [skipButton setImage:[UIImage imageNamed:@"skip_click"] forState:UIControlStateSelected];
+        [skipButton setImage:[UIImage imageNamed:@"skip_disabled"] forState:UIControlStateSelected];
         [skipButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
 
         //Create Progress Bar
@@ -55,31 +58,49 @@
         songProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [self addSubview:songProgress];
         songProgress.tintColor = UIColorFromRGB(0x7FA8D7);
-        songProgress.frame = CGRectMake(0, 0, frame.size.width, 10);
+        songProgress.frame = CGRectMake(0, -1, frame.size.width + 1, 11);
         songProgress.progress = 0.0;
         
         //Create Time Label
         
         location = CGRectMake((frame.size.width  / 4.0) - (LABEL_SIZE / 8.0),
-                              (frame.size.height / 2.0) - (BUTTON_SIZE / 2.0),
+                              (frame.size.height / 2.0) - (LABEL_HEIGHT / 2.0),
                               LABEL_SIZE,
-                              BUTTON_SIZE);
+                              LABEL_HEIGHT / 2.0);
 
-        timeLabel = [[UILabel alloc] initWithFrame:location];
-        timeLabel.text = @"0:00\n0:00";
-        timeLabel.adjustsFontSizeToFitWidth = YES;
-        timeLabel.textColor = [UIColor whiteColor];
-        timeLabel.numberOfLines = 0;
-        timeLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:timeLabel];
+        topLabel = [[UILabel alloc] initWithFrame:location];
+        topLabel.text = @"0:00";
+        topLabel.adjustsFontSizeToFitWidth = YES;
+        topLabel.textColor = [UIColor whiteColor];
+        topLabel.numberOfLines = 0;
+        topLabel.textAlignment = NSTextAlignmentCenter;
+        topLabel.font = [topLabel.font fontWithSize:14];
+        [self addSubview:topLabel];
         
-        location = CGRectMake((frame.size.width  * 3 / 4.0) - (LABEL_SIZE * 7 / 8.0),
-                              (frame.size.height   / 2.0) - (BUTTON_SIZE / 2.0),
+        location = CGRectMake((frame.size.width  / 4.0) - (LABEL_SIZE / 8.0),
+                              (frame.size.height / 2.0),
                               LABEL_SIZE,
+                              LABEL_HEIGHT / 2.0);
+        
+        bottomLabel = [[UILabel alloc] initWithFrame:location];
+        bottomLabel.text = @"0:00";
+        bottomLabel.adjustsFontSizeToFitWidth = YES;
+        bottomLabel.textColor = UIColorFromRGB(0xC5D1DE);
+        bottomLabel.numberOfLines = 0;
+        bottomLabel.textAlignment = NSTextAlignmentCenter;
+        bottomLabel.font = [bottomLabel.font fontWithSize:12];
+        [self addSubview:bottomLabel];
+
+        
+        //Create Play Button
+        location = CGRectMake((frame.size.width  * (5.0 / 8.0)) - (BUTTON_SIZE / 2.0),
+                              (frame.size.height / 2.0) - (BUTTON_SIZE / 2.0),
+                              BUTTON_SIZE,
                               BUTTON_SIZE);
         playButton = [[UIButton alloc] initWithFrame:location];
         playButton.tag = PlayButton;
-        [playButton setTitle:@"Play" forState:UIControlStateNormal];
+        [playButton setContentMode:UIViewContentModeScaleAspectFit];
+        [playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
         [playButton addTarget:self.delegate action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:playButton];
     }
@@ -89,10 +110,10 @@
 - (void)setIsPlaying:(BOOL)isPlaying
 {
     if (isPlaying) {
-        [playButton setTitle:@"Pause" forState:UIControlStateNormal];
+        [playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
     }
     else {
-        [playButton setTitle:@"Play" forState:UIControlStateNormal];
+        [playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     }
 }
 
@@ -110,7 +131,9 @@
         currentMinutes++;
         songDuration.location -= 60;
     }
-    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu\n%d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
+    topLabel.text = [NSString stringWithFormat:@"%d:%.2lu", currentMinutes, songDuration.location];
+    bottomLabel.text = [NSString stringWithFormat:@"%d:%.2lu", totalMinutes, songDuration.length];
+    //timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu\n%d:%.2lu", currentMinutes, songDuration.location, totalMinutes, songDuration.length];
 }
 
 @end

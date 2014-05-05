@@ -55,7 +55,8 @@
     
     // Tracks and Passengers selector
     tableviewMenu = [[UISegmentedControl alloc] initWithItems:@[@"Tracks", @"Passengers"]];
-    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 3, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 6, 26);
+    tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 7, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 14, tableviewMenuBackground.frame.size.height - 14);
+    NSLog(@"origin x: %f\n", self.view.bounds.origin.x + 3);
     
     [tableviewMenu setSelectedSegmentIndex:0];
     [tableviewMenu setTintColor:UIColorFromRGB(0x6F95D3)];
@@ -98,6 +99,7 @@
     [super viewWillAppear:animated];
     [sessionManager addObserver:self forKeyPath:@"connectedPeersArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentlyPlaying" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -111,6 +113,7 @@
     [super viewDidDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"connectedPeersArray"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
     [musicPlayer removeObserver:self forKeyPath:@"currentlyPlaying"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
 }
@@ -168,8 +171,8 @@
         else {
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.textLabel.text = @"No Passengers in Train";
-            cell.detailTextLabel.text = @"";
         }
+        cell.detailTextLabel.text = @"";
         return cell;
     }
     if (musicPlayer.playlist.count){
@@ -233,6 +236,10 @@
         else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong"]) {
             [albumArtwork updateSongInfo:musicPlayer.currentSong];
             [mainTableView reloadData];
+        }
+        else if (object == musicPlayer && [keyPath isEqualToString:@"currentSong.albumImage"]) {
+            [albumArtwork updateSongInfo:musicPlayer.currentSong];
+            [musicPlayer updateNowPlaying];
         }
         else {
             [mainTableView reloadData];

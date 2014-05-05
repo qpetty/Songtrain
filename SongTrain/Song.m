@@ -64,6 +64,25 @@
     return -1;
 }
 
+- (BOOL)isEqual:(id)object
+{
+    if (object == nil)
+        return false;
+    if (![object isKindOfClass:[Song class]])
+        return false;
+    
+    if ([((Song*)object).url isEqual:self.url])
+        return false;
+    
+    return true;
+}
+
+- (void)setAlbumImage:(UIImage *)albumImage
+{
+    _albumImage = albumImage;
+    image = albumImage;
+}
+
 - (void)dealloc
 {
     if (outputASBD){

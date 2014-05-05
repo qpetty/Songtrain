@@ -57,8 +57,6 @@
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.clipsToBounds = YES;
         self.showArtwork = YES;
-        
-
     }
     return self;
 }
@@ -105,7 +103,5 @@
     
     return [UIImage imageWithCGImage:imageRef];
 }
-
-
 
 @end

@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "LocalSong.h"
+#import "RemoteSong.h"
 #import "ControlPanel.h"
 
 @protocol QPMusicPlayerControllerDelegate <NSObject>
@@ -44,4 +45,6 @@
 - (void)play;
 - (void)skip;
 - (void)nextSong;
+
+- (void)updateNowPlaying;
 @end

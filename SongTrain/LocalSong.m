@@ -28,6 +28,8 @@
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         
+        image = nil;
+        
         mediaItem = item;
         
         sampleBuffer = NULL;
@@ -113,9 +115,14 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
 
 - (UIImage*)getAlbumImage
 {
+    if (image)
+        return image;
+    
     MPMediaItemArtwork *albumItem = [mediaItem valueForProperty:MPMediaItemPropertyArtwork];
-    if (albumItem)
-        return [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+    if (albumItem) {
+        image = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+        return image;
+    }
     else {
         NSLog(@"No Current Image\n");
         return nil;

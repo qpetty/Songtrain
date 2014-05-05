@@ -13,6 +13,7 @@
 
 @interface Song : NSObject <NSCoding>{
     AudioStreamBasicDescription *inputASBD, *outputASBD;
+    UIImage *image;
 }
 
 @property (strong, nonatomic) NSString *title;
