@@ -183,6 +183,9 @@
         cell.textLabel.text = @"No Songs in Queue";
         cell.detailTextLabel.text = @"";
     }
+    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.0f];
+
     return cell;
 }
 

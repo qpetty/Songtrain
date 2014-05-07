@@ -37,8 +37,8 @@
     CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
 
-    newView = [[UIImageView alloc] initWithFrame:self.view.frame];
-    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 15, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 40);
+    newView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 20, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 40);
     newView.image = blurredImage;
     [self.view addSubview:newView];
 
@@ -78,6 +78,7 @@
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
+    self.createTrainButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
     self.createTrainButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [self.createTrainButton addTarget:self action:@selector(createTrainPressed:) forControlEvents:UIControlEventTouchDown];
     
@@ -167,7 +168,7 @@
         cell.userInteractionEnabled = NO;
         cell.textLabel.text = @"No Nearby Trains";
     }
-
+    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
     return cell;
 }
 
