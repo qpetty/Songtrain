@@ -25,7 +25,6 @@
     //Sets up the navigationBar to be transparent, same as Background Image
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xebebeb), NSForegroundColorAttributeName, nil];
-    [self setTitle:@"Station"];
     self.navigationController.delegate = self;
 
     //Blur Background Image and add to MainView
