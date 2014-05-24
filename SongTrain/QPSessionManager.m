@@ -60,6 +60,7 @@
 {
     _currentRole = ClientConnection;
     [[QPMusicPlayerController musicPlayer] resetToClient];
+    [browse stopBrowsingForPeers];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
 
