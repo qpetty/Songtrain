@@ -144,21 +144,14 @@
     }
     else if (mess.message == AlbumImage) {
         
-        //NSLog(@"Comparing %@ and %@\n", [[[QPMusicPlayerController musicPlayer] currentSong] title], mess.song.title);
-        
         if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
             [[QPMusicPlayerController musicPlayer] currentSong].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
-            //NSLog(@"Unarchieved %@\n", [NSKeyedUnarchiver unarchiveObjectWithData:mess.data]);
-            //NSLog(@"Adding Image to current Song, Image: %@\n", [[QPMusicPlayerController musicPlayer] currentSong].albumImage);
-            
-            //[[[QPMusicPlayerController musicPlayer] currentSong] setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
             return;
         }
         
         for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
             if ([song.url isEqual:mess.song.url]) {
                 song.albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
-                //[song setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
                 break;
             }
         }
@@ -174,13 +167,6 @@
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
             Song *newSong;
             
-            /*
-            NSLog(@"Remote Song: %@\n", [mess.song isMemberOfClass:[RemoteSong class]] ? @"YES" : @"NO");
-            
-            if ([mess.song isMemberOfClass:[RemoteSong class]]) {
-                NSLog(@"Local Peer: %@ Remote Peer: %@\n", peerID.displayName, ((RemoteSong*)mess.song).peer.displayName);
-            }
-            */
             if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
                 newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song];
                 NSLog(@"Added local song recieved from server");
@@ -247,8 +233,6 @@
     if (error != nil) {
         NSLog(@"Error: %@\n", error.localizedDescription);
     }
-    
-    //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)sendDataToAllPeers:(NSData*)data
@@ -316,7 +300,6 @@
     message.message = AlbumRequest;
     message.song = song;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
-    //NSLog(@"Requesting album artwork\n");
 }
 
 - (void)sendAlbumArtwork:(Song*)song to:(MCPeerID*)peer

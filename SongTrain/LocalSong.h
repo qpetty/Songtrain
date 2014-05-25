@@ -10,6 +10,8 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 
+#define PICTURE_HEIGHT_AND_WIDTH 320.0
+
 @interface LocalSong : Song
 
 - (instancetype)initLocalSongFromSong:(Song*)song;

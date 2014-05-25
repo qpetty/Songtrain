@@ -67,30 +67,6 @@
     if (image)
         return image;
     
-    //QPSessionManager *sessionman = [QPSessionManager sessionManager];
-    //NSLog(@"Comparing %@ and %@\n", self.peer.displayName, sessionman.pid);
-    
-    /*
-    if ([self.peer isEqual:[[QPSessionManager sessionManager] pid]]) {
-        MPMediaQuery *query = [[MPMediaQuery alloc] init];
-        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:self.url forProperty:MPMediaItemPropertyAssetURL]];
-        if ([[query items] count] == 0) {
-            NSLog(@"Could not query url\n");
-            return nil;
-        }
-        
-        MPMediaItemArtwork *albumItem = [[[query items] firstObject] valueForProperty:MPMediaItemPropertyArtwork];
-        if (albumItem) {
-            image = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
-            return image;
-        }
-        else {
-            NSLog(@"No Album Image\n");
-            return nil;
-        }
-    }
-    
-    */
     if (sentRequest == NO){
         [[QPSessionManager sessionManager] requestAlbumArtwork:self];
         sentRequest = YES;

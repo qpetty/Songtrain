@@ -139,7 +139,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     MPMediaItemArtwork *albumItem = [mediaItem valueForProperty:MPMediaItemPropertyArtwork];
     if (albumItem) {
-        image = [albumItem imageWithSize:CGSizeMake(albumItem.bounds.size.width, albumItem.bounds.size.height)];
+        image = [albumItem imageWithSize:CGSizeMake(PICTURE_HEIGHT_AND_WIDTH, PICTURE_HEIGHT_AND_WIDTH)];
         return image;
     }
     else {
