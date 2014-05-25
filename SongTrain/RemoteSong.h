@@ -9,10 +9,15 @@
 #import "Song.h"
 #import "QPSessionManager.h"
 
-@interface RemoteSong : Song
+@interface RemoteSong : Song <NSStreamDelegate>
 
 @property (strong, nonatomic) MCPeerID *peer;
+@property (strong, nonatomic, setter = setInStream:) NSInputStream *inStream;
+
+@property (atomic, assign, readonly) AudioFileStreamID fileStream;
 
 - (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer;
+
+- (void)setInStream:(NSInputStream *)inStream;
 
 @end

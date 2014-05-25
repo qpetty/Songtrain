@@ -82,7 +82,7 @@
     }
     self.outStream.delegate = self;
     if (![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
-        return [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:YES];
+        return [self performSelectorOnMainThread:@selector(startStreaming) withObject:nil waitUntilDone:YES];
     }
     
     streamingThread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];

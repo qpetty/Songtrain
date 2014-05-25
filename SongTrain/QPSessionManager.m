@@ -107,6 +107,17 @@
 -(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Got Stream: %@  from %@\n", streamName, [peerID displayName]);
+    if ([[QPMusicPlayerController musicPlayer].currentSong isMemberOfClass:[RemoteSong class]] && [[QPMusicPlayerController musicPlayer].currentSong.title isEqualToString:streamName]) {
+        ((RemoteSong*)([QPMusicPlayerController musicPlayer].currentSong)).inStream = stream;
+        NSLog(@"Added to %@\n", [[QPMusicPlayerController musicPlayer]currentSong].title);
+    }
+    else if ([[QPMusicPlayerController musicPlayer].playlist.firstObject isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)([QPMusicPlayerController musicPlayer].playlist.firstObject)).title isEqualToString:streamName]) {
+        ((RemoteSong*)([QPMusicPlayerController musicPlayer].playlist.firstObject)).inStream = stream;
+        NSLog(@"Added to %@\n", ((RemoteSong*)([[[QPMusicPlayerController musicPlayer]playlist] firstObject])).title);
+    }
+    else {
+        NSLog(@"Could not find song corresponding to stream\n");
+    }
 }
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
@@ -163,7 +174,7 @@
         else if (mess.message == StartStreaming) {
             Song *streamSong = [self findSong:mess.song];
             if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
-                ((LocalSong*)streamSong).outStream = [mainSession startStreamWithName:mess.song.persistantID.stringValue toPeer:peerID error:nil];
+                ((LocalSong*)streamSong).outStream = [mainSession startStreamWithName:mess.song.title toPeer:peerID error:nil];
                 [((LocalSong*)streamSong) startStreaming];
             }
         }
