@@ -12,11 +12,11 @@
 
 #define PICTURE_HEIGHT_AND_WIDTH 320.0
 
-@interface LocalSong : Song
+@interface LocalSong : Song <NSStreamDelegate>
 
 @property (strong, nonatomic) NSOutputStream *outStream;
 
-- (instancetype)initLocalSongFromSong:(Song*)song;
+- (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item;
 
 - (void)startStreaming;

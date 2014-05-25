@@ -19,31 +19,29 @@
     AudioStreamPacketDescription aspds[256];
     
     MPMediaItem *mediaItem;
+    
+    NSThread *streamingThread;
 }
 
-- (instancetype)initLocalSongFromSong:(Song*)song
+- (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD
 {
-    if (self = [super init]) {
-        self.title = song.title;
-        self.artistName = song.artistName;
-        self.persistantID = song.persistantID;
-        self.url = song.url;
-        self.songLength = song.songLength;
-        image = nil;
-        
-        MPMediaQuery *query = [MPMediaQuery songsQuery];
-        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:self.persistantID forProperty:MPMediaItemPropertyPersistentID]];
-        NSArray *displayItems = [query items];
-
-        mediaItem = [displayItems firstObject];
-    }
-    return self;
+    MPMediaQuery *query = [MPMediaQuery songsQuery];
+    [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:song.persistantID forProperty:MPMediaItemPropertyPersistentID]];
+    NSArray *displayItems = [query items];
+    
+    mediaItem = [displayItems firstObject];
+    
+    if (mediaItem)
+        return [[LocalSong alloc] initWithOutputASBD:audioStreamBD andItem:mediaItem];
+    else
+        return nil;
 }
 
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item {
     if (self = [super initWithOutputASBD:audioStreamBD]) {
         self.title = [item valueForProperty:MPMediaItemPropertyTitle];
         self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         
@@ -78,6 +76,34 @@
 - (void)startStreaming
 {
     NSLog(@"Start Streaming\n");
+    if (!self.outStream) {
+        NSLog(@"No Outputstream to write to\n");
+        return;
+    }
+    self.outStream.delegate = self;
+    if (![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
+        return [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:YES];
+    }
+    
+    streamingThread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];
+    [streamingThread start];
+}
+
+- (void)startThread
+{
+    [self.outStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.outStream open];
+    while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
+}
+
+-(void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+{
+    if (eventCode == NSStreamEventHasSpaceAvailable) {
+        [self sendDataChunk];
+    }
+    else if (eventCode == NSStreamEventEndEncountered) {
+        //close loop
+    }
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
@@ -137,6 +163,35 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     return 0;
 }
 
+- (void)sendDataChunk
+{
+    sampleBuffer = [assetOutput copyNextSampleBuffer];
+    
+    if (sampleBuffer == NULL || CMSampleBufferGetNumSamples(sampleBuffer) == 0) {
+        CFRelease(sampleBuffer);
+        return;
+    }
+    
+    AudioBufferList audioBufferList;
+    
+    OSStatus err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
+    
+    if (err) {
+        CFRelease(sampleBuffer);
+        return;
+    }
+    
+    for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
+        AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
+        NSInteger size = [self.outStream write:audioBuffer.mData maxLength:audioBuffer.mDataByteSize];
+        NSLog(@"wrote %u of buffer size: %u", size, (unsigned int)audioBuffer.mDataByteSize);
+    }
+    
+    CFRelease(blockBuffer);
+    CFRelease(sampleBuffer);
+}
+
+
 - (UIImage*)getAlbumImage
 {
     if (image)
@@ -151,6 +206,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         NSLog(@"No Current Image\n");
         return nil;
     }
+}
+
+-(void)dealloc{
+    NSLog(@"deallocate stuff from %@\n", self.title);
+    [self.outStream close];
 }
 
 @end

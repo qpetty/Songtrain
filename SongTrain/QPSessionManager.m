@@ -143,7 +143,7 @@
             Song *newSong;
             
             if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
-                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song];
+                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song WithOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
             }
             else {
                 newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];

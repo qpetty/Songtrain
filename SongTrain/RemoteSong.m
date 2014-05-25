@@ -45,10 +45,12 @@
 
 - (void)prepareSong{
     [[QPSessionManager sessionManager] requestToStartStreaming:self];
+    //Allocate Circular buffer
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
+    //read from converter
     return 3;
 }
 
