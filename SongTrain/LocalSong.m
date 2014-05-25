@@ -21,6 +21,25 @@
     MPMediaItem *mediaItem;
 }
 
+- (instancetype)initLocalSongFromSong:(Song*)song
+{
+    if (self = [super init]) {
+        self.title = song.title;
+        self.artistName = song.artistName;
+        self.persistantID = song.persistantID;
+        self.url = song.url;
+        self.songLength = song.songLength;
+        image = nil;
+        
+        MPMediaQuery *query = [MPMediaQuery songsQuery];
+        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:self.persistantID forProperty:MPMediaItemPropertyPersistentID]];
+        NSArray *displayItems = [query items];
+
+        mediaItem = [displayItems firstObject];
+    }
+    return self;
+}
+
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item {
     if (self = [super initWithOutputASBD:audioStreamBD]) {
         self.title = [item valueForProperty:MPMediaItemPropertyTitle];

@@ -12,6 +12,7 @@
 
 @interface LocalSong : Song
 
+- (instancetype)initLocalSongFromSong:(Song*)song;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item;
 
 @end

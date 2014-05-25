@@ -44,7 +44,7 @@
     NSLog(@"Sending some data\n");
     
     for (MPMediaItem *item in mediaItemCollection.items) {
-        LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
+        Song *tempSong = [[Song alloc] initWithMediaItem:item];
         [sessionManager addSongToServer:tempSong];
     }
     
@@ -61,6 +61,11 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.navigationController popToRootViewControllerAnimated:YES];
     });
+}
+
+- (void)availablePeersUpdated:(NSMutableArray *)peerArray
+{
+    
 }
 
 @end

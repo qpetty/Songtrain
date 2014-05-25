@@ -19,10 +19,12 @@
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *artistName;
 @property (strong, nonatomic, getter=getAlbumImage) UIImage *albumImage;
+@property (strong, nonatomic) NSNumber *persistantID;
 @property (strong, nonatomic) NSURL *url;
 
 @property (nonatomic) int songLength;
 
+- (instancetype)initWithMediaItem:(MPMediaItem*)item;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;

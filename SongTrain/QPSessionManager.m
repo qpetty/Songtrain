@@ -123,19 +123,17 @@
 {
     NSLog(@"Got some data from %@\n", peerID.displayName);
     
-    NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
+    //NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
     
     SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     
     if (mess.message == AlbumRequest) {
         //send album
-        //NSLog(@"Got request for album image\n");
         
         if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
             [self sendAlbumArtwork: [[QPMusicPlayerController musicPlayer] currentSong] to:peerID];
             return;
         }
-        
         for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
             if ([song.url isEqual:mess.song.url]) {
                 [self sendAlbumArtwork:song to:peerID];
@@ -159,7 +157,6 @@
         
         for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
             if ([song.url isEqual:mess.song.url]) {
-                NSLog(@"Adding Image to song in playlist\n");
                 song.albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
                 //[song setAlbumImage:[NSKeyedUnarchiver unarchiveObjectWithData:mess.data]];
                 break;
@@ -170,12 +167,29 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (mess.message == AddSong && _currentRole == ServerConnection) {
-            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:mess.song];
-            [self addSongToAllPeers:mess.song];
+            RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
+            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
+            [self addSongToAllPeers:newSong];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
-            RemoteSong *recievedSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
-            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:recievedSong];
+            Song *newSong;
+            
+            /*
+            NSLog(@"Remote Song: %@\n", [mess.song isMemberOfClass:[RemoteSong class]] ? @"YES" : @"NO");
+            
+            if ([mess.song isMemberOfClass:[RemoteSong class]]) {
+                NSLog(@"Local Peer: %@ Remote Peer: %@\n", peerID.displayName, ((RemoteSong*)mess.song).peer.displayName);
+            }
+            */
+            if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
+                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song];
+                NSLog(@"Added local song recieved from server");
+            }
+            else {
+                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
+                NSLog(@"Added remote song recieved from server");
+            }
+            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
             [[QPMusicPlayerController musicPlayer] nextSong];

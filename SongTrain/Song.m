@@ -10,13 +10,26 @@
 
 @implementation Song
 
--(instancetype)init
+- (instancetype)init
 {
      if(self = [super init])
      {
          outputASBD = malloc(sizeof(AudioStreamBasicDescription));
          inputASBD = malloc(sizeof(AudioStreamBasicDescription));
      }
+    return self;
+}
+
+- (instancetype)initWithMediaItem:(MPMediaItem*)item
+{
+    if(self = [self init])
+    {
+        self.title = [item valueForProperty:MPMediaItemPropertyTitle];
+        self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
+        self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
+    }
     return self;
 }
 
@@ -36,6 +49,7 @@
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
         //self.albumImage = [aDecoder decodeObjectForKey:@"image"];
+        self.persistantID = [aDecoder decodeObjectForKey:@"id"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
         
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
@@ -52,6 +66,7 @@
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
     //[aCoder encodeObject:self.albumImage forKey:@"image"];
+    [aCoder encodeObject:self.persistantID forKey:@"id"];
     [aCoder encodeObject:self.url forKey:@"url"];
     
     [aCoder encodeInt:_songLength forKey:@"songLength"];

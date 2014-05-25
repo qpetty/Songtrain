@@ -56,7 +56,6 @@
     // Tracks and Passengers selector
     tableviewMenu = [[UISegmentedControl alloc] initWithItems:@[@"Tracks", @"Passengers"]];
     tableviewMenu.frame = CGRectMake(self.view.bounds.origin.x + 7, albumArtwork.frame.origin.y + albumArtwork.frame.size.height + 7, self.view.bounds.size.width - 14, tableviewMenuBackground.frame.size.height - 14);
-    NSLog(@"origin x: %f\n", self.view.bounds.origin.x + 3);
     
     [tableviewMenu setSelectedSegmentIndex:0];
     [tableviewMenu setTintColor:UIColorFromRGB(0x6F95D3)];

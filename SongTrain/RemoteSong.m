@@ -18,6 +18,7 @@
         self.peer = peer;
         self.title = song.title;
         self.artistName = song.artistName;
+        self.persistantID = song.persistantID;
         self.url = song.url;
         self.songLength = song.songLength;
         
@@ -25,6 +26,21 @@
         sentRequest = NO;
     }
     return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        self.peer = [coder decodeObjectForKey:@"peer"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [super encodeWithCoder:coder];
+    [coder encodeObject:self.peer forKey:@"peer"];
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
@@ -54,6 +70,7 @@
     //QPSessionManager *sessionman = [QPSessionManager sessionManager];
     //NSLog(@"Comparing %@ and %@\n", self.peer.displayName, sessionman.pid);
     
+    /*
     if ([self.peer isEqual:[[QPSessionManager sessionManager] pid]]) {
         MPMediaQuery *query = [[MPMediaQuery alloc] init];
         [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:self.url forProperty:MPMediaItemPropertyAssetURL]];
@@ -72,7 +89,9 @@
             return nil;
         }
     }
-    else if (sentRequest == NO){
+    
+    */
+    if (sentRequest == NO){
         [[QPSessionManager sessionManager] requestAlbumArtwork:self];
         sentRequest = YES;
     }
