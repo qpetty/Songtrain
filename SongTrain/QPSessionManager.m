@@ -126,40 +126,15 @@
     //NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
     
     SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-    if (mess.message == AlbumRequest) {
-        //send album
-        
-        if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
-            [self sendAlbumArtwork: [[QPMusicPlayerController musicPlayer] currentSong] to:peerID];
-            return;
-        }
-        for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
-            if ([song.url isEqual:mess.song.url]) {
-                [self sendAlbumArtwork:song to:peerID];
-                break;
-            }
-        }
-        return;
-    }
-    else if (mess.message == AlbumImage) {
-        
-        if ([[[[QPMusicPlayerController musicPlayer] currentSong] url] isEqual:mess.song.url]) {
-            [[QPMusicPlayerController musicPlayer] currentSong].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
-            return;
-        }
-        
-        for (Song *song in [[QPMusicPlayerController musicPlayer] playlist]) {
-            if ([song.url isEqual:mess.song.url]) {
-                song.albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
-                break;
-            }
-        }
-        return;
-    }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (mess.message == AddSong && _currentRole == ServerConnection) {
+        if (mess.message == AlbumRequest) {
+            [self sendAlbumArtwork:[self findSong:mess.song] to:peerID];
+        }
+        else if (mess.message == AlbumImage) {
+            [self findSong:mess.song].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
+        }
+        else if (mess.message == AddSong && _currentRole == ServerConnection) {
             RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
             [self addSongToAllPeers:newSong];
@@ -169,11 +144,9 @@
             
             if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
                 newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song];
-                NSLog(@"Added local song recieved from server");
             }
             else {
                 newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
-                NSLog(@"Added remote song recieved from server");
             }
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
         }
@@ -187,7 +160,24 @@
             NSLog(@"first: %ld   second: %ld\n", (long)mess.firstIndex, (long)mess.secondIndex);
             [[QPMusicPlayerController musicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
+        else if (mess.message == StartStreaming) {
+            NSLog(@"Start Streaming\n");
+        }
     });
+}
+
+- (Song*)findSong:(Song*)song
+{
+    if ([[[QPMusicPlayerController musicPlayer] currentSong] isEqual:song]) {
+        return [[QPMusicPlayerController musicPlayer] currentSong];
+    }
+    
+    for (Song *songFromList in [[QPMusicPlayerController musicPlayer] playlist]) {
+        if ([song isEqual:songFromList]) {
+            return songFromList;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Advertising Methods
@@ -318,13 +308,16 @@
     //NSLog(@"Sending Image %@\n", song.albumImage);
 }
 
-- (void)requestToStartStreaming:(Song*)song
+- (void)requestToStartStreaming:(RemoteSong*)song
 {
-    //[[QPMusicPlayerController musicPlayer] fillOutStream:[mainSession startStreamWithName:@"temp" toPeer:self.server error:nil] FromSong:song];
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = StartStreaming;
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
 }
 - (void)requestToStopStreaming
 {
-    //[[QPMusicPlayerController musicPlayer] stopOutStream];
+    
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

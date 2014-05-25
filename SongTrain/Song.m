@@ -86,7 +86,7 @@
     if (![object isKindOfClass:[Song class]])
         return false;
     
-    if ([((Song*)object).url isEqual:self.url])
+    if (![((Song*)object).url isEqual:self.url])
         return false;
     
     return true;

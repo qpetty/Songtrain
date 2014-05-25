@@ -48,20 +48,6 @@
     return 3;
 }
 
-- (BOOL)isEqual:(id)object
-{
-    if (![super isEqual:object])
-        return false;
-    
-    if (![object isMemberOfClass:[self class]])
-        return false;
-    
-    if (((RemoteSong*)object).peer != self.peer)
-        return false;
-    
-    return true;
-}
-
 - (UIImage*)getAlbumImage
 {
     if (image)
