@@ -98,6 +98,9 @@
     image = albumImage;
 }
 
+- (void)prepareSong{
+}
+
 - (void)dealloc
 {
     if (outputASBD){

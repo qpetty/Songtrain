@@ -43,6 +43,10 @@
     [coder encodeObject:self.peer forKey:@"peer"];
 }
 
+- (void)prepareSong{
+    [[QPSessionManager sessionManager] requestToStartStreaming:self];
+}
+
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
     return 3;

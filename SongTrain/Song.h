@@ -28,5 +28,5 @@
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;
-
+- (void)prepareSong;
 @end

@@ -161,7 +161,11 @@
             [[QPMusicPlayerController musicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
         else if (mess.message == StartStreaming) {
-            NSLog(@"Start Streaming\n");
+            Song *streamSong = [self findSong:mess.song];
+            if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
+                ((LocalSong*)streamSong).outStream = [mainSession startStreamWithName:mess.song.persistantID.stringValue toPeer:peerID error:nil];
+                [((LocalSong*)streamSong) startStreaming];
+            }
         }
     });
 }

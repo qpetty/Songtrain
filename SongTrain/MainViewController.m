@@ -35,8 +35,6 @@
     [gaussianBlurFilter setValue:[NSNumber numberWithFloat: 8] forKey: @"inputRadius"];
     CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
     UIImage *blurredImage = [[UIImage alloc] initWithCIImage:resultImage];
-
-    NSLog(@"Horizontal Size: %lf\n", self.view.bounds.size.width);
     
     newView = [[UIImageView alloc] initWithFrame:self.view.bounds];
     newView.frame = CGRectMake(self.view.frame.origin.x - 30, self.view.frame.origin.y - 20, self.view.bounds.size.width * 1.5 + 60, self.view.bounds.size.height + 40);

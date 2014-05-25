@@ -137,6 +137,7 @@
 - (void)skip
 {
     if (isServer) {
+        [[_playlist firstObject] prepareSong];
         [self nextSong];
     }
     else {
