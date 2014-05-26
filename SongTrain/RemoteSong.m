@@ -10,9 +10,13 @@
 
 @implementation RemoteSong {
     BOOL sentRequest;
+    
     NSThread *streamingThread;
     BOOL stillStreaming, isFormatVBR;
+    
     TPCircularBuffer cBuffer;
+    AudioConverterRef converter;
+    AudioStreamPacketDescription aspds[256];
 }
 
 - (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
@@ -48,7 +52,6 @@
 
 - (void)prepareSong{
     [[QPSessionManager sessionManager] requestToStartStreaming:self];
-    //Allocate Circular buffer
     
     TPCircularBufferInit(&cBuffer, kBufferLength);
     AudioFileStreamOpen((__bridge void*)self, propertyListenerCallback, packetCallback, 0, &(_fileStream));
@@ -117,6 +120,7 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
         propertySize = sizeof(AudioStreamBasicDescription);
         AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, myInfo->inputASBD);
         myInfo->isFormatVBR = (myInfo->inputASBD->mBytesPerPacket == 0 || myInfo->inputASBD->mFramesPerPacket == 0);
+        AudioConverterNew(myInfo->inputASBD, myInfo->outputASBD, &myInfo->converter);
     }
     else if (inPropertyID == kAudioFileStreamProperty_ReadyToProducePackets) {
         NSLog(@"Ready to make some packets\n");
@@ -196,13 +200,54 @@ void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPac
         }
     }
     
-    TPCircularBufferProduce(&myInfo->cBuffer, offset);
+    TPCircularBufferProduce(&myInfo->cBuffer, (int)offset);
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    //read from converter
-    return 3;
+    OSStatus err = AudioConverterFillComplexBuffer(converter, converterCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
+    //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    return err;
+}
+
+OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription  **outDataPacketDescription, void *inUserData)
+{
+    RemoteSong *myInfo = (__bridge RemoteSong *)inUserData;
+    
+    int32_t spaceAvailableInBuffer;
+    uint8_t *buffer;
+    int i;
+    
+    for (i = 0; i < *ioNumberDataPackets; i++) {
+        buffer = TPCircularBufferTail(&myInfo->cBuffer, &spaceAvailableInBuffer);
+        if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)
+                                && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {
+            printf("VBR and there is enough in the buffer\n");
+            memcpy(myInfo->aspds + i, buffer, sizeof(AudioStreamPacketDescription));
+            
+            ioData->mBuffers[0].mDataByteSize = ((AudioStreamPacketDescription*)buffer)->mDataByteSize;
+            ioData->mBuffers[0].mData = buffer + sizeof(AudioStreamPacketDescription);
+            TPCircularBufferConsume(&myInfo->cBuffer, sizeof(AudioStreamPacketDescription) + ioData->mBuffers[0].mDataByteSize);
+        }
+        else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo->inputASBD->mBytesPerPacket) {
+            printf("Not VBR but there is enough in the buffer\n");
+            ioData->mBuffers[0].mDataByteSize = myInfo->inputASBD->mBytesPerPacket;
+            ioData->mBuffers[0].mData = buffer;
+            TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
+        }
+        else {
+            printf("not enough data in the buffer\n");
+        }
+    }
+    *ioNumberDataPackets = i;
+    *outDataPacketDescription = myInfo->aspds;
+    
+    if (*ioNumberDataPackets > 0) {
+        return 0;
+    }
+    else {
+        return -3;
+    }
 }
 
 - (UIImage*)getAlbumImage

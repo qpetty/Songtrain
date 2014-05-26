@@ -68,7 +68,7 @@
         [assetReader addOutput:assetOutput];
         [assetReader startReading];
         
-        AudioConverterNew(self->inputASBD, outputASBD, &converter);
+        AudioConverterNew(inputASBD, outputASBD, &converter);
     }
     return self;
 }

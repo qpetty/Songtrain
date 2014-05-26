@@ -364,7 +364,7 @@ static OSStatus audioOutputCallback(void *inRefCon,
         if (err) {
             char error[6];
             FormatError(error, err);
-            //NSLog(@"Just called fill complex buffer with error: %s\n", error);
+            NSLog(@"Just called fill complex buffer with error: %s\n", error);
         }
 	}
     
