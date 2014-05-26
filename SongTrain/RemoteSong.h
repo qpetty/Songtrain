@@ -19,7 +19,7 @@ static const int kBufferLength = 32768 * 32;
 
 @property (atomic, assign, readonly) AudioFileStreamID fileStream;
 
-- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer;
+- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 
 - (void)setInStream:(NSInputStream *)inStream;
 

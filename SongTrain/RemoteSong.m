@@ -13,21 +13,17 @@
     NSThread *streamingThread;
     BOOL stillStreaming, isFormatVBR;
     TPCircularBuffer cBuffer;
-    
-    AudioStreamBasicDescription *inputASBD;
 }
 
-- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer
+- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
 {
-    if (self = [super init]) {
+    if (self = [super initWithOutputASBD:audioStreamBD]) {
         self.peer = peer;
         self.title = song.title;
         self.artistName = song.artistName;
         self.persistantID = song.persistantID;
         self.url = song.url;
         self.songLength = song.songLength;
-        
-        inputASBD = malloc(sizeof(AudioStreamBasicDescription));
         
         image = nil;
         sentRequest = NO;

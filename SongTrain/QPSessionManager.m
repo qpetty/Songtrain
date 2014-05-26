@@ -146,7 +146,7 @@
             [self findSong:mess.song].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
         }
         else if (mess.message == AddSong && _currentRole == ServerConnection) {
-            RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
+            RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
             [self addSongToAllPeers:newSong];
         }
@@ -157,7 +157,7 @@
                 newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song WithOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
             }
             else {
-                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID];
+                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
             }
             [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
         }
