@@ -8,6 +8,9 @@
 
 #import "Song.h"
 #import "QPSessionManager.h"
+#import "TPCircularBuffer.h"
+
+static const int kBufferLength = 32768 * 32;
 
 @interface RemoteSong : Song <NSStreamDelegate>
 

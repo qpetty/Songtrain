@@ -59,7 +59,7 @@
         CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
         const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (item);
         
-        memcpy(inputASBD, bobTheDesc, sizeof(AudioStreamBasicDescription));
+        memcpy(self->inputASBD, bobTheDesc, sizeof(AudioStreamBasicDescription));
         
         assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetURL.tracks[0] outputSettings:nil];
         if (![assetReader canAddOutput:assetOutput])
@@ -68,7 +68,7 @@
         [assetReader addOutput:assetOutput];
         [assetReader startReading];
         
-        AudioConverterNew(inputASBD, outputASBD, &converter);
+        AudioConverterNew(self->inputASBD, outputASBD, &converter);
     }
     return self;
 }

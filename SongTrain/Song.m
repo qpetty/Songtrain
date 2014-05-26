@@ -16,6 +16,7 @@
      {
          outputASBD = malloc(sizeof(AudioStreamBasicDescription));
          inputASBD = malloc(sizeof(AudioStreamBasicDescription));
+         image = nil;
      }
     return self;
 }
@@ -95,7 +96,7 @@
 - (void)setAlbumImage:(UIImage *)albumImage
 {
     _albumImage = albumImage;
-    image = albumImage;
+    image = _albumImage;
 }
 
 - (void)prepareSong{
