@@ -17,6 +17,7 @@
     TPCircularBuffer cBuffer;
     AudioConverterRef converter;
     AudioStreamPacketDescription aspds[256];
+    uint8_t *audioData;
 }
 
 - (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
@@ -177,7 +178,7 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
 
 void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData, AudioStreamPacketDescription *inPacketDescriptions)
 {
-    NSLog(@"Got some packets\n");
+    NSLog(@"Got %lu packets\n", inNumberPackets);
     RemoteSong *myInfo = (__bridge RemoteSong *)(inClientData);
     
     int32_t spaceAvailableInBuffer;
@@ -185,6 +186,10 @@ void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPac
     size_t offset = 0;
     
     buffer = TPCircularBufferHead(&myInfo->cBuffer, &spaceAvailableInBuffer);
+    
+    if (spaceAvailableInBuffer <= kBufferLength / 5) {
+        return;
+    }
     
     for (int i = 0; i < inNumberPackets; i++) {
         
@@ -216,34 +221,53 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
     
     int32_t spaceAvailableInBuffer;
     uint8_t *buffer;
-    int i;
+    int goodPackets = 0;
     
-    for (i = 0; i < *ioNumberDataPackets; i++) {
+    printf("number of data packets: %d\n", (unsigned int)*ioNumberDataPackets);
+    
+    for (int i = 0; i < *ioNumberDataPackets; i++) {
         buffer = TPCircularBufferTail(&myInfo->cBuffer, &spaceAvailableInBuffer);
+        if (spaceAvailableInBuffer == 0) {
+            return -1;
+        }
+        printf("Space in the buffer: %d at %d\n", spaceAvailableInBuffer, buffer);
+        printf("Space larger than AudioStreamPacketDescription: %lu\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
+        
         if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)
                                 && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {
-            printf("VBR and there is enough in the buffer\n");
+            printf("VBR and there is enough in the buffer: %d\n", spaceAvailableInBuffer);
             memcpy(myInfo->aspds + i, buffer, sizeof(AudioStreamPacketDescription));
             
-            ioData->mBuffers[0].mDataByteSize = ((AudioStreamPacketDescription*)buffer)->mDataByteSize;
-            ioData->mBuffers[0].mData = buffer + sizeof(AudioStreamPacketDescription);
+            ioData->mBuffers[0].mDataByteSize = (myInfo->aspds + i)->mDataByteSize;
+            myInfo->audioData = malloc(ioData->mBuffers[0].mDataByteSize);
+            
+            memcpy(myInfo->audioData, buffer, ioData->mBuffers[0].mDataByteSize);
+            ioData->mBuffers[0].mData = myInfo->audioData;
+            
             TPCircularBufferConsume(&myInfo->cBuffer, sizeof(AudioStreamPacketDescription) + ioData->mBuffers[0].mDataByteSize);
+            goodPackets++;
         }
         else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo->inputASBD->mBytesPerPacket) {
             printf("Not VBR but there is enough in the buffer\n");
             ioData->mBuffers[0].mDataByteSize = myInfo->inputASBD->mBytesPerPacket;
             ioData->mBuffers[0].mData = buffer;
             TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
+            goodPackets++;
         }
         else {
             printf("not enough data in the buffer\n");
+            break;
         }
     }
-    *ioNumberDataPackets = i;
+    *ioNumberDataPackets = goodPackets;
     *outDataPacketDescription = myInfo->aspds;
     
     if (*ioNumberDataPackets > 0) {
         return 0;
+    }
+    else if (*ioNumberDataPackets == 0) {
+        printf("Zero packets to return\n");
+        return -50;
     }
     else {
         return -3;
