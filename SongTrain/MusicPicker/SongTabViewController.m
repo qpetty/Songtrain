@@ -102,7 +102,7 @@
      
      if ([[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyAssetURL]) {
          cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
-         cell.textLabel.textColor = [UIColor blackColor];
+         cell.textLabel.textColor = [UIColor whiteColor];
          cell.userInteractionEnabled = YES;
          if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
              cell.backgroundColor = [UIColor greenColor];

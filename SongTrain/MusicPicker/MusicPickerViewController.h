@@ -11,6 +11,7 @@
 #import "SongTabViewController.h"
 #import "PlaylistTabViewController.h"
 #import "ArtistTabViewController.h"
+#import "MusicNavigationViewController.h"
 
 @class MusicPickerViewController;
 
