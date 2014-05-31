@@ -64,6 +64,7 @@
 		CAA2F08D18AC256600E24534 /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA2F08C18AC256600E24534 /* Animator.m */; };
 		CAB4E57E18A6BF9000A654FC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAB4E57D18A6BF9000A654FC /* CoreImage.framework */; };
 		CAB4E58018A6C23B00A654FC /* mainViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */; };
+		E1306BDC1934245300944BBE /* MusicNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1306BDB1934245300944BBE /* MusicNavigationViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +175,8 @@
 		CAA2F08C18AC256600E24534 /* Animator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Animator.m; sourceTree = "<group>"; };
 		CAB4E57D18A6BF9000A654FC /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mainViewBackground.png; path = Images.xcassets/mainViewBackground.png; sourceTree = "<group>"; };
+		E1306BDA1934245300944BBE /* MusicNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicNavigationViewController.h; sourceTree = "<group>"; };
+		E1306BDB1934245300944BBE /* MusicNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicNavigationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +428,8 @@
 				69FF48BE18FA09E500E48B98 /* SongTabViewController.m */,
 				69FF48BF18FA09E500E48B98 /* TabViewController.h */,
 				69FF48C018FA09E500E48B98 /* TabViewController.m */,
+				E1306BDA1934245300944BBE /* MusicNavigationViewController.h */,
+				E1306BDB1934245300944BBE /* MusicNavigationViewController.m */,
 			);
 			path = MusicPicker;
 			sourceTree = "<group>";
@@ -552,6 +557,7 @@
 				6970F4DE18A6A0BE00EAB82A /* TDAudioQueue.m in Sources */,
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
 				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
+				E1306BDC1934245300944BBE /* MusicNavigationViewController.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
 				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
 				6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */,
@@ -701,7 +707,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -717,7 +723,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B2DA39D-3D06-40BD-B942-0578D9B99C2B";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

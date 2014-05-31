@@ -84,7 +84,7 @@
     NSUInteger ndx = [[[query collectionSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
     
     cell.textLabel.text = [[[displayItems objectAtIndex:ndx] representativeItem] valueForProperty:MPMediaItemPropertyArtist];
-    cell.textLabel.textColor = [UIColor blackColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
     cell.accessoryType = UITableViewCellAccessoryNone;

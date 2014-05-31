@@ -30,7 +30,6 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
     allMediaItems = [[NSMutableArray alloc] init];
     doneButton1 = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     doneButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
@@ -39,27 +38,29 @@
     PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
     playListViewController.title = @"Playlists";
     playListViewController.navigationItem.rightBarButtonItem = doneButton1;
+    [playListViewController.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
     
-    UINavigationController *playlists = [[UINavigationController alloc] initWithRootViewController:playListViewController];
+    MusicNavigationViewController *playlists = [[MusicNavigationViewController alloc] initWithRootViewController:playListViewController];
     playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
     
     ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
     artistViewController.title = @"Artists";
     artistViewController.navigationItem.rightBarButtonItem = doneButton2;
     
-    UINavigationController *artists = [[UINavigationController alloc] initWithRootViewController:artistViewController];
+    MusicNavigationViewController *artists = [[MusicNavigationViewController alloc] initWithRootViewController:artistViewController];
     artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
     songViewController.navigationItem.rightBarButtonItem = doneButton3;
     
-    UINavigationController *songs = [[UINavigationController alloc] initWithRootViewController:songViewController];
+    MusicNavigationViewController *songs = [[MusicNavigationViewController alloc] initWithRootViewController:songViewController];
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
     
     NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, nil];
     
     self.viewControllers = controllers;
+    self.tabBar.barTintColor = [UIColor darkGrayColor];
 }
 
 - (void)didReceiveMemoryWarning

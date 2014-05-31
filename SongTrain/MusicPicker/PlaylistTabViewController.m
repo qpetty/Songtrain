@@ -68,7 +68,7 @@
     NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
     
     cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaPlaylistPropertyName];
-    cell.textLabel.textColor = [UIColor blackColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
     cell.accessoryType = UITableViewCellAccessoryNone;

@@ -35,6 +35,7 @@
         wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
         [wholeTableView setBackgroundColor: [UIColor clearColor]];
         
+        
     }
     return self;
 }
@@ -54,6 +55,7 @@
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+
     wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,
@@ -91,7 +93,7 @@
         [cell setRestorationIdentifier:@"MusicCell"];
     }
     
-    cell.textLabel.textColor = [UIColor blackColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
