@@ -223,15 +223,15 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
     uint8_t *buffer;
     int goodPackets = 0;
     
-    printf("number of data packets: %d\n", (unsigned int)*ioNumberDataPackets);
+    //printf("number of data packets: %d\n", (unsigned int)*ioNumberDataPackets);
     
     for (int i = 0; i < *ioNumberDataPackets; i++) {
         buffer = TPCircularBufferTail(&myInfo->cBuffer, &spaceAvailableInBuffer);
         if (spaceAvailableInBuffer == 0) {
             return -1;
         }
-        printf("Space in the buffer: %d at %d\n", spaceAvailableInBuffer, buffer);
-        printf("Space larger than AudioStreamPacketDescription: %lu\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
+        //printf("Space in the buffer: %d at %d\n", spaceAvailableInBuffer, buffer);
+        //printf("Space larger than AudioStreamPacketDescription: %lu\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
         
         if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)
                                 && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {

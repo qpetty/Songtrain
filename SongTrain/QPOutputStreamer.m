@@ -145,7 +145,6 @@
     }
     
     //NSLog(@"Audiobufferlist size: %d   dataIndex: %d\n", (unsigned int)audioBufferList.mBuffers[0].mDataByteSize, dataIndex);
-    
     //NSLog(@"ASPD: %d    ASPD + i: %d\n", aspd, aspd + i);
     
     /*
