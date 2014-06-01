@@ -148,6 +148,9 @@
 - (void)nextSong
 {
     if ([_playlist count]) {
+        
+        [_currentSong cleanUpSong];
+        
         [self willChangeValueForKey:@"currentSong"];
         _currentSong = [_playlist firstObject];
         [_playlist removeObjectAtIndex:0];

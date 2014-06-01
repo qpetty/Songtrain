@@ -235,7 +235,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         
         if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)
                                 && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {
-            printf("VBR and there is enough in the buffer: %d\n", spaceAvailableInBuffer);
+            //printf("VBR and there is enough in the buffer: %d\n", spaceAvailableInBuffer);
             memcpy(myInfo->aspds + i, buffer, sizeof(AudioStreamPacketDescription));
             
             ioData->mBuffers[0].mDataByteSize = (myInfo->aspds + i)->mDataByteSize;
@@ -248,7 +248,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             goodPackets++;
         }
         else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo->inputASBD->mBytesPerPacket) {
-            printf("Not VBR but there is enough in the buffer\n");
+            //printf("Not VBR but there is enough in the buffer\n");
             ioData->mBuffers[0].mDataByteSize = myInfo->inputASBD->mBytesPerPacket;
             ioData->mBuffers[0].mData = buffer;
             TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
@@ -284,6 +284,23 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         sentRequest = YES;
     }
     return nil;
+}
+
+- (void)cleanUpSong{
+    //NSLog(@"streamingThread: %@\n", streamingThread);
+    stillStreaming = NO;
+    if (streamingThread) {
+        [self performSelector:@selector(unScheduleStream) onThread:streamingThread withObject:nil waitUntilDone:YES];
+    }
+
+}
+
+- (void)unScheduleStream
+{
+    if (self.inStream) {
+        [self.inStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [self.inStream close];
+    }
 }
 
 @end
