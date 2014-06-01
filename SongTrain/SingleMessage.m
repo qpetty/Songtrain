@@ -15,17 +15,29 @@
     if(self = [super init])
     {
         self.message = [aDecoder decodeIntForKey:@"message"];
-        self.song = [aDecoder decodeObjectForKey:@"song"];
         
-        if (self.message == RemoveSong) {
+        if (self.message == AddSong) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
+        else if (self.message == RemoveSong) {
             self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
         }
         else if (self.message == SwitchSong) {
             self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
             self.secondIndex = [aDecoder decodeIntForKey:@"2ndx"];
         }
+        else if (self.message == SkipSong) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
+        else if (self.message == AlbumRequest) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
         else if (self.message == AlbumImage) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
             self.data = [aDecoder decodeObjectForKey:@"data"];
+        }
+        else if (self.message == StartStreaming) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
         }
     }
     return self;
@@ -34,17 +46,30 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:self.message forKey:@"message"];
-    [aCoder encodeObject:self.song forKey:@"song"];
     
-    if (self.message == RemoveSong) {
+    
+    if (self.message == AddSong) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+    }
+    else if (self.message == RemoveSong) {
         [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
     }
     else if (self.message == SwitchSong) {
         [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
         [aCoder encodeInteger:self.secondIndex forKey:@"2ndx"];
     }
+    else if (self.message == SkipSong) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+    }
+    else if (self.message == AlbumRequest) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+    }
     else if (self.message == AlbumImage) {
+        [aCoder encodeObject:self.song forKey:@"song"];
         [aCoder encodeObject:self.data forKey:@"data"];
+    }
+    else if (self.message == StartStreaming) {
+        [aCoder encodeObject:self.song forKey:@"song"];
     }
 }
 

@@ -54,6 +54,7 @@
     [advert startAdvertisingPeer];
     [[QPMusicPlayerController musicPlayer] resetToServer];
     [[QPMusicPlayerController musicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [[QPMusicPlayerController musicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)connectToPeer:(MCPeerID*)peerID
@@ -72,6 +73,7 @@
     [browse startBrowsingForPeers];
     if (_currentRole == ServerConnection) {
         [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSong"];
+        [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
     }
     _currentRole = NotConnected;
 }
@@ -247,6 +249,11 @@
     //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
+- (void)sendDataUnreliablyToAllPeers:(NSData*)data
+{
+    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataUnreliable error:nil];
+}
+
 - (void)nextSong:(Song*)song
 {
     SingleMessage *message = [[SingleMessage alloc] init];
@@ -279,12 +286,10 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
-//- (void)removeSongFromAllPeers:(Song*)song atIndex:(NSUInteger)ndx
 - (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = RemoveSong;
-    //message.song = song;
     message.firstIndex = ndx;
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
@@ -293,7 +298,6 @@
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = SwitchSong;
-    //message.song = song;
     message.firstIndex = x;
     message.secondIndex = y;
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
@@ -330,16 +334,15 @@
     message.song = song;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
 }
-- (void)requestToStopStreaming
-{
-    
-}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([keyPath isEqualToString:@"currentSong"]) {
             [self nextSong:[QPMusicPlayerController musicPlayer].currentSong];
+        }
+        else if ([keyPath isEqualToString:@"currentSongTime"]) {
+            
         }
     });
 }

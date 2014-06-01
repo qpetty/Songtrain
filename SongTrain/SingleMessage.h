@@ -15,8 +15,7 @@ enum MessageTypes : NSInteger {
     SkipSong,
     AlbumRequest,
     AlbumImage,
-    StartStreaming,
-    StopStreaming
+    StartStreaming
 };
 
 @interface SingleMessage : NSObject
