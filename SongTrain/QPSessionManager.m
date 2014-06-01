@@ -180,6 +180,9 @@
                 [((LocalSong*)streamSong) startStreaming];
             }
         }
+        else if (mess.message == CurrentTime) {
+            [[QPMusicPlayerController musicPlayer] currentTime:mess.firstIndex];
+        }
     });
 }
 
@@ -342,7 +345,10 @@
             [self nextSong:[QPMusicPlayerController musicPlayer].currentSong];
         }
         else if ([keyPath isEqualToString:@"currentSongTime"]) {
-            
+            SingleMessage *mess = [[SingleMessage alloc] init];
+            mess.message = CurrentTime;
+            mess.firstIndex = [[QPMusicPlayerController musicPlayer] currentSongTime].location;
+            [self sendDataUnreliablyToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:mess]];
         }
     });
 }

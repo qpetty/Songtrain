@@ -38,6 +38,8 @@
 - (void)resetToServer;
 - (void)resetToClient;
 
+- (void)currentTime:(NSUInteger)time;
+
 - (void)addSongToPlaylist:(Song*)song;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
 - (void)removeSongFromPlaylist:(NSUInteger)ndx;

@@ -39,6 +39,9 @@
         else if (self.message == StartStreaming) {
             self.song = [aDecoder decodeObjectForKey:@"song"];
         }
+        else if (self.message == CurrentTime) {
+            self.firstIndex =[aDecoder decodeIntForKey:@"1ndx"];
+        }
     }
     return self;
 }
@@ -70,6 +73,9 @@
     }
     else if (self.message == StartStreaming) {
         [aCoder encodeObject:self.song forKey:@"song"];
+    }
+    else if (self.message == CurrentTime) {
+        [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
     }
 }
 
