@@ -34,6 +34,7 @@
 
 + (instancetype)musicPlayer;
 
+- (void)reset;
 - (void)resetToServer;
 - (void)resetToClient;
 

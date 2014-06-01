@@ -28,22 +28,9 @@
 		6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */; };
 		6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394618A9B487001A7AC8 /* QPSessionManager.m */; };
 		6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956BC2F188F44E9003C80DA /* CurrentSongView.m */; };
-		6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4C418A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m */; };
-		6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4C718A6A0BE00EAB82A /* TDAudioFileStream.m */; };
-		6970F4DE18A6A0BE00EAB82A /* TDAudioQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4C918A6A0BE00EAB82A /* TDAudioQueue.m */; };
-		6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4CB18A6A0BE00EAB82A /* TDAudioQueueBuffer.m */; };
-		6970F4E018A6A0BE00EAB82A /* TDAudioQueueBufferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4CD18A6A0BE00EAB82A /* TDAudioQueueBufferManager.m */; };
-		6970F4E118A6A0BE00EAB82A /* TDAudioQueueController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4CF18A6A0BE00EAB82A /* TDAudioQueueController.m */; };
-		6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D118A6A0BE00EAB82A /* TDAudioQueueFiller.m */; };
-		6970F4E318A6A0BE00EAB82A /* TDAudioStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D318A6A0BE00EAB82A /* TDAudioStream.m */; };
-		6970F4E418A6A0BE00EAB82A /* TDAudioInputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D518A6A0BE00EAB82A /* TDAudioInputStreamer.m */; };
-		6970F4E518A6A0BE00EAB82A /* TDAudioOutputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D718A6A0BE00EAB82A /* TDAudioOutputStreamer.m */; };
-		6970F4E618A6A0BE00EAB82A /* TDAudioStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4D918A6A0BE00EAB82A /* TDAudioStreamer.m */; };
-		6970F4E718A6A0BE00EAB82A /* TDAudioStreamerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4DB18A6A0BE00EAB82A /* TDAudioStreamerConstants.m */; };
 		6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4E918A6A90000EAB82A /* SingleMessage.m */; };
 		6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */; };
 		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
-		6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */; };
 		697CF6AC1898794F00CF4DC7 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 697CF6AB1898794F00CF4DC7 /* Song.m */; };
 		69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */; };
 		69BE4FA618A01F0F00483DD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BE4FA518A01F0F00483DD8 /* AudioToolbox.framework */; };
@@ -109,38 +96,12 @@
 		6933394618A9B487001A7AC8 /* QPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPSessionManager.m; sourceTree = "<group>"; };
 		6956BC2E188F44E9003C80DA /* CurrentSongView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentSongView.h; sourceTree = "<group>"; };
 		6956BC2F188F44E9003C80DA /* CurrentSongView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSongView.m; sourceTree = "<group>"; };
-		6970F4C318A6A0BE00EAB82A /* NSMutableArray+QueueMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueMethods.h"; sourceTree = "<group>"; };
-		6970F4C418A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueMethods.m"; sourceTree = "<group>"; };
-		6970F4C618A6A0BE00EAB82A /* TDAudioFileStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioFileStream.h; sourceTree = "<group>"; };
-		6970F4C718A6A0BE00EAB82A /* TDAudioFileStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioFileStream.m; sourceTree = "<group>"; };
-		6970F4C818A6A0BE00EAB82A /* TDAudioQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioQueue.h; sourceTree = "<group>"; };
-		6970F4C918A6A0BE00EAB82A /* TDAudioQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioQueue.m; sourceTree = "<group>"; };
-		6970F4CA18A6A0BE00EAB82A /* TDAudioQueueBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioQueueBuffer.h; sourceTree = "<group>"; };
-		6970F4CB18A6A0BE00EAB82A /* TDAudioQueueBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioQueueBuffer.m; sourceTree = "<group>"; };
-		6970F4CC18A6A0BE00EAB82A /* TDAudioQueueBufferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioQueueBufferManager.h; sourceTree = "<group>"; };
-		6970F4CD18A6A0BE00EAB82A /* TDAudioQueueBufferManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioQueueBufferManager.m; sourceTree = "<group>"; };
-		6970F4CE18A6A0BE00EAB82A /* TDAudioQueueController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioQueueController.h; sourceTree = "<group>"; };
-		6970F4CF18A6A0BE00EAB82A /* TDAudioQueueController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioQueueController.m; sourceTree = "<group>"; };
-		6970F4D018A6A0BE00EAB82A /* TDAudioQueueFiller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioQueueFiller.h; sourceTree = "<group>"; };
-		6970F4D118A6A0BE00EAB82A /* TDAudioQueueFiller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioQueueFiller.m; sourceTree = "<group>"; };
-		6970F4D218A6A0BE00EAB82A /* TDAudioStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioStream.h; sourceTree = "<group>"; };
-		6970F4D318A6A0BE00EAB82A /* TDAudioStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioStream.m; sourceTree = "<group>"; };
-		6970F4D418A6A0BE00EAB82A /* TDAudioInputStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioInputStreamer.h; sourceTree = "<group>"; };
-		6970F4D518A6A0BE00EAB82A /* TDAudioInputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioInputStreamer.m; sourceTree = "<group>"; };
-		6970F4D618A6A0BE00EAB82A /* TDAudioOutputStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioOutputStreamer.h; sourceTree = "<group>"; };
-		6970F4D718A6A0BE00EAB82A /* TDAudioOutputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioOutputStreamer.m; sourceTree = "<group>"; };
-		6970F4D818A6A0BE00EAB82A /* TDAudioStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioStreamer.h; sourceTree = "<group>"; };
-		6970F4D918A6A0BE00EAB82A /* TDAudioStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioStreamer.m; sourceTree = "<group>"; };
-		6970F4DA18A6A0BE00EAB82A /* TDAudioStreamerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAudioStreamerConstants.h; sourceTree = "<group>"; };
-		6970F4DB18A6A0BE00EAB82A /* TDAudioStreamerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAudioStreamerConstants.m; sourceTree = "<group>"; };
 		6970F4E818A6A90000EAB82A /* SingleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMessage.h; sourceTree = "<group>"; };
 		6970F4E918A6A90000EAB82A /* SingleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleMessage.m; sourceTree = "<group>"; };
 		6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Playlist.h"; sourceTree = "<group>"; };
 		6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Playlist.m"; sourceTree = "<group>"; };
 		6970F4F718A8514B00EAB82A /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
 		6970F4F818A8514B00EAB82A /* ControlPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlPanel.m; sourceTree = "<group>"; };
-		6976E0C418BB35D900A919B3 /* QPOutputStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPOutputStreamer.h; sourceTree = "<group>"; };
-		6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPOutputStreamer.m; sourceTree = "<group>"; };
 		697CF6AA1898794F00CF4DC7 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
 		697CF6AB1898794F00CF4DC7 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
 		69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
@@ -258,15 +219,12 @@
 				6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */,
 				6933394218A9AC57001A7AC8 /* QPMusicPlayerController.h */,
 				6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */,
-				6976E0C418BB35D900A919B3 /* QPOutputStreamer.h */,
-				6976E0C518BB35D900A919B3 /* QPOutputStreamer.m */,
 				6933394518A9B487001A7AC8 /* QPSessionManager.h */,
 				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
 				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
 				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
 				69FF48B618FA09E500E48B98 /* MusicPicker */,
 				6933394118A9ABEE001A7AC8 /* Network Data */,
-				6970F4C118A6A0BE00EAB82A /* AudioStreamer */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
 				69327DDF188F0F4C001AB7F5 /* Resources */,
 				69327DC2188F0F16001AB7F5 /* Images.xcassets */,
@@ -327,53 +285,6 @@
 				6970F4E918A6A90000EAB82A /* SingleMessage.m */,
 			);
 			name = "Network Data";
-			sourceTree = "<group>";
-		};
-		6970F4C118A6A0BE00EAB82A /* AudioStreamer */ = {
-			isa = PBXGroup;
-			children = (
-				6970F4C218A6A0BE00EAB82A /* Categories */,
-				6970F4C518A6A0BE00EAB82A /* Classes */,
-				6970F4D418A6A0BE00EAB82A /* TDAudioInputStreamer.h */,
-				6970F4D518A6A0BE00EAB82A /* TDAudioInputStreamer.m */,
-				6970F4D618A6A0BE00EAB82A /* TDAudioOutputStreamer.h */,
-				6970F4D718A6A0BE00EAB82A /* TDAudioOutputStreamer.m */,
-				6970F4D818A6A0BE00EAB82A /* TDAudioStreamer.h */,
-				6970F4D918A6A0BE00EAB82A /* TDAudioStreamer.m */,
-				6970F4DA18A6A0BE00EAB82A /* TDAudioStreamerConstants.h */,
-				6970F4DB18A6A0BE00EAB82A /* TDAudioStreamerConstants.m */,
-			);
-			path = AudioStreamer;
-			sourceTree = "<group>";
-		};
-		6970F4C218A6A0BE00EAB82A /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				6970F4C318A6A0BE00EAB82A /* NSMutableArray+QueueMethods.h */,
-				6970F4C418A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		6970F4C518A6A0BE00EAB82A /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				6970F4C618A6A0BE00EAB82A /* TDAudioFileStream.h */,
-				6970F4C718A6A0BE00EAB82A /* TDAudioFileStream.m */,
-				6970F4C818A6A0BE00EAB82A /* TDAudioQueue.h */,
-				6970F4C918A6A0BE00EAB82A /* TDAudioQueue.m */,
-				6970F4CA18A6A0BE00EAB82A /* TDAudioQueueBuffer.h */,
-				6970F4CB18A6A0BE00EAB82A /* TDAudioQueueBuffer.m */,
-				6970F4CC18A6A0BE00EAB82A /* TDAudioQueueBufferManager.h */,
-				6970F4CD18A6A0BE00EAB82A /* TDAudioQueueBufferManager.m */,
-				6970F4CE18A6A0BE00EAB82A /* TDAudioQueueController.h */,
-				6970F4CF18A6A0BE00EAB82A /* TDAudioQueueController.m */,
-				6970F4D018A6A0BE00EAB82A /* TDAudioQueueFiller.h */,
-				6970F4D118A6A0BE00EAB82A /* TDAudioQueueFiller.m */,
-				6970F4D218A6A0BE00EAB82A /* TDAudioStream.h */,
-				6970F4D318A6A0BE00EAB82A /* TDAudioStream.m */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		69BE4FA918A0399F00483DD8 /* Public Utilities */ = {
@@ -540,39 +451,26 @@
 				69853E9D18C6DE7D00AD6578 /* TPCircularBuffer.c in Sources */,
 				69327DC1188F0F16001AB7F5 /* MainViewController.m in Sources */,
 				69FF48C318FA09E500E48B98 /* PlaylistTabViewController.m in Sources */,
-				6970F4DD18A6A0BE00EAB82A /* TDAudioFileStream.m in Sources */,
 				69FF48C418FA09E500E48B98 /* SongTabViewController.m in Sources */,
 				69F85E2619149C4A001A7A45 /* RemoteSong.m in Sources */,
-				6976E0C618BB35D900A919B3 /* QPOutputStreamer.m in Sources */,
 				69FF48C518FA09E500E48B98 /* TabViewController.m in Sources */,
-				6970F4E218A6A0BE00EAB82A /* TDAudioQueueFiller.m in Sources */,
 				6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */,
 				6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */,
 				69327DBB188F0F16001AB7F5 /* AppDelegate.m in Sources */,
 				69CAC9AE189EE19600C9B02A /* ServerPlaylistViewController.m in Sources */,
 				69CAC9AB189EE18100C9B02A /* ClientPlaylistViewController.m in Sources */,
-				6970F4E618A6A0BE00EAB82A /* TDAudioStreamer.m in Sources */,
 				CAA2F08D18AC256600E24534 /* Animator.m in Sources */,
-				6970F4E718A6A0BE00EAB82A /* TDAudioStreamerConstants.m in Sources */,
-				6970F4DE18A6A0BE00EAB82A /* TDAudioQueue.m in Sources */,
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
 				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
 				E1306BDC1934245300944BBE /* MusicNavigationViewController.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
 				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
-				6970F4DC18A6A0BE00EAB82A /* NSMutableArray+QueueMethods.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
-				6970F4E018A6A0BE00EAB82A /* TDAudioQueueBufferManager.m in Sources */,
-				6970F4E518A6A0BE00EAB82A /* TDAudioOutputStreamer.m in Sources */,
-				6970F4E318A6A0BE00EAB82A /* TDAudioStream.m in Sources */,
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
 				69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */,
-				6970F4E418A6A0BE00EAB82A /* TDAudioInputStreamer.m in Sources */,
 				6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */,
-				6970F4DF18A6A0BE00EAB82A /* TDAudioQueueBuffer.m in Sources */,
-				6970F4E118A6A0BE00EAB82A /* TDAudioQueueController.m in Sources */,
 				697CF6AC1898794F00CF4DC7 /* Song.m in Sources */,
 				69327DB7188F0F16001AB7F5 /* main.m in Sources */,
 			);
