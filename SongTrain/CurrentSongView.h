@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "QPMusicPlayerController.h"
 #import "UsefulFunctions.h"
+#import "MarqueeLabel.h"
 
 @interface CurrentSongView : UIImageView{
     Song *currentSong;

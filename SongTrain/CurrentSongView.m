@@ -32,15 +32,19 @@
         [self addSubview:self.tinyAlbumView];
         
         //Song Title
-        songTitle = [[UILabel alloc] init];
+        CGRect tempFrame = CGRectMake(self.tinyAlbumView.frame.size.width + self.tinyAlbumView.frame.origin.x + 5,
+                                     self.tinyAlbumView.frame.origin.y + self.tinyAlbumView.frame.size.height/2,
+                                     self.frame.size.width * 0.6,
+                                     self.frame.size.height / 4);
+        
+        songTitle = [[MarqueeLabel alloc] initWithFrame:tempFrame rate:75.0 andFadeLength:10.0f];
+        ((MarqueeLabel*)songTitle).marqueeType = MLContinuous;
+        ((MarqueeLabel*)songTitle).continuousMarqueeExtraBuffer = 25.0f;
+        ((MarqueeLabel*)songTitle).animationDelay = 5.0f;
+        
         [self addSubview:songTitle];
         songTitle.textColor = [UIColor whiteColor];
         [songTitle setFont:[UIFont systemFontOfSize:18]];
-        
-        songTitle.frame = CGRectMake(self.tinyAlbumView.frame.size.width + self.tinyAlbumView.frame.origin.x + 15,
-                                     self.tinyAlbumView.frame.origin.y + self.tinyAlbumView.frame.size.height/2,
-                                     songTitle.superview.frame.size.width * 0.6,
-                                     songTitle.superview.frame.size.height / 4);
         
         //Song Artist
         songArtist = [[UILabel alloc] init];
@@ -48,7 +52,7 @@
         songArtist.textColor = [UIColor whiteColor];
         [songArtist setFont:[UIFont systemFontOfSize:14]];
         
-        songArtist.frame = CGRectMake(songTitle.frame.origin.x,
+        songArtist.frame = CGRectMake(songTitle.frame.origin.x + 10,
                                       songTitle.frame.origin.y + songTitle.frame.size.height,
                                       songTitle.frame.size.width,
                                       songTitle.frame.size.height * 0.6);

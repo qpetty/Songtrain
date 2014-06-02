@@ -28,6 +28,7 @@
 		6933394418A9AC57001A7AC8 /* QPMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */; };
 		6933394718A9B487001A7AC8 /* QPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933394618A9B487001A7AC8 /* QPSessionManager.m */; };
 		6956BC30188F44E9003C80DA /* CurrentSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956BC2F188F44E9003C80DA /* CurrentSongView.m */; };
+		696EA18C193C1D8D0059A899 /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 696EA18B193C1D8D0059A899 /* MarqueeLabel.m */; };
 		6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4E918A6A90000EAB82A /* SingleMessage.m */; };
 		6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F518A6ED3A00EAB82A /* NSMutableArray+Playlist.m */; };
 		6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6970F4F818A8514B00EAB82A /* ControlPanel.m */; };
@@ -96,6 +97,8 @@
 		6933394618A9B487001A7AC8 /* QPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPSessionManager.m; sourceTree = "<group>"; };
 		6956BC2E188F44E9003C80DA /* CurrentSongView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentSongView.h; sourceTree = "<group>"; };
 		6956BC2F188F44E9003C80DA /* CurrentSongView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSongView.m; sourceTree = "<group>"; };
+		696EA18A193C1D8D0059A899 /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarqueeLabel.h; sourceTree = "<group>"; };
+		696EA18B193C1D8D0059A899 /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarqueeLabel.m; sourceTree = "<group>"; };
 		6970F4E818A6A90000EAB82A /* SingleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMessage.h; sourceTree = "<group>"; };
 		6970F4E918A6A90000EAB82A /* SingleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleMessage.m; sourceTree = "<group>"; };
 		6970F4F418A6ED3A00EAB82A /* NSMutableArray+Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Playlist.h"; sourceTree = "<group>"; };
@@ -221,8 +224,6 @@
 				6933394318A9AC57001A7AC8 /* QPMusicPlayerController.m */,
 				6933394518A9B487001A7AC8 /* QPSessionManager.h */,
 				6933394618A9B487001A7AC8 /* QPSessionManager.m */,
-				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
-				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
 				69FF48B618FA09E500E48B98 /* MusicPicker */,
 				6933394118A9ABEE001A7AC8 /* Network Data */,
 				69BE4FA918A0399F00483DD8 /* Public Utilities */,
@@ -290,6 +291,10 @@
 		69BE4FA918A0399F00483DD8 /* Public Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				696EA18A193C1D8D0059A899 /* MarqueeLabel.h */,
+				696EA18B193C1D8D0059A899 /* MarqueeLabel.m */,
+				69853E9C18C6DE7D00AD6578 /* TPCircularBuffer.h */,
+				69853E9B18C6DE7D00AD6578 /* TPCircularBuffer.c */,
 			);
 			name = "Public Utilities";
 			sourceTree = "<group>";
@@ -467,6 +472,7 @@
 				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
+				696EA18C193C1D8D0059A899 /* MarqueeLabel.m in Sources */,
 				6970F4F618A6ED3A00EAB82A /* NSMutableArray+Playlist.m in Sources */,
 				691FDE181890D1A500DD83D6 /* GrayTableView.m in Sources */,
 				69FF48C218FA09E500E48B98 /* MusicPickerViewController.m in Sources */,
