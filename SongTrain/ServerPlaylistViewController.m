@@ -16,7 +16,9 @@
 @property BOOL djEditing;
 @end
 
-@implementation ServerPlaylistViewController
+@implementation ServerPlaylistViewController{
+    BOOL shownAddButton;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +54,13 @@
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     
     [tableviewMenu addTarget:self action:@selector(segmentChanged) forControlEvents:UIControlEventValueChanged];
+    
+    if (musicPlayer.currentSong) {
+        shownAddButton = YES;
+    }
+    else {
+        shownAddButton = NO;
+    }
 }
 
 - (void)djUpdate:(UIButton*)sender
@@ -142,6 +151,15 @@
 {
     [super viewWillAppear:animated];
     djButton.hidden = NO;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (musicPlayer.currentSong == nil && shownAddButton == NO) {
+        [self addToPlaylist];
+        shownAddButton = YES;
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

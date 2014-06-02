@@ -38,4 +38,6 @@
     UIButton *addToList;
 }
 
+- (void)addToPlaylist;
+
 @end
