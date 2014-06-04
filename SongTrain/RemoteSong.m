@@ -178,7 +178,7 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
 
 void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData, AudioStreamPacketDescription *inPacketDescriptions)
 {
-    NSLog(@"Got %lu packets\n", inNumberPackets);
+    //NSLog(@"Got %lu packets\n", inNumberPackets);
     RemoteSong *myInfo = (__bridge RemoteSong *)(inClientData);
     
     int32_t spaceAvailableInBuffer;

@@ -76,6 +76,7 @@
         [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
     }
     _currentRole = NotConnected;
+    [[QPMusicPlayerController musicPlayer] reset];
 }
 
 -(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state

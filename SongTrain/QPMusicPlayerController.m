@@ -192,10 +192,13 @@
         [objects addObject:_currentSong.artistName];
     }
     
-    if (_currentSong.albumImage) {
-        [keys addObject:MPMediaItemPropertyArtwork];
-        [objects addObject:[[MPMediaItemArtwork alloc] initWithImage:_currentSong.albumImage]];
+    UIImage *songImage = _currentSong.albumImage;
+    
+    if (songImage == nil) {
+        songImage = [UIImage imageNamed:@"default_album_artwork"];
     }
+    [keys addObject:MPMediaItemPropertyArtwork];
+    [objects addObject:[[MPMediaItemArtwork alloc] initWithImage:songImage]];
     
     NSDictionary *info = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
     

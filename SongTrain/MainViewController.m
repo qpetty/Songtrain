@@ -135,7 +135,7 @@
 {
     [super viewWillAppear:animated];
     self.createTrainButton.titleLabel.textColor = UIColorFromRGB(0x7fa8d7);
-    [musicPlayer reset];
+    [sessionManager restartSession];
 }
 
 - (void)createTrainPressed:(UIButton*)sender
