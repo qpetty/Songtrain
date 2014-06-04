@@ -20,6 +20,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
+        self.backgroundColor = UIColorFromRGBWithAlpha(0xc5d1de, 0.13);
         
         [self.layer setBorderWidth:0];
         
