@@ -123,6 +123,9 @@
 // Changes header views background color
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     view.tintColor = [UIColor clearColor];
+    [view.layer setBorderWidth:0.5f];
+    [view.layer setBorderColor:[UIColor blackColor].CGColor];
+    view.frame = CGRectMake(view.frame.origin.x - 1, view.frame.origin.y, view.frame.size.width + 2, view.frame.size.height);
 }
 
 /*
