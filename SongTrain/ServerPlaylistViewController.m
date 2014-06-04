@@ -35,8 +35,10 @@
 	// Do any additional setup after loading the view.
     
     CGRect location = CGRectMake(0, albumArtwork.frame.origin.y + albumArtwork.frame.size.height, 50, 50);
-    
+
     self.djEditing = NO;
+    
+    
     
     // Add Dj button for host, I think that's the only person who should have it, right?
     // TODO: reposition the dj button, alter size, ui changes and what not
@@ -75,11 +77,15 @@
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+
                 }];
+                self.navigationItem.title = [[UIDevice currentDevice] name];
                 [mainTableView setEditing:NO];
             } else {
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+                    self.navigationItem.title = @"";
+
                 }];
                 [mainTableView setEditing:YES];
             }
@@ -93,6 +99,7 @@
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
                 }];
+                self.navigationItem.title = [[UIDevice currentDevice] name];
                 [djButton setEnabled:NO];
             } else {
                 [djButton setEnabled:YES];
@@ -105,11 +112,14 @@
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                    self.navigationItem.title = [[UIDevice currentDevice] name];
+
                 }];
                 [mainTableView setEditing:NO];
             } else {
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
+                    self.navigationItem.title = @"";
                 }];
                 [mainTableView setEditing:YES];
             }
@@ -122,6 +132,7 @@
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                    self.navigationItem.title = [[UIDevice currentDevice] name];
                 }];
                 [djButton setEnabled:NO];
             } else {
@@ -164,6 +175,9 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([mainTableView isEditing] == NO) {
+        return NO;
+    }
     return YES;
 }
 

@@ -43,12 +43,17 @@
         wholeTableView.dataSource = self;
         wholeTableView.delegate = self;
         
-        //UIImage *blurredImage = [self applyBlurOnImage:[UIImage imageNamed:@"splash.png"] withRadius:1];
-        UIImage *blurredImage = [UIImage imageNamed:@"splash.png"];
+        UIImage *blurredImage = [UIImage imageNamed:@"station_splash2"];
         wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:blurredImage];
         wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
         wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+        wholeTableView.sectionIndexColor = UIColorFromRGB(0x7FA8D7);
+        
         [wholeTableView setBackgroundColor: [UIColor clearColor]];
+        [wholeTableView setSeparatorColor:UIColorFromRGB(0x222222)];
+        
+        [wholeTableView.layer setBorderWidth:0.5f];
+        [wholeTableView.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
         
         
     }
@@ -111,14 +116,13 @@
     cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
-    
     cell.accessoryType = UITableViewCellAccessoryNone;
     return cell;
 }
 
 // Changes header views background color
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    view.tintColor = UIColorFromRGB(0xC5D1DE);
+    view.tintColor = [UIColor clearColor];
 }
 
 /*

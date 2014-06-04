@@ -17,6 +17,8 @@
     //Sets status bar to white text
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:UIColorFromRGB(0x7FA8D7)];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:UIColorFromRGB(0xC5D1DE)];
+
     //[[[UITableViewCell appearance] textLabel] setFont:[UIFont fontWithName:@"Helvetica Neue Light" size:14]];
     
      [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];

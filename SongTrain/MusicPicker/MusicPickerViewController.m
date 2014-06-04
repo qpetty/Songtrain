@@ -59,8 +59,10 @@
     NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, nil];
     
     self.viewControllers = controllers;
+    
+    //[self.tabBar setSelectedImageTintColor:UIColorFromRGB(0x7FA8D7)];
+    self.tabBar.tintColor = UIColorFromRGB(0x7FA8D7);
     self.tabBar.barTintColor = [UIColor darkGrayColor];
-  
 }
 
 - (void)didReceiveMemoryWarning

@@ -105,18 +105,19 @@
          cell.textLabel.textColor = [UIColor whiteColor];
          cell.userInteractionEnabled = YES;
          if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
-             cell.backgroundColor = [UIColor greenColor];
+             cell.textLabel.textColor = UIColorFromRGB(0x7FA8D7);
          }
          else {
-             cell.backgroundColor = [UIColor clearColor];
+             cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
          }
          //NSLog(@"%@\n", [((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]] ? @"YES" : @"NO");
      }
      else{
-         cell.textLabel.text = @"DRM shit";
-         cell.textLabel.textColor = [UIColor redColor];
+         cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
+         cell.textLabel.textColor = UIColorFromRGB(0x656A71);
          cell.userInteractionEnabled = NO;
      }
+     
      cell.accessoryType = UITableViewCellAccessoryNone;
      return cell;
  }
