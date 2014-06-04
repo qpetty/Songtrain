@@ -182,6 +182,7 @@
     NSLog(@"Selected train: %@\n", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
     
     ClientPlaylistViewController *nextView = [[ClientPlaylistViewController alloc] init];
+    nextView.navigationItem.title = ((MCPeerID *)[sessionManager.peerArray objectAtIndex:[indexPath row]]).displayName;
     sessionManager.delegate = nextView;
     
     [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:[indexPath row]]];
