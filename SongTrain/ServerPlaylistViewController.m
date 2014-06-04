@@ -134,6 +134,7 @@
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
                     self.navigationItem.title = [[UIDevice currentDevice] name];
                 }];
+
                 [djButton setEnabled:NO];
             } else {
                 [djButton setEnabled:YES];

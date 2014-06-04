@@ -41,6 +41,8 @@
     
     MusicNavigationViewController *playlists = [[MusicNavigationViewController alloc] initWithRootViewController:playListViewController];
     playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
+    [playlists.tabBarItem setImage: [UIImage imageNamed:@"playlist_inactive"]];
+    [playlists.tabBarItem setSelectedImage:[UIImage imageNamed:@"playlist_active"]];
     
     ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
     artistViewController.title = @"Artists";
@@ -48,6 +50,11 @@
     
     MusicNavigationViewController *artists = [[MusicNavigationViewController alloc] initWithRootViewController:artistViewController];
     artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
+    UIImage *img = [UIImage imageNamed:@"artist_inactive"];
+
+    [artists.tabBarItem setImage: [UIImage imageNamed:@"artist_inactive"]];
+    [artists.tabBarItem setSelectedImage:[UIImage imageNamed:@"artist_active"]];
+
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
@@ -55,10 +62,13 @@
     
     MusicNavigationViewController *songs = [[MusicNavigationViewController alloc] initWithRootViewController:songViewController];
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
+    [songs.tabBarItem setImage: [UIImage imageNamed:@"song_inactive"]];
+    [songs.tabBarItem setSelectedImage:[UIImage imageNamed:@"song_active"]];
     
     NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, nil];
     
     self.viewControllers = controllers;
+    
     
     self.tabBar.tintColor = UIColorFromRGB(0x7FA8D7);
     self.tabBar.barTintColor = [UIColor darkGrayColor];
