@@ -40,10 +40,8 @@
     
     
     
-    // Add Dj button for host, I think that's the only person who should have it, right?
-    // TODO: reposition the dj button, alter size, ui changes and what not
     location = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
-                          self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
+                          self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE + 5, BUTTON_SIZE + 5);
     djButton = [[UIButton alloc] initWithFrame:location];
     
     location = CGRectMake(location.origin.x - 20, location.origin.y, location.size.width + 15, location.size.height);
@@ -54,6 +52,7 @@
     [self.navigationController.navigationBar addSubview:djButton];
     [self.navigationController.navigationBar addSubview:doneButton];
     [djButton setContentMode:UIViewContentModeScaleAspectFit];
+
 
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
