@@ -91,7 +91,7 @@
     if (show) {
         UIImage *newImage = currentSong.albumImage;
         if (newImage == nil) {
-            newImage = [UIImage imageNamed:@"default_album_artwork"];
+            newImage = [UIImage imageNamed:@"albumart_default"];
         }
         self.image = [self cropAlbumImage:newImage];
         self.tinyAlbumView.image = newImage;
