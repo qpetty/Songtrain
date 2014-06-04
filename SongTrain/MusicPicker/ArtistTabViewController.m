@@ -66,7 +66,7 @@
     NSMutableArray *titles = [[NSMutableArray alloc] init];
     
     //[titles addObject:UITableViewIndexSearch];
-    
+
     for (MPMediaQuerySection *section in query.itemSections) {
         [titles addObject:section.title];
     }
@@ -76,6 +76,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return [[[query collectionSections] objectAtIndex:section] title];
 }
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -88,6 +90,8 @@
     cell.userInteractionEnabled = YES;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
+    
+    
     return cell;
 }
 

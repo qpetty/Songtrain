@@ -7,6 +7,7 @@
 //
 
 #import "TabViewController.h"
+#import <CoreImage/CoreImage.h>
 
 @interface TabViewController () {
     UITableView *wholeTableView;
@@ -25,6 +26,15 @@
     return self;
 }
 
+- (UIImage *)applyBlurOnImage: (UIImage *)imageToBlur withRadius: (CGFloat)blurRadius {
+    
+    CIImage *originalImage = [CIImage imageWithCGImage: imageToBlur.CGImage];
+    CIFilter *filter = [CIFilter filterWithName: @"CIGaussianBlur" keysAndValues: kCIInputImageKey, originalImage, @"inputRadius", @(blurRadius), nil];
+    CIImage *outputImage = filter.outputImage;
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef outImage = [context createCGImage: outputImage fromRect: [outputImage extent]]; return [UIImage imageWithCGImage: outImage];
+}
+
 -(id)init
 {
     self = [super init];
@@ -32,7 +42,12 @@
         wholeTableView = [[UITableView alloc] init];
         wholeTableView.dataSource = self;
         wholeTableView.delegate = self;
-        wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splash.png"]];
+        
+        //UIImage *blurredImage = [self applyBlurOnImage:[UIImage imageNamed:@"splash.png"] withRadius:1];
+        UIImage *blurredImage = [UIImage imageNamed:@"splash.png"];
+        wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:blurredImage];
+        wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
+        wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
         [wholeTableView setBackgroundColor: [UIColor clearColor]];
         
         
@@ -60,6 +75,7 @@
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,
                                       self.view.frame.size.height - 49);
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,15 +105,20 @@
     
     if (!cell) {
         cell = [[UITableViewCell alloc] init];
-        cell.backgroundColor = [UIColor clearColor];
         [cell setRestorationIdentifier:@"MusicCell"];
     }
     
+    cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
     return cell;
+}
+
+// Changes header views background color
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    view.tintColor = UIColorFromRGB(0xC5D1DE);
 }
 
 /*

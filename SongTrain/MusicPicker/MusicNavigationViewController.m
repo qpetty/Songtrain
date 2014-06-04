@@ -40,7 +40,8 @@
 {
     self = [super initWithRootViewController:rootViewController];
     
-    self.navigationBar.barTintColor = UIColorFromRGB(0xC5D1DE);
+    
+    //self.navigationBar.tintColor = UIColorFromRGB(0xC5D1DE);
     self.navigationBar.barTintColor = [UIColor darkGrayColor];
     self.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xebebeb), NSForegroundColorAttributeName, nil];
     return self;

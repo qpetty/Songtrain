@@ -38,7 +38,6 @@
     PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
     playListViewController.title = @"Playlists";
     playListViewController.navigationItem.rightBarButtonItem = doneButton1;
-    [playListViewController.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
     
     MusicNavigationViewController *playlists = [[MusicNavigationViewController alloc] initWithRootViewController:playListViewController];
     playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
@@ -61,6 +60,7 @@
     
     self.viewControllers = controllers;
     self.tabBar.barTintColor = [UIColor darkGrayColor];
+  
 }
 
 - (void)didReceiveMemoryWarning
