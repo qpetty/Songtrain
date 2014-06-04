@@ -83,13 +83,7 @@
     currentSong = song;
     songTitle.text = currentSong.title;
     songArtist.text = currentSong.artistName;
-    if (self.showArtwork) {
-        self.image = [self cropAlbumImage:currentSong.albumImage];
-        self.tinyAlbumView.image = currentSong.albumImage;
-    } else {
-        self.image = nil;
-        self.tinyAlbumView.image = nil;
-    }
+    [self setIsShowArtwork:self.showArtwork];
 }
 
 - (void)setIsShowArtwork:(BOOL)show
