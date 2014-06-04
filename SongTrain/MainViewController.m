@@ -19,7 +19,6 @@
     [super viewDidLoad];
 
     //Construct User Interface
-    
     //self.view.backgroundColor = UIColorFromRGB(0x363636);
     
     //Sets up the navigationBar to be transparent, same as Background Image
@@ -77,8 +76,7 @@
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
     [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
-    self.createTrainButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
-    self.createTrainButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    self.createTrainButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:17.0f];
     [self.createTrainButton addTarget:self action:@selector(createTrainPressed:) forControlEvents:UIControlEventTouchDown];
     
     //Create TableView
@@ -100,8 +98,8 @@
                           self.view.bounds.size.width,
                           14);
     label = [[UILabel alloc] initWithFrame:location];
-    label.textColor = [UIColor whiteColor];
-    [label setFont:[UIFont systemFontOfSize:12]];
+    label.textColor = UIColorFromRGB(0xc5d1de);
+    [label setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
     label.text = @"NEARBY TRAINS";
     
     [self.view addSubview:label];
@@ -136,6 +134,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.createTrainButton.titleLabel.textColor = UIColorFromRGB(0x7fa8d7);
     [musicPlayer reset];
 }
 
@@ -161,17 +160,18 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] init];
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
-        cell.textLabel.textColor = [UIColor whiteColor];
     }
     if (sessionManager.peerArray.count > 0){
         cell.textLabel.text = [[sessionManager.peerArray objectAtIndex:[indexPath row]] displayName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.userInteractionEnabled = YES;
+        cell.textLabel.textColor = [UIColor whiteColor];
     }
     else{
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.userInteractionEnabled = NO;
         cell.textLabel.text = @"No Nearby Trains";
+        cell.textLabel.textColor = UIColorFromRGB(0xc5d1de);
     }
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
     return cell;

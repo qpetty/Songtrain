@@ -28,12 +28,12 @@
         [self addSubview:blurFilter];
         
         //Add Tiny Album Cover
-        self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(18, self.frame.size.height/8, (self.frame.size.height * 3)/4, (self.frame.size.height * 3)/4)];
+        self.tinyAlbumView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, self.frame.size.height - 16 * 2, self.frame.size.height - 16 * 2)];
         [self addSubview:self.tinyAlbumView];
         
         //Song Title
         CGRect tempFrame = CGRectMake(self.tinyAlbumView.frame.size.width + self.tinyAlbumView.frame.origin.x + 5,
-                                     self.tinyAlbumView.frame.origin.y + self.tinyAlbumView.frame.size.height/2,
+                                     self.tinyAlbumView.frame.origin.y + self.tinyAlbumView.frame.size.height - 40,
                                      self.frame.size.width * 0.6,
                                      self.frame.size.height / 4);
         
@@ -44,13 +44,13 @@
         
         [self addSubview:songTitle];
         songTitle.textColor = [UIColor whiteColor];
-        [songTitle setFont:[UIFont systemFontOfSize:18]];
+        [songTitle setFont:[UIFont fontWithName:@"HelveticaNeue" size:17.0f]];
         
         //Song Artist
         songArtist = [[UILabel alloc] init];
         [self addSubview:songArtist];
         songArtist.textColor = [UIColor whiteColor];
-        [songArtist setFont:[UIFont systemFontOfSize:14]];
+        [songArtist setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
         
         songArtist.frame = CGRectMake(songTitle.frame.origin.x + 10,
                                       songTitle.frame.origin.y + songTitle.frame.size.height,
@@ -61,6 +61,9 @@
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.clipsToBounds = YES;
         self.showArtwork = YES;
+        
+        //Borders
+        self.layer.borderWidth = 0.5f;
     }
     return self;
 }
@@ -80,13 +83,7 @@
     currentSong = song;
     songTitle.text = currentSong.title;
     songArtist.text = currentSong.artistName;
-    if (self.showArtwork) {
-        self.image = [self cropAlbumImage:currentSong.albumImage];
-        self.tinyAlbumView.image = currentSong.albumImage;
-    } else {
-        self.image = nil;
-        self.tinyAlbumView.image = nil;
-    }
+    [self setIsShowArtwork:self.showArtwork];
 }
 
 - (void)setIsShowArtwork:(BOOL)show

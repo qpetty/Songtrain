@@ -37,16 +37,19 @@
     self.view.backgroundColor = UIColorFromRGB(0x363636);
     
     //Create Song View at top of view
-    CGRect location = CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
+    CGRect location = CGRectMake(self.navigationController.navigationBar.bounds.origin.x - 0.5,
                                  self.navigationController.navigationBar.bounds.origin.y + self.navigationController.navigationBar.bounds.size.height + [[UIApplication sharedApplication]statusBarFrame].size.height,
-                                 self.view.bounds.size.width,
+                                 self.view.bounds.size.width + 0.5 * 2,
                                  ARTWORK_HEIGHT);
     
     albumArtwork = [[CurrentSongView alloc] initWithFrame:location];
     [self.view addSubview:albumArtwork];
     
     // Tracks and Passengers selector background
-    tableviewMenuBackground = [[UIView alloc] initWithFrame:CGRectMake(location.origin.x, location.origin.y + location.size.height, self.view.frame.size.width, 44)];
+    tableviewMenuBackground = [[UIView alloc] initWithFrame:CGRectMake(self.navigationController.navigationBar.bounds.origin.x,
+                                                                       location.origin.y + location.size.height,
+                                                                       self.view.frame.size.width,
+                                                                       44)];
 
     tableviewMenuBackground.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
     [tableviewMenuBackground.layer setBorderWidth:0.0f];
@@ -157,7 +160,6 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.3);
-        cell.textLabel.textColor = [UIColor whiteColor];
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.userInteractionEnabled = YES;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -166,10 +168,12 @@
         
         if (sessionManager.connectedPeersArray.count) {
             cell.textLabel.text = [[sessionManager.connectedPeersArray objectAtIndex:[indexPath row]] displayName];
+            cell.textLabel.textColor = [UIColor whiteColor];
         }
         else {
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.textLabel.text = @"No Passengers in Train";
+            cell.textLabel.textColor = UIColorFromRGB(0x9fa8b2);
         }
         cell.detailTextLabel.text = @"";
         return cell;
@@ -177,12 +181,15 @@
     if (musicPlayer.playlist.count){
         cell.textLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] title];
         cell.detailTextLabel.text = [[musicPlayer.playlist objectAtIndex:[indexPath row]] artistName];
+        cell.textLabel.textColor = [UIColor whiteColor];
     }
     else{
         cell.textLabel.text = @"No Songs in Queue";
         cell.detailTextLabel.text = @"";
+        cell.textLabel.textColor = UIColorFromRGB(0x9fa8b2);
     }
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0f];
+    cell.detailTextLabel.textColor = UIColorFromRGB(0xc5d1de);
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.0f];
 
     return cell;

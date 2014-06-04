@@ -16,8 +16,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = UIColorFromRGBWithAlpha(0x464646, 0.67);
-        self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        self.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
+        self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        //self.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
         [self.layer setBorderWidth:0.5f];
         [self.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
     }
