@@ -45,13 +45,23 @@
     location = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                           self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
     djButton = [[UIButton alloc] initWithFrame:location];
+    
+    location = CGRectMake(location.origin.x - 20, location.origin.y, location.size.width + 15, location.size.height);
+    doneButton = [[UIButton alloc] initWithFrame:location];
+    
+    doneButton.hidden = YES;
+    
     [self.navigationController.navigationBar addSubview:djButton];
+    [self.navigationController.navigationBar addSubview:doneButton];
     [djButton setContentMode:UIViewContentModeScaleAspectFit];
 
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
     [djButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
     [self djUpdate:nil];
+    
+    [doneButton setTitle:@"Done" forState:UIControlStateNormal];
+    [doneButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
     
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     
@@ -80,12 +90,13 @@
 
                 }];
                 self.navigationItem.title = [[UIDevice currentDevice] name];
+                doneButton.hidden = YES;
                 [mainTableView setEditing:NO];
             } else {
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
                     self.navigationItem.title = @"";
-
+                    doneButton.hidden = NO;
                 }];
                 [mainTableView setEditing:YES];
             }
@@ -100,6 +111,7 @@
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
                 }];
                 self.navigationItem.title = [[UIDevice currentDevice] name];
+                doneButton.hidden = YES;
                 [djButton setEnabled:NO];
             } else {
                 [djButton setEnabled:YES];
@@ -113,13 +125,14 @@
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
                     self.navigationItem.title = [[UIDevice currentDevice] name];
-
+                    doneButton.hidden = YES;
                 }];
                 [mainTableView setEditing:NO];
             } else {
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width/2.0 - (djButton.frame.size.width/2.0), djButton.frame.origin.y, djButton.frame.size.width, djButton.frame.size.height);
                     self.navigationItem.title = @"";
+                    doneButton.hidden = NO;
                 }];
                 [mainTableView setEditing:YES];
             }
@@ -133,6 +146,7 @@
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                                                 self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE, BUTTON_SIZE);
                     self.navigationItem.title = [[UIDevice currentDevice] name];
+                    doneButton.hidden = YES;
                 }];
 
                 [djButton setEnabled:NO];
@@ -143,10 +157,6 @@
     }
 }
 
-/*- (void)turnOffEditOnUISegementSwitch
-{
-    [mainTableView setEditing:NO];
-}*/
 
 - (void)segmentChanged
 {
