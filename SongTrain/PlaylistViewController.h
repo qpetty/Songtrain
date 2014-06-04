@@ -20,8 +20,6 @@
 #import "QPMusicPlayerController.h"
 #import "QPSessionManager.h"
 
-#import "TDAudioStreamer.h"
-
 #import "MusicPickerViewController.h"
 
 @interface PlaylistViewController : UIViewController <ControlPanelDelegate, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource, QPSessionManagerDelegate, QPMusicPlayerControllerDelegate, MusicPickerViewController>{
@@ -39,5 +37,7 @@
     
     UIButton *addToList;
 }
+
+- (void)addToPlaylist;
 
 @end

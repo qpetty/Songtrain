@@ -34,8 +34,11 @@
 
 + (instancetype)musicPlayer;
 
+- (void)reset;
 - (void)resetToServer;
 - (void)resetToClient;
+
+- (void)currentTime:(NSUInteger)time;
 
 - (void)addSongToPlaylist:(Song*)song;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;

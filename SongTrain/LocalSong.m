@@ -87,6 +87,7 @@
     
     streamingThread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];
     [streamingThread start];
+    NSLog(@"just made streaming thread: %@\n", streamingThread);
 }
 
 - (void)startThread
@@ -103,6 +104,21 @@
     }
     else if (eventCode == NSStreamEventEndEncountered) {
         //close loop
+    }
+}
+
+- (void)cleanUpSong{
+    //NSLog(@"Cleaning up the song, trying to stop sending packets\n");
+    if (streamingThread) {
+        [self performSelector:@selector(unScheduleStream) onThread:streamingThread withObject:nil waitUntilDone:YES];
+    }
+}
+
+- (void)unScheduleStream
+{
+    if (self.outStream) {
+        [self.outStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [self.outStream close];
     }
 }
 
@@ -206,11 +222,6 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         NSLog(@"No Current Image\n");
         return nil;
     }
-}
-
--(void)dealloc{
-    NSLog(@"deallocate stuff from %@\n", self.title);
-    [self.outStream close];
 }
 
 @end

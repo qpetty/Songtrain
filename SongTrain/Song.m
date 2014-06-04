@@ -102,6 +102,9 @@
 - (void)prepareSong{
 }
 
+- (void)cleanUpSong{
+}
+
 - (void)dealloc
 {
     if (outputASBD){

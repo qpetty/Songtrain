@@ -29,10 +29,6 @@
 
 - (id)init {
     if (self = [super init]) {
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        [audioSession setActive:YES error:nil];
-        [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-        
         _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
         [self initOutputDescription];
         [self initAudioGraph];
@@ -47,8 +43,18 @@
     return self;
 }
 
+-(void)reset
+{
+    [[AVAudioSession sharedInstance] setActive:NO error:nil];
+    AUGraphStop(graph);
+    isServer = NO;
+    [_playlist removeAllObjects];
+}
+
 - (void)resetToServer
 {
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [_playlist removeAllObjects];
     AUGraphStop(graph);
     isServer = YES;
@@ -63,6 +69,8 @@
 
 - (void)resetToClient
 {
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [_playlist removeAllObjects];
     AUGraphStart(graph);
     isServer = NO;
@@ -148,6 +156,9 @@
 - (void)nextSong
 {
     if ([_playlist count]) {
+        
+        [_currentSong cleanUpSong];
+        
         [self willChangeValueForKey:@"currentSong"];
         _currentSong = [_playlist firstObject];
         [_playlist removeObjectAtIndex:0];
@@ -193,8 +204,13 @@
 
 - (void)addOneToTime
 {
+    [self currentTime:_currentSongTime.location + 1];
+}
+
+- (void)currentTime:(NSUInteger)time
+{
     [self willChangeValueForKey:@"currentSongTime"];
-    _currentSongTime.location++;
+    _currentSongTime.location = time;
     if(_currentSongTime.location > _currentSongTime.length)
         _currentSongTime.location = _currentSongTime.length;
     [self didChangeValueForKey:@"currentSongTime"];
