@@ -135,6 +135,7 @@
 {
     [super viewWillAppear:animated];
     self.createTrainButton.titleLabel.textColor = UIColorFromRGB(0x7fa8d7);
+    sessionManager.delegate = self;
     [sessionManager restartSession];
 }
 

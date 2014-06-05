@@ -24,7 +24,7 @@
 - (id)init {
     if (self = [super init]) {
         service = SERVICE_TYPE;
-        _pid = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+        _pid = [self getDevicePeerID];
         
         _peerArray = [[NSMutableArray alloc] init];
         
@@ -43,6 +43,25 @@
         _server = nil;
     }
     return self;
+}
+
+- (MCPeerID*)getDevicePeerID
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSData *peerData = [defaults dataForKey:kSongtrainPeerID];
+    MCPeerID *peerID;
+    
+    if (peerData == nil) {
+        peerID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+        peerData = [NSKeyedArchiver archivedDataWithRootObject:peerID];
+        [defaults setObject:peerData forKey:kSongtrainPeerID];
+        [defaults synchronize];
+    }
+    else {
+        peerID = [NSKeyedUnarchiver unarchiveObjectWithData:peerData];
+    }
+    
+    return peerID;
 }
 
 #pragma mark - Session Methods
@@ -222,12 +241,14 @@
 {
     NSLog(@"Removed Peer: %@", peerID.displayName);
     
+    /*
     for (MCPeerID *peer in _peerArray) {
         if ([peer.displayName isEqualToString:peerID.displayName]) {
             [_peerArray removeObject:peer];
             break;
         }
     }
+     */
     [_peerArray removeObjectIdenticalTo:peerID];
     [self.delegate availablePeersUpdated:self.peerArray];
 }
