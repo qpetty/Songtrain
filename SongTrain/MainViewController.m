@@ -61,7 +61,7 @@
         songNotPlayingHeader = [UIImage imageNamed:@"name.png"];
         UIImageView *header = [[UIImageView alloc] initWithImage:songNotPlayingHeader];
         
-        header.frame = CGRectMake(self.view.bounds.size.width/3, self.view.bounds.size.height/6, self.view.bounds.size.width/3, self.view.bounds.size.height/20);
+        header.frame = CGRectMake(self.view.bounds.size.width/2.0 - (121/2.0), self.view.bounds.size.height/6, 121, 29.5);
         
         [self.view addSubview:header];
     }
