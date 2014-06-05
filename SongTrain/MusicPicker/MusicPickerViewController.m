@@ -81,11 +81,8 @@
 {
     [allMediaItems addObject:item];
     
-    NSLog(@"Added item\n");
-    NSLog(@"Button Size: %lu\n", (unsigned long)doneButtons.count);
     for (UIBarButtonItem *button in doneButtons) {
         button.title = @"Done";
-        NSLog(@"Changing Title\n");
     }
 }
 
@@ -105,7 +102,12 @@
 }
 
 - (void)addButton:(UIBarButtonItem*)button {
-    NSLog(@"Added Button\n");
+    if (allMediaItems.count) {
+        button.title = @"Done";
+    }
+    else {
+        button.title = @"Cancel";
+    }
     [doneButtons addObject:button];
 }
 
