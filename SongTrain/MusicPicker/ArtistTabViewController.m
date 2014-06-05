@@ -77,8 +77,6 @@
     return [[[query collectionSections] objectAtIndex:section] title];
 }
 
-
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -86,11 +84,29 @@
     NSUInteger ndx = [[[query collectionSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
     
     cell.textLabel.text = [[[displayItems objectAtIndex:ndx] representativeItem] valueForProperty:MPMediaItemPropertyArtist];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.userInteractionEnabled = YES;
     
+    //Query to see if songs are pickable
+    MPMediaQuery *songQuery = [MPMediaQuery songsQuery];
+    [songQuery addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:cell.textLabel.text forProperty:MPMediaItemPropertyArtist]];
+    
+    BOOL displayName = NO;
+
+    for (MPMediaItem *item in songQuery.items) {
+        if ([item valueForProperty:MPMediaItemPropertyAssetURL]) {
+            displayName = YES;
+        }
+    }
+    
+    if (displayName) {
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.userInteractionEnabled = YES;
+    }
+    else {
+        cell.textLabel.textColor = [UIColor grayColor];
+        cell.userInteractionEnabled = NO;
+    }
+
     cell.accessoryType = UITableViewCellAccessoryNone;
-    
     
     return cell;
 }
@@ -102,7 +118,7 @@
     NSString *artistName = [[[displayItems objectAtIndex:ndx] representativeItem] valueForProperty:MPMediaItemPropertyArtist];
     
     [artistQuery addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:artistName forProperty:MPMediaItemPropertyArtist]];
-    [artistQuery setGroupingType:MPMediaGroupingAlbum];
+    [artistQuery setGroupingType:MPMediaGroupingTitle];
     
     SongTabViewController *songsView = [[SongTabViewController alloc] initWithQuery:artistQuery];
     songsView.title = artistName;
@@ -110,7 +126,6 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
 
 /*
 #pragma mark - Navigation

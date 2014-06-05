@@ -230,5 +230,7 @@
     }
 }
 
+-(void)disconnectedFromPeer:(MCPeerID *)peerID{
+}
 
 @end
