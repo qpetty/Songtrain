@@ -28,6 +28,8 @@ enum CurrentConnectionRole : NSInteger {
 @class RemoteSong;
 @class QPMusicPlayerController;
 
+static NSString *kSongtrainPeerID = @"SongtrainPeerID";
+
 @interface QPSessionManager : NSObject <MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate>{
     MCNearbyServiceBrowser *browse;
     MCNearbyServiceAdvertiser *advert;

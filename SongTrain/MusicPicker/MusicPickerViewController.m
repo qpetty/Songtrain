@@ -50,11 +50,9 @@
     
     MusicNavigationViewController *artists = [[MusicNavigationViewController alloc] initWithRootViewController:artistViewController];
     artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
-    UIImage *img = [UIImage imageNamed:@"artist_inactive"];
 
     [artists.tabBarItem setImage: [UIImage imageNamed:@"artist_inactive"]];
     [artists.tabBarItem setSelectedImage:[UIImage imageNamed:@"artist_active"]];
-
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
