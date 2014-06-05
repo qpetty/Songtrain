@@ -55,7 +55,8 @@
         [wholeTableView.layer setBorderWidth:0.5f];
         [wholeTableView.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
         
-        
+        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
+        self.navigationItem.rightBarButtonItem = item;
     }
     return self;
 }
@@ -64,6 +65,7 @@
 {
     [super viewDidLoad];
     [self.view addSubview:wholeTableView];
+    [self.delegate addButton:self.navigationItem.rightBarButtonItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated

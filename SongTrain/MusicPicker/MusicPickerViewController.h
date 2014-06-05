@@ -19,12 +19,15 @@
 
 @end
 
-@interface MusicPickerViewController : UITabBarController
+@interface MusicPickerViewController : UITabBarController <TabViewControllerDelegate>
 
 @property (weak, nonatomic) id <MusicPickerViewController> delegate;
 
 - (void)addItem:(MPMediaItem*)item;
 - (void)removeItem:(MPMediaItem*)item;
 - (BOOL)isItemSelected:(MPMediaItem*)item;
+- (void)addButton:(UIBarButtonItem*)button;
+- (void)removeButton:(UIBarButtonItem*)button;
+- (void)done;
 
 @end

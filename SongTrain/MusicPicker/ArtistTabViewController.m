@@ -122,6 +122,7 @@
     
     SongTabViewController *songsView = [[SongTabViewController alloc] initWithQuery:artistQuery];
     songsView.title = artistName;
+    songsView.delegate = self.delegate;
     [self.navigationController pushViewController:songsView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

@@ -25,7 +25,7 @@
 
 -(id)initWithQuery:(MPMediaQuery*)mediaQuery
 {
-    self = [self init];
+    self = [super init];
     if (self) {
         if (mediaQuery) {
             query = mediaQuery;
@@ -107,7 +107,7 @@
      if ([[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyAssetURL]) {
          cell.textLabel.textColor = [UIColor whiteColor];
          cell.userInteractionEnabled = YES;
-         if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
+         if ([self.delegate isItemSelected:[displayItems objectAtIndex:ndx]]) {
              cell.textLabel.textColor = UIColorFromRGB(0x7FA8D7);
          }
          //NSLog(@"%@\n", [((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]] ? @"YES" : @"NO");
@@ -130,11 +130,12 @@
 {
     NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
     
-    if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
-        [((MusicPickerViewController*)self.tabBarController) removeItem:[displayItems objectAtIndex:ndx]];
+    if ([self.delegate isItemSelected:[displayItems objectAtIndex:ndx]]) {
+        [self.delegate removeItem:[displayItems objectAtIndex:ndx]];
     }
     else {
-        [((MusicPickerViewController*)self.tabBarController) addItem:[displayItems objectAtIndex:ndx]];
+        NSLog(@"Adding item");
+        [self.delegate addItem:[displayItems objectAtIndex:ndx]];
     }
     [tableView reloadData];
 }

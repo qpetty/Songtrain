@@ -9,7 +9,7 @@
 #import "MusicPickerViewController.h"
 
 @interface MusicPickerViewController (){
-    NSMutableArray *allMediaItems;
+    NSMutableArray *allMediaItems, *doneButtons;
     UIBarButtonItem *doneButton1, *doneButton2, *doneButton3;
 }
 
@@ -31,13 +31,12 @@
     [super viewDidLoad];
     
     allMediaItems = [[NSMutableArray alloc] init];
-    doneButton1 = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
-    doneButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
-    doneButton3 = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
+    
+    doneButtons = [[NSMutableArray alloc] init];
     
     PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
     playListViewController.title = @"Playlists";
-    playListViewController.navigationItem.rightBarButtonItem = doneButton1;
+    playListViewController.delegate = self;
     
     MusicNavigationViewController *playlists = [[MusicNavigationViewController alloc] initWithRootViewController:playListViewController];
     playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
@@ -46,7 +45,7 @@
     
     ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
     artistViewController.title = @"Artists";
-    artistViewController.navigationItem.rightBarButtonItem = doneButton2;
+    artistViewController.delegate = self;
     
     MusicNavigationViewController *artists = [[MusicNavigationViewController alloc] initWithRootViewController:artistViewController];
     artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
@@ -56,7 +55,7 @@
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
-    songViewController.navigationItem.rightBarButtonItem = doneButton3;
+    songViewController.delegate = self;
     
     MusicNavigationViewController *songs = [[MusicNavigationViewController alloc] initWithRootViewController:songViewController];
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
@@ -80,21 +79,23 @@
 
 - (void)addItem:(MPMediaItem*)item
 {
-    NSString *done = @"Done";
     [allMediaItems addObject:item];
-    doneButton1.title = done;
-    doneButton2.title = done;
-    doneButton3.title = done;
+    
+    NSLog(@"Added item\n");
+    NSLog(@"Button Size: %lu\n", (unsigned long)doneButtons.count);
+    for (UIBarButtonItem *button in doneButtons) {
+        button.title = @"Done";
+        NSLog(@"Changing Title\n");
+    }
 }
 
 - (void)removeItem:(MPMediaItem*)item
 {
     [allMediaItems removeObject:item];
     if (![allMediaItems count]) {
-        NSString *cancel = @"Cancel";
-        doneButton1.title = cancel;
-        doneButton2.title = cancel;
-        doneButton3.title = cancel;
+        for (UIBarButtonItem *button in doneButtons) {
+            button.title = @"Cancel";
+        }
     }
 }
 
@@ -103,15 +104,23 @@
     return [allMediaItems containsObject:item];
 }
 
+- (void)addButton:(UIBarButtonItem*)button {
+    NSLog(@"Added Button\n");
+    [doneButtons addObject:button];
+}
+
+- (void)removeButton:(UIBarButtonItem*)button {
+    [doneButtons removeObject:button];
+}
+
 - (void)done
 {
     if ([allMediaItems count]) {
         [self.delegate mediaPicker:(MPMediaPickerController*)self didPickMediaItems:[MPMediaItemCollection collectionWithItems:allMediaItems]];
         [allMediaItems removeAllObjects];
-        NSString *cancel = @"Cancel";
-        doneButton1.title = cancel;
-        doneButton2.title = cancel;
-        doneButton3.title = cancel;
+        for (UIBarButtonItem *button in doneButtons) {
+            button.title = @"Cancel";
+        }
     }
     else {
         [self.delegate mediaPickerDidCancel:(MPMediaPickerController*)self];
