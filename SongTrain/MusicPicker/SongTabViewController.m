@@ -97,28 +97,32 @@
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
      UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
- 
+     cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+     cell.accessoryType = UITableViewCellAccessoryNone;
+     
      NSUInteger ndx = [[[query itemSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
+     cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
      
      if ([[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyAssetURL]) {
-         cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
          cell.textLabel.textColor = [UIColor whiteColor];
          cell.userInteractionEnabled = YES;
          if ([((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]]) {
              cell.textLabel.textColor = UIColorFromRGB(0x7FA8D7);
          }
-         else {
-             cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
-         }
          //NSLog(@"%@\n", [((MusicPickerViewController*)self.tabBarController) isItemSelected:[displayItems objectAtIndex:ndx]] ? @"YES" : @"NO");
      }
      else{
-         cell.textLabel.text = [[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyTitle];
+         if ([[displayItems objectAtIndex:ndx] valueForProperty:MPMediaItemPropertyIsCloudItem]) {
+             cell.imageView.image = [UIImage imageNamed:@"cloud"];
+         }
+         else {
+             cell.imageView.image = [UIImage imageNamed:@"drm"];
+         }
          cell.textLabel.textColor = UIColorFromRGB(0x656A71);
          cell.userInteractionEnabled = NO;
      }
      
-     cell.accessoryType = UITableViewCellAccessoryNone;
      return cell;
  }
 

@@ -188,6 +188,7 @@ void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPac
     buffer = TPCircularBufferHead(&myInfo->cBuffer, &spaceAvailableInBuffer);
     
     if (spaceAvailableInBuffer <= kBufferLength / 5) {
+        //NSLog(@"BUFFER IS TOO FULL!!!!!\n");
         return;
     }
     
