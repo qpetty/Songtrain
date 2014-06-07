@@ -28,12 +28,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = [sessionManager server].displayName;
     NSLog(@"%@", [sessionManager server].displayName);
     NSLog(@"%@", [sessionManager server].displayName);
     NSLog(@"%@", [sessionManager server].displayName);
     NSLog(@"%@", [sessionManager server].displayName);
 	// Do any additional setup after loading the view.
+    
+    self.navigationItem.title = [sessionManager server].displayName;
 }
 
 - (void)didReceiveMemoryWarning
