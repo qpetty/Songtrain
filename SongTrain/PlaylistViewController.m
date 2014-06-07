@@ -87,8 +87,12 @@
                           mainTableView.frame.origin.y + mainTableView.frame.size.height,
                           self.view.frame.size.width,
                           albumArtwork.frame.origin.y);
-     
-    panel = [[ControlPanel alloc] initWithFrame:location];
+    
+    if (sessionManager.currentRole == ServerConnection) {
+        panel = [[ServerControlPanel alloc] initWithFrame:location];
+    } else {
+        panel = [[ClientControlPanel alloc] initWithFrame:location];
+    }
     panel.delegate = self;
     [self.view addSubview:panel];
 

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#define BUTTON_SIZE 40
+
+
 enum ControlPanelButtonNames : NSInteger {
     AddButton = 1,
     SkipButton,
@@ -22,11 +25,10 @@ enum ControlPanelButtonNames : NSInteger {
 
 @interface ControlPanel : UIImageView{
     UIButton *addButton;
-    UIButton *skipButton;
-    UILabel *topLabel, *bottomLabel;
-    UIButton *playButton;
-    
+    CGRect location;
     UIProgressView *songProgress;
+    int currentMinutes;
+    int totalMinutes;
 }
 
 @property (weak, nonatomic) id <ControlPanelDelegate> delegate;

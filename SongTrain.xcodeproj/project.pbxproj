@@ -53,6 +53,8 @@
 		CAB4E57E18A6BF9000A654FC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAB4E57D18A6BF9000A654FC /* CoreImage.framework */; };
 		CAB4E58018A6C23B00A654FC /* mainViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */; };
 		E1306BDC1934245300944BBE /* MusicNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1306BDB1934245300944BBE /* MusicNavigationViewController.m */; };
+		E1B324241942BE2900A29A4B /* ServerControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B324231942BE2900A29A4B /* ServerControlPanel.m */; };
+		E1B324271942BFB800A29A4B /* ClientControlPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B324261942BFB800A29A4B /* ClientControlPanel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,10 @@
 		CAB4E57F18A6C23B00A654FC /* mainViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mainViewBackground.png; path = Images.xcassets/mainViewBackground.png; sourceTree = "<group>"; };
 		E1306BDA1934245300944BBE /* MusicNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicNavigationViewController.h; sourceTree = "<group>"; };
 		E1306BDB1934245300944BBE /* MusicNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicNavigationViewController.m; sourceTree = "<group>"; };
+		E1B324221942BE2900A29A4B /* ServerControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerControlPanel.h; sourceTree = "<group>"; };
+		E1B324231942BE2900A29A4B /* ServerControlPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerControlPanel.m; sourceTree = "<group>"; };
+		E1B324251942BFB800A29A4B /* ClientControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientControlPanel.h; sourceTree = "<group>"; };
+		E1B324261942BFB800A29A4B /* ClientControlPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientControlPanel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +331,10 @@
 				6956BC2F188F44E9003C80DA /* CurrentSongView.m */,
 				6970F4F718A8514B00EAB82A /* ControlPanel.h */,
 				6970F4F818A8514B00EAB82A /* ControlPanel.m */,
+				E1B324221942BE2900A29A4B /* ServerControlPanel.h */,
+				E1B324231942BE2900A29A4B /* ServerControlPanel.m */,
+				E1B324251942BFB800A29A4B /* ClientControlPanel.h */,
+				E1B324261942BFB800A29A4B /* ClientControlPanel.m */,
 				691FDE161890D1A500DD83D6 /* GrayTableView.h */,
 				691FDE171890D1A500DD83D6 /* GrayTableView.m */,
 			);
@@ -468,7 +478,9 @@
 				6970F4EA18A6A90000EAB82A /* SingleMessage.m in Sources */,
 				6970F4F918A8514B00EAB82A /* ControlPanel.m in Sources */,
 				E1306BDC1934245300944BBE /* MusicNavigationViewController.m in Sources */,
+				E1B324271942BFB800A29A4B /* ClientControlPanel.m in Sources */,
 				691FDE151890CB0F00DD83D6 /* SingleCellButton.m in Sources */,
+				E1B324241942BE2900A29A4B /* ServerControlPanel.m in Sources */,
 				69FF48C118FA09E500E48B98 /* ArtistTabViewController.m in Sources */,
 				69C04C8F18962EC800B957DB /* PlaylistViewController.m in Sources */,
 				69FF48A418F9DDE700E48B98 /* LocalSong.m in Sources */,
@@ -611,7 +623,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5102E789-49C9-4B65-81F0-F7D89455F410";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -627,7 +639,7 @@
 				GCC_PREFIX_HEADER = "SongTrain/SongTrain-Prefix.pch";
 				INFOPLIST_FILE = "SongTrain/SongTrain-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5102E789-49C9-4B65-81F0-F7D89455F410";
+				PROVISIONING_PROFILE = "754E8A50-502A-4B5C-828C-757C5C08A1E2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

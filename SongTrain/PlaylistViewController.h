@@ -14,7 +14,8 @@
 #import "UsefulFunctions.h"
 #import "CurrentSongView.h"
 #import "GrayTableView.h"
-#import "ControlPanel.h"
+#import "ServerControlPanel.h"
+#import "ClientControlPanel.h"
 
 #import "NSMutableArray+Playlist.h"
 #import "QPMusicPlayerController.h"
