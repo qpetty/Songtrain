@@ -75,7 +75,7 @@
                           SINGLE_TABLEVIEWCELL_HEIGHT);
     self.createTrainButton = [[SingleCellButton alloc] initWithFrame:location];
     [self.view addSubview:self.createTrainButton];
-    [self.createTrainButton setTitle:@"Create New Train" forState:UIControlStateNormal];
+    [self.createTrainButton setTitle:@"Create a New Train" forState:UIControlStateNormal];
     self.createTrainButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:17.0f];
     [self.createTrainButton addTarget:self action:@selector(createTrainPressed:) forControlEvents:UIControlEventTouchDown];
     

@@ -34,19 +34,23 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    
+    
     CGRect location = CGRectMake(0, albumArtwork.frame.origin.y + albumArtwork.frame.size.height, 50, 50);
 
+    
+    // Dj is not editing on initial load
+    
     self.djEditing = NO;
-    
-    
     
     location = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
                           self.navigationController.navigationBar.frame.size.height / 7, BUTTON_SIZE + 5, BUTTON_SIZE + 5);
     djButton = [[UIButton alloc] initWithFrame:location];
     
+    // Done button is added below the dj button
+    
     location = CGRectMake(location.origin.x - 20, location.origin.y, location.size.width + 15, location.size.height);
     doneButton = [[UIButton alloc] initWithFrame:location];
-    
     doneButton.hidden = YES;
     
     [self.navigationController.navigationBar addSubview:djButton];
@@ -54,10 +58,15 @@
     [djButton setContentMode:UIViewContentModeScaleAspectFit];
 
 
+    // Dj Button setup and target-action
+    
     [djButton setImage:[UIImage imageNamed:@"dj_inactive"] forState:UIControlStateNormal];
     [djButton setImage:[UIImage imageNamed:@"dj_active"] forState:UIControlStateSelected];
     [djButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
     [self djUpdate:nil];
+    
+    
+    // Done button setup and target-action
     
     [doneButton setTitle:@"Done" forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(djUpdate:) forControlEvents:UIControlEventTouchUpInside];
@@ -65,6 +74,8 @@
     [albumArtwork updateSongInfo:musicPlayer.currentSong];
     
     [tableviewMenu addTarget:self action:@selector(segmentChanged) forControlEvents:UIControlEventValueChanged];
+    
+    
     
     if (musicPlayer.currentSong) {
         shownAddButton = YES;
@@ -119,6 +130,7 @@
         }
     } else {
         if (sender) {
+            // User touched djButton
             if ([mainTableView isEditing]) {
                 [UIView animateWithDuration:0.5 animations:^{
                     djButton.frame = CGRectMake(self.view.frame.size.width - self.navigationController.navigationBar.frame.size.width / 8,
