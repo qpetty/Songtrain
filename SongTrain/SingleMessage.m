@@ -39,6 +39,13 @@
         else if (self.message == StartStreaming) {
             self.song = [aDecoder decodeObjectForKey:@"song"];
         }
+        else if (self.message == MusicPacket) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+            self.data = [aDecoder decodeObjectForKey:@"data"];
+        }
+        else if (self.message == MusicPacketRequest) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
         else if (self.message == CurrentTime) {
             self.firstIndex =[aDecoder decodeIntForKey:@"1ndx"];
         }
@@ -73,6 +80,14 @@
     }
     else if (self.message == StartStreaming) {
         [aCoder encodeObject:self.song forKey:@"song"];
+    }
+    else if (self.message == MusicPacket) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+        [aCoder encodeObject:self.data forKey:@"data"];
+    }
+    else if (self.message == MusicPacketRequest) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+        [aCoder encodeObject:self.data forKey:@"data"];
     }
     else if (self.message == CurrentTime) {
         [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];

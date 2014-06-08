@@ -14,11 +14,9 @@
 
 @interface LocalSong : Song <NSStreamDelegate>
 
-@property (strong, nonatomic) NSOutputStream *outStream;
-
 - (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item;
 
-- (void)startStreaming;
+- (NSData*)getNextPacket;
 
 @end

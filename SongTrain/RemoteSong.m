@@ -11,7 +11,6 @@
 @implementation RemoteSong {
     BOOL sentRequest;
     
-    NSThread *streamingThread;
     BOOL stillStreaming, isFormatVBR;
     
     TPCircularBuffer cBuffer;
@@ -55,60 +54,17 @@
     [[QPSessionManager sessionManager] requestToStartStreaming:self];
     
     TPCircularBufferInit(&cBuffer, kBufferLength);
-    AudioFileStreamOpen((__bridge void*)self, propertyListenerCallback, packetCallback, 0, &(_fileStream));
+    AudioFileStreamOpen((__bridge void*)self, propertyListenerCallback, packetCallback, kAudioFileAC3Type, &(_fileStream));
 }
 
-- (void)setInStream:(NSInputStream *)inStream
-{
-    _inStream = inStream;
-    [self startStreaming];
-}
 
-- (void)startStreaming
+- (void)submitBytes:(NSData*)bytes
 {
-    if (![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
-        return [self performSelectorOnMainThread:@selector(startStreaming) withObject:nil waitUntilDone:YES];
-    }
+    AudioFileStreamParseBytes(_fileStream, (UInt32)bytes.length, bytes.bytes, 0);
     
-    self.inStream.delegate = self;
-    stillStreaming = YES;
-    streamingThread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];
-    [streamingThread start];
+
+    //TPCircularBufferProduceBytes(&(cBuffer), bytes.bytes, (uint32_t)bytes.length);
 }
-
-- (void)startThread
-{
-    [self.inStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.inStream open];
-    while (stillStreaming && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
-}
-
-
-// Well Shit -> http://stackoverflow.com/questions/4051018/nsinputstream-getbuffer-length-doesnt-work
-// [incomingStream getBuffer:&buff length:&len] would have been nice.
--(void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
-{
-    if (eventCode == NSStreamEventHasBytesAvailable) {
-        NSInputStream *incomingStream = (NSInputStream*)aStream;
-        uint8_t buf[4096];
-        
-        NSInteger ret = [incomingStream read:buf maxLength:4096];
-        if (ret < 0) {
-            NSLog(@"Failed to read from input stream\n");
-        }
-        else if (ret == 0) {
-            NSLog(@"End of Buffer found\n");
-        }
-        else {
-            AudioFileStreamParseBytes(_fileStream, (UInt32)ret, buf, 0);
-        }
-    }
-    else if (eventCode == NSStreamEventEndEncountered) {
-        //close loop
-        stillStreaming = NO;
-    }
-}
-
 
 void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileStream, AudioFileStreamPropertyID inPropertyID, UInt32 *ioFlags)
 {
@@ -119,9 +75,22 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
     
     if (inPropertyID == kAudioFileStreamProperty_DataFormat) {
         propertySize = sizeof(AudioStreamBasicDescription);
-        AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, myInfo->inputASBD);
+        //AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, myInfo->inputASBD);
         myInfo->isFormatVBR = (myInfo->inputASBD->mBytesPerPacket == 0 || myInfo->inputASBD->mFramesPerPacket == 0);
-        AudioConverterNew(myInfo->inputASBD, myInfo->outputASBD, &myInfo->converter);
+        NSLog(@"Bytes per packet: %d", (unsigned int)myInfo->inputASBD->mBytesPerPacket);
+        NSLog(@"Frames per packet: %d", (unsigned int)myInfo->inputASBD->mFramesPerPacket);
+        NSLog(@"Bytes per frame: %d", (unsigned int)myInfo->inputASBD->mBytesPerFrame);
+        
+        NSLog(@"Channels per frame: %d", (unsigned int)myInfo->inputASBD->mChannelsPerFrame);
+        NSLog(@"Bits per Channel: %d", (unsigned int)myInfo->inputASBD->mBitsPerChannel);
+        NSLog(@"found inputASBD '%c%c%c%c'\n", (char)(myInfo->inputASBD->mFormatID>>24)&255, (char)(myInfo->inputASBD->mFormatID>>16)&255, (char)(myInfo->inputASBD->mFormatID>>8)&255, (char)myInfo->inputASBD->mFormatID&255);
+        NSLog(@"found outputASBD '%c%c%c%c'\n", (char)(myInfo->outputASBD->mFormatID>>24)&255, (char)(myInfo->outputASBD->mFormatID>>16)&255, (char)(myInfo->outputASBD->mFormatID>>8)&255, (char)myInfo->outputASBD->mFormatID&255);
+        //myInfo->inputASBD->mFormatID = kAudioFormatMPEG4AAC;
+        OSStatus err = AudioConverterNew(myInfo->inputASBD, myInfo->outputASBD, &myInfo->converter);
+        NSLog(@"AudioConverter New return status: %d\n", (int)err);
+        if (err) {
+            NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
+        }
     }
     else if (inPropertyID == kAudioFileStreamProperty_ReadyToProducePackets) {
         NSLog(@"Ready to make some packets\n");
@@ -178,7 +147,7 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
 
 void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData, AudioStreamPacketDescription *inPacketDescriptions)
 {
-    //NSLog(@"Got %lu packets\n", inNumberPackets);
+    NSLog(@"Got %lu packets and %lu bytes\n", inNumberPackets, inNumberBytes);
     RemoteSong *myInfo = (__bridge RemoteSong *)(inClientData);
     
     int32_t spaceAvailableInBuffer;
@@ -197,15 +166,19 @@ void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPac
         if (myInfo->isFormatVBR) {
             memcpy(buffer + offset, inPacketDescriptions + i, sizeof(AudioStreamPacketDescription));
             offset += sizeof(AudioStreamPacketDescription);
-            memcpy(buffer + offset, ((uint8_t*)inInputData) + inPacketDescriptions->mStartOffset, inPacketDescriptions->mDataByteSize);
-            offset += inPacketDescriptions->mDataByteSize;
+            NSLog(@"PacketDescription ", inPacketDescriptions);
+            memcpy(buffer + offset, ((uint8_t*)inInputData) + (inPacketDescriptions + i)->mStartOffset, (inPacketDescriptions + i)->mDataByteSize);
+            offset += (inPacketDescriptions + i)->mDataByteSize;
+            NSLog(@"packet number: %d, start offset: %lld, byte size: %d\n", i, (inPacketDescriptions + i)->mStartOffset, (unsigned int)(inPacketDescriptions + i)->mDataByteSize);
         }
         else {
             memcpy(buffer + offset, ((uint8_t*)inInputData) + (myInfo->inputASBD->mBytesPerPacket * i), myInfo->inputASBD->mBytesPerPacket);
             offset += myInfo->inputASBD->mBytesPerPacket;
+            NSLog(@"NO VBR\n");
         }
     }
     
+    //NSLog(@"Produce %d bytes\n", offset);
     TPCircularBufferProduce(&myInfo->cBuffer, (int)offset);
 }
 
@@ -224,7 +197,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
     uint8_t *buffer;
     int goodPackets = 0;
     
-    //printf("number of data packets: %d\n", (unsigned int)*ioNumberDataPackets);
+    printf("number of data packets: %d\n", (unsigned int)*ioNumberDataPackets);
     
     for (int i = 0; i < *ioNumberDataPackets; i++) {
         buffer = TPCircularBufferTail(&myInfo->cBuffer, &spaceAvailableInBuffer);
@@ -234,34 +207,46 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         //printf("Space in the buffer: %d at %d\n", spaceAvailableInBuffer, buffer);
         //printf("Space larger than AudioStreamPacketDescription: %lu\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
         
+        
+        
         if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)
                                 && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {
-            //printf("VBR and there is enough in the buffer: %d\n", spaceAvailableInBuffer);
+            printf("VBR and there is enough in the buffer: %d\n", spaceAvailableInBuffer);
             memcpy(myInfo->aspds + i, buffer, sizeof(AudioStreamPacketDescription));
             
+            (myInfo->aspds + i)->mStartOffset = 0;
             ioData->mBuffers[0].mDataByteSize = (myInfo->aspds + i)->mDataByteSize;
+            printf("Data Size: %d Total size: %lu\n",(unsigned int)ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mDataByteSize + sizeof(AudioStreamPacketDescription));
             myInfo->audioData = malloc(ioData->mBuffers[0].mDataByteSize);
             
-            memcpy(myInfo->audioData, buffer, ioData->mBuffers[0].mDataByteSize);
+            memcpy(myInfo->audioData, buffer + sizeof(AudioStreamPacketDescription), ioData->mBuffers[0].mDataByteSize);
             ioData->mBuffers[0].mData = myInfo->audioData;
             
             TPCircularBufferConsume(&myInfo->cBuffer, sizeof(AudioStreamPacketDescription) + ioData->mBuffers[0].mDataByteSize);
             goodPackets++;
         }
         else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo->inputASBD->mBytesPerPacket) {
-            //printf("Not VBR but there is enough in the buffer\n");
+            printf("Not VBR but there is enough in the buffer\n");
             ioData->mBuffers[0].mDataByteSize = myInfo->inputASBD->mBytesPerPacket;
             ioData->mBuffers[0].mData = buffer;
             TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
             goodPackets++;
         }
         else {
-            printf("not enough data in the buffer\n");
+            if (myInfo->isFormatVBR && spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)) {
+                NSLog(@"VBR and found %lu bytes\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
+            }
+            if (spaceAvailableInBuffer >= sizeof(AudioStreamPacketDescription)) {
+                NSLog(@"Found %lu bytes\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
+            }
+            printf("not enough data in the buffer: %d\n", spaceAvailableInBuffer);
             break;
         }
     }
     *ioNumberDataPackets = goodPackets;
     *outDataPacketDescription = myInfo->aspds;
+    
+    NSLog(@"Here inside of fill complex buffer\n");
     
     if (*ioNumberDataPackets > 0) {
         return 0;
@@ -290,18 +275,12 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
 - (void)cleanUpSong{
     //NSLog(@"streamingThread: %@\n", streamingThread);
     stillStreaming = NO;
-    if (streamingThread) {
-        [self performSelector:@selector(unScheduleStream) onThread:streamingThread withObject:nil waitUntilDone:YES];
-    }
 
 }
 
 - (void)unScheduleStream
 {
-    if (self.inStream) {
-        [self.inStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [self.inStream close];
-    }
+
 }
 
 @end

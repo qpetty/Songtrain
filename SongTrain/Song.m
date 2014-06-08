@@ -56,8 +56,11 @@
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
         
         NSUInteger size;
-        void *temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"asbd" returnedLength:&size];
+        void *temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"out" returnedLength:&size];
         memcpy(outputASBD, temp, sizeof(AudioStreamBasicDescription));
+        
+        temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"in" returnedLength:&size];
+        memcpy(inputASBD, temp, sizeof(AudioStreamBasicDescription));
     }
     return self;
 }
@@ -72,7 +75,8 @@
     
     [aCoder encodeInt:_songLength forKey:@"songLength"];
     
-    [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"asbd"];
+    [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"out"];
+    [aCoder encodeBytes:(const uint8_t*)inputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"in"];
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData

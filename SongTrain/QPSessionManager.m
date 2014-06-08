@@ -129,17 +129,6 @@
 -(void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Got Stream: %@  from %@\n", streamName, [peerID displayName]);
-    if ([[QPMusicPlayerController musicPlayer].currentSong isMemberOfClass:[RemoteSong class]] && [[QPMusicPlayerController musicPlayer].currentSong.title isEqualToString:streamName]) {
-        ((RemoteSong*)([QPMusicPlayerController musicPlayer].currentSong)).inStream = stream;
-        NSLog(@"Added to %@\n", [[QPMusicPlayerController musicPlayer]currentSong].title);
-    }
-    else if ([[QPMusicPlayerController musicPlayer].playlist.firstObject isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)([QPMusicPlayerController musicPlayer].playlist.firstObject)).title isEqualToString:streamName]) {
-        ((RemoteSong*)([QPMusicPlayerController musicPlayer].playlist.firstObject)).inStream = stream;
-        NSLog(@"Added to %@\n", ((RemoteSong*)([[[QPMusicPlayerController musicPlayer]playlist] firstObject])).title);
-    }
-    else {
-        NSLog(@"Could not find song corresponding to stream\n");
-    }
 }
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
@@ -196,14 +185,24 @@
         else if (mess.message == StartStreaming) {
             Song *streamSong = [self findSong:mess.song];
             if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
-                ((LocalSong*)streamSong).outStream = [mainSession startStreamWithName:mess.song.title toPeer:peerID error:nil];
-                [((LocalSong*)streamSong) startStreaming];
+                [self sendMusicData:streamSong withData:[((LocalSong*)streamSong) getNextPacket] to:peerID];
+            }
+        }
+        else if (mess.message == MusicPacket) {
+            Song *streamSong = [self findSong:mess.song];
+            if (streamSong && [streamSong isMemberOfClass:[RemoteSong class]]) {
+                NSLog(@"Got %d music bytes in a packet\n", mess.data.length);
+                [((RemoteSong*)streamSong) submitBytes:mess.data];
             }
         }
         else if (mess.message == CurrentTime) {
             [[QPMusicPlayerController musicPlayer] currentTime:mess.firstIndex];
         }
     });
+}
+
+- (void)needMoreData:(RemoteSong*)song {
+    
 }
 
 - (Song*)findSong:(Song*)song
@@ -240,15 +239,6 @@
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
 {
     NSLog(@"Removed Peer: %@", peerID.displayName);
-    
-    /*
-    for (MCPeerID *peer in _peerArray) {
-        if ([peer.displayName isEqualToString:peerID.displayName]) {
-            [_peerArray removeObject:peer];
-            break;
-        }
-    }
-     */
     [_peerArray removeObjectIdenticalTo:peerID];
     [self.delegate availablePeersUpdated:self.peerArray];
 }
@@ -358,6 +348,15 @@
     message.message = StartStreaming;
     message.song = song;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
+}
+
+- (void)sendMusicData:(Song*)song withData:(NSData*)data to:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = MusicPacket;
+    message.song = song;
+    message.data = data;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

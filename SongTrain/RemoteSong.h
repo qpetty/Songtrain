@@ -12,15 +12,21 @@
 
 static const int kBufferLength = 32768 * 32;
 
+@class RemoteSong;
+
+@protocol RemoteSongProtocol <NSObject>
+
+- (void)needMoreData:(RemoteSong*)song;
+
+@end
+
 @interface RemoteSong : Song <NSStreamDelegate>
 
 @property (strong, nonatomic) MCPeerID *peer;
-@property (strong, nonatomic, setter = setInStream:) NSInputStream *inStream;
-
 @property (atomic, assign, readonly) AudioFileStreamID fileStream;
 
 - (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 
-- (void)setInStream:(NSInputStream *)inStream;
+- (void)submitBytes:(NSData*)bytes;
 
 @end

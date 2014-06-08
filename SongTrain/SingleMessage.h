@@ -17,6 +17,8 @@ enum MessageTypes : NSInteger {
     AlbumRequest,
     AlbumImage,
     StartStreaming,
+    MusicPacket,
+    MusicPacketRequest,
     CurrentTime
 };
 

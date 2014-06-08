@@ -20,7 +20,6 @@
     
     MPMediaItem *mediaItem;
     
-    NSThread *streamingThread;
 }
 
 - (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD
@@ -59,6 +58,10 @@
         CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
         const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (item);
         
+        UInt32 form = bobTheDesc->mFormatID;
+        uint8_t *next = &form;
+        NSLog(@"%@ of type: %c%c%c%c\n", self.title, *((char*)next), *((char*)next + 1), *((char*)next + 2), *((char*)next + 3));
+    
         memcpy(self->inputASBD, bobTheDesc, sizeof(AudioStreamBasicDescription));
         
         assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetURL.tracks[0] outputSettings:nil];
@@ -73,53 +76,14 @@
     return self;
 }
 
-- (void)startStreaming
-{
-    NSLog(@"Start Streaming\n");
-    if (!self.outStream) {
-        NSLog(@"No Outputstream to write to\n");
-        return;
-    }
-    self.outStream.delegate = self;
-    if (![[NSThread currentThread] isEqual:[NSThread mainThread]]) {
-        return [self performSelectorOnMainThread:@selector(startStreaming) withObject:nil waitUntilDone:YES];
-    }
-    
-    streamingThread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];
-    [streamingThread start];
-    NSLog(@"just made streaming thread: %@\n", streamingThread);
-}
-
-- (void)startThread
-{
-    [self.outStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    [self.outStream open];
-    while ([[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]) ;
-}
-
--(void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
-{
-    if (eventCode == NSStreamEventHasSpaceAvailable) {
-        [self sendDataChunk];
-    }
-    else if (eventCode == NSStreamEventEndEncountered) {
-        //close loop
-    }
-}
-
 - (void)cleanUpSong{
     //NSLog(@"Cleaning up the song, trying to stop sending packets\n");
-    if (streamingThread) {
-        [self performSelector:@selector(unScheduleStream) onThread:streamingThread withObject:nil waitUntilDone:YES];
-    }
+
 }
 
 - (void)unScheduleStream
 {
-    if (self.outStream) {
-        [self.outStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [self.outStream close];
-    }
+
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
@@ -179,32 +143,46 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     return 0;
 }
 
-- (void)sendDataChunk
+-(NSData *)getNextPacket
 {
     sampleBuffer = [assetOutput copyNextSampleBuffer];
     
     if (sampleBuffer == NULL || CMSampleBufferGetNumSamples(sampleBuffer) == 0) {
         CFRelease(sampleBuffer);
-        return;
+        return nil;
     }
     
     AudioBufferList audioBufferList;
+    //CMBlockBufferRef blockBuffer;
+    const AudioStreamPacketDescription *aspd;
+    size_t packetDescriptionSize;
     
-    OSStatus err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
+    OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(sampleBuffer, &aspd, &packetDescriptionSize);
+    UInt32 numOfASPD = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     if (err) {
         CFRelease(sampleBuffer);
-        return;
+        return nil;
     }
+    
+    err = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(AudioBufferList), NULL, NULL, kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment, &blockBuffer);
+    
+    if (err) {
+        CFRelease(sampleBuffer);
+        return nil;
+    }
+    NSData *bufferData = nil;
     
     for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
         AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
-        NSInteger size = [self.outStream write:audioBuffer.mData maxLength:audioBuffer.mDataByteSize];
-        NSLog(@"wrote %u of buffer size: %u", size, (unsigned int)audioBuffer.mDataByteSize);
+        bufferData = [NSData dataWithBytes:audioBuffer.mData length:audioBuffer.mDataByteSize];
+        //NSLog(@"wrote %u of buffer size: %u", size, (unsigned int)audioBuffer.mDataByteSize);
     }
     
     CFRelease(blockBuffer);
     CFRelease(sampleBuffer);
+    
+    return bufferData;
 }
 
 
