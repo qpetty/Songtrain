@@ -10,9 +10,9 @@
 
 @implementation LocalSong{
     AudioConverterRef converter;
-    AVURLAsset *assetURL;
-    AVAssetReaderTrackOutput *assetOutput;
+    
     AVAssetReader *assetReader;
+    AVAssetReaderTrackOutput *assetOutput;
     
     CMSampleBufferRef sampleBuffer;
     CMBlockBufferRef blockBuffer;
@@ -37,41 +37,23 @@
 }
 
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item {
-    if (self = [super initWithOutputASBD:audioStreamBD]) {
-        self.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
-        self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
-        self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
-        
-        image = nil;
-        
+    if (self = [super initWithItem:item andOutputASBD:audioStreamBD]) {
         mediaItem = item;
         
         sampleBuffer = NULL;
         blockBuffer = NULL;
-        
-        assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
+
         NSError *assetError;
-        assetReader = [AVAssetReader assetReaderWithAsset:assetURL error:&assetError];
+        assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
         
-        CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
-        const AudioStreamBasicDescription* bobTheDesc = CMAudioFormatDescriptionGetStreamBasicDescription (item);
-        
-        UInt32 form = bobTheDesc->mFormatID;
-        uint8_t *next = &form;
-        NSLog(@"%@ of type: %c%c%c%c\n", self.title, *((char*)next), *((char*)next + 1), *((char*)next + 2), *((char*)next + 3));
-    
-        memcpy(self->inputASBD, bobTheDesc, sizeof(AudioStreamBasicDescription));
-        
-        assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetURL.tracks[0] outputSettings:nil];
+        assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:self.assetURL.tracks[0] outputSettings:nil];
         if (![assetReader canAddOutput:assetOutput])
         {NSLog(@"Asset Reader instansiation error");}
         
         [assetReader addOutput:assetOutput];
         [assetReader startReading];
         
-        AudioConverterNew(inputASBD, outputASBD, &converter);
+        AudioConverterNew(self.inputASBD, outputASBD, &converter);
     }
     return self;
 }

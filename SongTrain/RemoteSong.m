@@ -21,13 +21,8 @@
 
 - (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
 {
-    if (self = [super initWithOutputASBD:audioStreamBD]) {
+    if (self = [super initWithSong:song andOutputASBD:audioStreamBD]) {
         self.peer = peer;
-        self.title = song.title;
-        self.artistName = song.artistName;
-        self.persistantID = song.persistantID;
-        self.url = song.url;
-        self.songLength = song.songLength;
         
         image = nil;
         sentRequest = NO;
@@ -76,17 +71,17 @@ void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileS
     if (inPropertyID == kAudioFileStreamProperty_DataFormat) {
         propertySize = sizeof(AudioStreamBasicDescription);
         //AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, myInfo->inputASBD);
-        myInfo->isFormatVBR = (myInfo->inputASBD->mBytesPerPacket == 0 || myInfo->inputASBD->mFramesPerPacket == 0);
-        NSLog(@"Bytes per packet: %d", (unsigned int)myInfo->inputASBD->mBytesPerPacket);
-        NSLog(@"Frames per packet: %d", (unsigned int)myInfo->inputASBD->mFramesPerPacket);
-        NSLog(@"Bytes per frame: %d", (unsigned int)myInfo->inputASBD->mBytesPerFrame);
+        myInfo->isFormatVBR = (myInfo.inputASBD->mBytesPerPacket == 0 || myInfo.inputASBD->mFramesPerPacket == 0);
+        NSLog(@"Bytes per packet: %d", (unsigned int)myInfo.inputASBD->mBytesPerPacket);
+        NSLog(@"Frames per packet: %d", (unsigned int)myInfo.inputASBD->mFramesPerPacket);
+        NSLog(@"Bytes per frame: %d", (unsigned int)myInfo.inputASBD->mBytesPerFrame);
         
-        NSLog(@"Channels per frame: %d", (unsigned int)myInfo->inputASBD->mChannelsPerFrame);
-        NSLog(@"Bits per Channel: %d", (unsigned int)myInfo->inputASBD->mBitsPerChannel);
-        NSLog(@"found inputASBD '%c%c%c%c'\n", (char)(myInfo->inputASBD->mFormatID>>24)&255, (char)(myInfo->inputASBD->mFormatID>>16)&255, (char)(myInfo->inputASBD->mFormatID>>8)&255, (char)myInfo->inputASBD->mFormatID&255);
+        NSLog(@"Channels per frame: %d", (unsigned int)myInfo.inputASBD->mChannelsPerFrame);
+        NSLog(@"Bits per Channel: %d", (unsigned int)myInfo.inputASBD->mBitsPerChannel);
+        NSLog(@"found inputASBD '%c%c%c%c'\n", (char)(myInfo.inputASBD->mFormatID>>24)&255, (char)(myInfo.inputASBD->mFormatID>>16)&255, (char)(myInfo.inputASBD->mFormatID>>8)&255, (char)myInfo.inputASBD->mFormatID&255);
         NSLog(@"found outputASBD '%c%c%c%c'\n", (char)(myInfo->outputASBD->mFormatID>>24)&255, (char)(myInfo->outputASBD->mFormatID>>16)&255, (char)(myInfo->outputASBD->mFormatID>>8)&255, (char)myInfo->outputASBD->mFormatID&255);
         //myInfo->inputASBD->mFormatID = kAudioFormatMPEG4AAC;
-        OSStatus err = AudioConverterNew(myInfo->inputASBD, myInfo->outputASBD, &myInfo->converter);
+        OSStatus err = AudioConverterNew(myInfo.inputASBD, myInfo->outputASBD, &myInfo->converter);
         NSLog(@"AudioConverter New return status: %d\n", (int)err);
         if (err) {
             NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
@@ -172,8 +167,8 @@ void packetCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inNumberPac
             NSLog(@"packet number: %d, start offset: %lld, byte size: %d\n", i, (inPacketDescriptions + i)->mStartOffset, (unsigned int)(inPacketDescriptions + i)->mDataByteSize);
         }
         else {
-            memcpy(buffer + offset, ((uint8_t*)inInputData) + (myInfo->inputASBD->mBytesPerPacket * i), myInfo->inputASBD->mBytesPerPacket);
-            offset += myInfo->inputASBD->mBytesPerPacket;
+            memcpy(buffer + offset, ((uint8_t*)inInputData) + (myInfo.inputASBD->mBytesPerPacket * i), myInfo.inputASBD->mBytesPerPacket);
+            offset += myInfo.inputASBD->mBytesPerPacket;
             NSLog(@"NO VBR\n");
         }
     }
@@ -225,9 +220,9 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             TPCircularBufferConsume(&myInfo->cBuffer, sizeof(AudioStreamPacketDescription) + ioData->mBuffers[0].mDataByteSize);
             goodPackets++;
         }
-        else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo->inputASBD->mBytesPerPacket) {
+        else if (myInfo->isFormatVBR == NO && spaceAvailableInBuffer >= myInfo.inputASBD->mBytesPerPacket) {
             printf("Not VBR but there is enough in the buffer\n");
-            ioData->mBuffers[0].mDataByteSize = myInfo->inputASBD->mBytesPerPacket;
+            ioData->mBuffers[0].mDataByteSize = myInfo.inputASBD->mBytesPerPacket;
             ioData->mBuffers[0].mData = buffer;
             TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
             goodPackets++;

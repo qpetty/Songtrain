@@ -8,7 +8,6 @@
 
 #import "Song.h"
 #import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
 
 #define PICTURE_HEIGHT_AND_WIDTH 320.0
 

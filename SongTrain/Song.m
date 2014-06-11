@@ -15,7 +15,7 @@
      if(self = [super init])
      {
          outputASBD = malloc(sizeof(AudioStreamBasicDescription));
-         inputASBD = malloc(sizeof(AudioStreamBasicDescription));
+         _inputASBD = malloc(sizeof(AudioStreamBasicDescription));
          image = nil;
      }
     return self;
@@ -30,15 +30,38 @@
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
+        
+        _assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
+        
+        CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[_assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
+        const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription (item);
+        
+        memcpy(_inputASBD, asbd, sizeof(AudioStreamBasicDescription));
     }
     return self;
 }
 
-- (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
+- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
+{
+    if(self = [self initWithMediaItem:item])
+    {
+        memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
+    }
+    return self;
+}
+
+- (instancetype)initWithSong:(Song*)song andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
 {
     if(self = [self init])
     {
+        self.title = song.title;
+        self.artistName = song.artistName;
+        self.persistantID = song.persistantID;
+        self.url = song.url;
+        self.songLength = song.songLength;
+        
         memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
+        memcpy(_inputASBD, song.inputASBD, sizeof(AudioStreamBasicDescription));
     }
     return self;
 }
@@ -60,7 +83,7 @@
         memcpy(outputASBD, temp, sizeof(AudioStreamBasicDescription));
         
         temp = (AudioStreamBasicDescription*)[aDecoder decodeBytesForKey:@"in" returnedLength:&size];
-        memcpy(inputASBD, temp, sizeof(AudioStreamBasicDescription));
+        memcpy(_inputASBD, temp, sizeof(AudioStreamBasicDescription));
     }
     return self;
 }
@@ -76,7 +99,7 @@
     [aCoder encodeInt:_songLength forKey:@"songLength"];
     
     [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"out"];
-    [aCoder encodeBytes:(const uint8_t*)inputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"in"];
+    [aCoder encodeBytes:(const uint8_t*)_inputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"in"];
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
@@ -115,9 +138,9 @@
         free(outputASBD);
         outputASBD = NULL;
     }
-    if (inputASBD){
-        free(inputASBD);
-        inputASBD = NULL;
+    if (_inputASBD){
+        free(_inputASBD);
+        _inputASBD = NULL;
     }
 }
 
