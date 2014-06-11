@@ -49,16 +49,21 @@
     [[QPSessionManager sessionManager] requestToStartStreaming:self];
     
     TPCircularBufferInit(&cBuffer, kBufferLength);
-    AudioFileStreamOpen((__bridge void*)self, propertyListenerCallback, packetCallback, kAudioFileAC3Type, &(_fileStream));
+    OSStatus err = AudioConverterNew(self.inputASBD, outputASBD, &converter);
+    isFormatVBR = YES;
+    if (err) {
+        NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
+    }
+    //AudioFileStreamOpen((__bridge void*)self, propertyListenerCallback, packetCallback, kAudioFileAC3Type, &(_fileStream));
 }
 
 
 - (void)submitBytes:(NSData*)bytes
 {
-    AudioFileStreamParseBytes(_fileStream, (UInt32)bytes.length, bytes.bytes, 0);
+    //AudioFileStreamParseBytes(_fileStream, (UInt32)bytes.length, bytes.bytes, 0);
     
 
-    //TPCircularBufferProduceBytes(&(cBuffer), bytes.bytes, (uint32_t)bytes.length);
+    TPCircularBufferProduceBytes(&(cBuffer), bytes.bytes, (uint32_t)bytes.length);
 }
 
 void propertyListenerCallback(void *inClientData, AudioFileStreamID inAudioFileStream, AudioFileStreamPropertyID inPropertyID, UInt32 *ioFlags)

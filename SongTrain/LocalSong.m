@@ -135,12 +135,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     }
     
     AudioBufferList audioBufferList;
-    //CMBlockBufferRef blockBuffer;
     const AudioStreamPacketDescription *aspd;
     size_t packetDescriptionSize;
     
     OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptionsPtr(sampleBuffer, &aspd, &packetDescriptionSize);
-    UInt32 numOfASPD = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
+    UInt32 numOfASPD = (UInt32)packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     if (err) {
         CFRelease(sampleBuffer);
@@ -153,13 +152,25 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         CFRelease(sampleBuffer);
         return nil;
     }
-    NSData *bufferData = nil;
+    
+    NSUInteger buffSize = packetDescriptionSize;
     
     for (NSUInteger i = 0; i < audioBufferList.mNumberBuffers; i++) {
         AudioBuffer audioBuffer = audioBufferList.mBuffers[i];
-        bufferData = [NSData dataWithBytes:audioBuffer.mData length:audioBuffer.mDataByteSize];
-        //NSLog(@"wrote %u of buffer size: %u", size, (unsigned int)audioBuffer.mDataByteSize);
+        buffSize += audioBuffer.mDataByteSize;
     }
+    
+    uint8_t *totalBuffer = malloc(buffSize);
+    size_t offset = 0;
+    
+    for (NSUInteger i = 0; i < numOfASPD; i++) {
+        memcpy(totalBuffer + offset, &aspd[i], sizeof(AudioStreamPacketDescription));
+        offset += sizeof(AudioStreamPacketDescription);
+        memcpy(totalBuffer + offset, audioBufferList.mBuffers[0].mData + aspd[i].mStartOffset, aspd[i].mDataByteSize);
+        offset += aspd[i].mDataByteSize;
+    }
+    
+    NSData *bufferData = [NSData dataWithBytesNoCopy:totalBuffer length:offset freeWhenDone:YES];
     
     CFRelease(blockBuffer);
     CFRelease(sampleBuffer);
