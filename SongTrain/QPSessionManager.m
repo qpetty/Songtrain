@@ -185,7 +185,9 @@
         else if (mess.message == StartStreaming) {
             Song *streamSong = [self findSong:mess.song];
             if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
-                [self sendMusicData:streamSong withData:[((LocalSong*)streamSong) getNextPacket] to:peerID];
+                for (int i = 0; i < 50; i++) {
+                    [self sendMusicData:streamSong withData:[((LocalSong*)streamSong) getNextPacket] to:peerID];
+                }
             }
         }
         else if (mess.message == MusicPacket) {
