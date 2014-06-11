@@ -50,7 +50,7 @@
     
     TPCircularBufferInit(&cBuffer, kBufferLength);
     OSStatus err = AudioConverterNew(self.inputASBD, outputASBD, &converter);
-    isFormatVBR = YES;
+    isFormatVBR = (self.inputASBD->mBytesPerPacket == 0 || self.inputASBD->mFramesPerPacket == 0);
     if (err) {
         NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
     }
