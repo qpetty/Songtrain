@@ -91,9 +91,10 @@
 - (void)setSongDuration:(NSRange)songDuration
 {
     [super setSongDuration:songDuration];
-    topLabel.text = [NSString stringWithFormat:@"%d:%.2lu", currentMinutes, songDuration.location];
-    bottomLabel.text = [NSString stringWithFormat:@"%d:%.2lu", totalMinutes, songDuration.length];
+    topLabel.text = [NSString stringWithFormat:@"%d:%.2lu", currentMinutes, (unsigned long)currentSeconds];
+    bottomLabel.text = [NSString stringWithFormat:@"%d:%.2lu", totalMinutes, (unsigned long)totalSeconds];
 }
+
 
 /*
 // Only override drawRect: if you perform custom drawing.

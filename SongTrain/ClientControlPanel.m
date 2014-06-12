@@ -35,7 +35,7 @@
 - (void)setSongDuration:(NSRange)songDuration
 {
     [super setSongDuration:songDuration];
-    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu %d:%.2lu", currentMinutes, (unsigned long)songDuration.location, totalMinutes, (unsigned long)songDuration.length];
+    timeLabel.text = [NSString stringWithFormat:@"%d:%.2lu %d:%.2lu", currentMinutes, (unsigned long)currentSeconds, totalMinutes, (unsigned long)totalSeconds];
 }
 
 /*

@@ -28,13 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"%@", [sessionManager server].displayName);
-    NSLog(@"%@", [sessionManager server].displayName);
-    NSLog(@"%@", [sessionManager server].displayName);
-    NSLog(@"%@", [sessionManager server].displayName);
 	// Do any additional setup after loading the view.
-    
-    self.navigationItem.title = [sessionManager server].displayName;
 }
 
 - (void)didReceiveMemoryWarning
@@ -45,8 +39,6 @@
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
 {
-    //TODO: Send song to server
-    
     NSLog(@"Sending some data\n");
     
     for (MPMediaItem *item in mediaItemCollection.items) {
@@ -60,6 +52,7 @@
 - (void)connectedToPeer:(MCPeerID *)peerID
 {
     //musicPlayer resetMusicPlayer];
+    self.navigationItem.title = [sessionManager server].displayName;
 }
 
 - (void)disconnectedFromPeer:(MCPeerID *)peerID

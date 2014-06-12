@@ -27,8 +27,8 @@ enum ControlPanelButtonNames : NSInteger {
     UIButton *addButton;
     CGRect location;
     UIProgressView *songProgress;
-    int currentMinutes;
-    int totalMinutes;
+    NSUInteger currentSeconds, totalSeconds;
+    int currentMinutes, totalMinutes;
 }
 
 @property (weak, nonatomic) id <ControlPanelDelegate> delegate;

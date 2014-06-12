@@ -53,16 +53,18 @@
 {
     songProgress.progress = (float)songDuration.location / (float)songDuration.length;
     
+    totalSeconds = songDuration.length;
     totalMinutes = 0;
+    currentSeconds = songDuration.location;
     currentMinutes = 0;
     
-    while (songDuration.length >= 60) {
+    while (totalSeconds >= 60) {
         totalMinutes++;
-        songDuration.length -= 60;
+        totalSeconds -= 60;
     }
-    while (songDuration.location >= 60) {
+    while (currentSeconds >= 60) {
         currentMinutes++;
-        songDuration.location -= 60;
+        currentSeconds -= 60;
     }
 }
 
