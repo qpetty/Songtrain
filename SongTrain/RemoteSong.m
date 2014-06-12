@@ -51,9 +51,10 @@
 
 - (void)prepareSong{
     TPCircularBufferInit(&cBuffer, kBufferLength);
-    [[QPSessionManager sessionManager] requestToStartStreaming:self availableBytes:kBufferLength];
+    [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength];
     
     timer = -1;
+    audioData = NULL;
     OSStatus err = AudioConverterNew(self.inputASBD, outputASBD, &converter);
     isFormatVBR = (self.inputASBD->mBytesPerPacket == 0 || self.inputASBD->mFramesPerPacket == 0);
     if (err) {
@@ -107,7 +108,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"requesting %d more bytes\n", kBufferLength - availableBytes);
                     NSLog(@"Converter SELF = %@\n", myInfo);
-                    [[QPSessionManager sessionManager] requestToStartStreaming:myInfo availableBytes:kBufferLength - availableBytes];
+                    [[QPSessionManager sessionManager] requestMusicDataForSong:myInfo withAvailableBytes:kBufferLength - availableBytes];
                 });
             }
             
@@ -126,6 +127,11 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             (myInfo->aspds + i)->mStartOffset = 0;
             ioData->mBuffers[0].mDataByteSize = (myInfo->aspds + i)->mDataByteSize;
             //printf("Data Size: %d Total size: %lu\n",(unsigned int)ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mDataByteSize + sizeof(AudioStreamPacketDescription));
+            
+            //TODO: Memory leak?
+            if (myInfo->audioData) {
+                free(myInfo->audioData);
+            }
             myInfo->audioData = malloc(ioData->mBuffers[0].mDataByteSize);
             
             memcpy(myInfo->audioData, buffer + sizeof(AudioStreamPacketDescription), ioData->mBuffers[0].mDataByteSize);

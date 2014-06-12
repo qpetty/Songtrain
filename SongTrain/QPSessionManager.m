@@ -182,10 +182,10 @@
             NSLog(@"first: %ld   second: %ld\n", (long)mess.firstIndex, (long)mess.secondIndex);
             [[QPMusicPlayerController musicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
-        else if (mess.message == StartStreaming) {
+        else if (mess.message == MusicPacketRequest) {
             Song *streamSong = [self findSong:mess.song];
+            
             if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
-                
                 NSData *data;
                 do {
                     data = [((LocalSong*)streamSong) getNextPacketofMaxBytes:mess.firstIndex];
@@ -209,10 +209,6 @@
             [[QPMusicPlayerController musicPlayer] currentTime:mess.firstIndex];
         }
     });
-}
-
-- (void)needMoreData:(RemoteSong*)song {
-    
 }
 
 - (Song*)findSong:(Song*)song
@@ -352,10 +348,10 @@
     //NSLog(@"Sending Image %@\n", song.albumImage);
 }
 
-- (void)requestToStartStreaming:(RemoteSong*)song availableBytes:(NSInteger)bytes
+- (void)requestMusicDataForSong:(RemoteSong*)song withAvailableBytes:(NSInteger)bytes
 {
     SingleMessage *message = [[SingleMessage alloc] init];
-    message.message = StartStreaming;
+    message.message = MusicPacketRequest;
     message.song = song;
     message.firstIndex = bytes;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];

@@ -157,6 +157,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     if (err) {
         CFRelease(sampleBuffer);
+        sampleBuffer = NULL;
         return nil;
     }
     
@@ -169,6 +170,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     if (buffSize > maxBytes) {
         CFRelease(blockBuffer);
+        sampleBuffer = NULL;
         return nil;
     }
     
