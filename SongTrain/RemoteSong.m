@@ -126,6 +126,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             
             (myInfo->aspds + i)->mStartOffset = 0;
             ioData->mBuffers[0].mDataByteSize = (myInfo->aspds + i)->mDataByteSize;
+            ioData->mBuffers[0].mNumberChannels = myInfo.inputASBD->mChannelsPerFrame;
             //printf("Data Size: %d Total size: %lu\n",(unsigned int)ioData->mBuffers[0].mDataByteSize, ioData->mBuffers[0].mDataByteSize + sizeof(AudioStreamPacketDescription));
             
             //TODO: Memory leak?
@@ -143,6 +144,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         else if (myInfo->isFormatVBR == NO && availableBytes >= myInfo.inputASBD->mBytesPerPacket) {
             printf("Not VBR but there is enough in the buffer\n");
             ioData->mBuffers[0].mDataByteSize = myInfo.inputASBD->mBytesPerPacket;
+            ioData->mBuffers[0].mNumberChannels = myInfo.inputASBD->mChannelsPerFrame;
             ioData->mBuffers[0].mData = buffer;
             TPCircularBufferConsume(&myInfo->cBuffer, ioData->mBuffers[0].mDataByteSize);
             goodPackets++;
