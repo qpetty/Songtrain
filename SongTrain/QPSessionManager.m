@@ -185,9 +185,17 @@
         else if (mess.message == StartStreaming) {
             Song *streamSong = [self findSong:mess.song];
             if (streamSong && [streamSong isMemberOfClass:[LocalSong class]]) {
-                for (int i = 0; i < 50; i++) {
-                    [self sendMusicData:streamSong withData:[((LocalSong*)streamSong) getNextPacket] to:peerID];
-                }
+                
+                NSData *data;
+                do {
+                    data = [((LocalSong*)streamSong) getNextPacketofMaxBytes:mess.firstIndex];
+                    NSLog(@"Getting next packet for bytes request: %ld\n", (long)mess.firstIndex);
+                    if (data) {
+                        NSLog(@"Got some data to send\n");
+                        [self sendMusicData:streamSong withData:data to:peerID];
+                        mess.firstIndex -= data.length;
+                    }
+                } while (data != nil && mess.firstIndex >= 0);
             }
         }
         else if (mess.message == MusicPacket) {
@@ -344,11 +352,12 @@
     //NSLog(@"Sending Image %@\n", song.albumImage);
 }
 
-- (void)requestToStartStreaming:(RemoteSong*)song
+- (void)requestToStartStreaming:(RemoteSong*)song availableBytes:(NSInteger)bytes
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = StartStreaming;
     message.song = song;
+    message.firstIndex = bytes;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
 }
 

@@ -38,6 +38,7 @@
         }
         else if (self.message == StartStreaming) {
             self.song = [aDecoder decodeObjectForKey:@"song"];
+            self.firstIndex =[aDecoder decodeIntForKey:@"1ndx"];
         }
         else if (self.message == MusicPacket) {
             self.song = [aDecoder decodeObjectForKey:@"song"];
@@ -80,6 +81,7 @@
     }
     else if (self.message == StartStreaming) {
         [aCoder encodeObject:self.song forKey:@"song"];
+        [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
     }
     else if (self.message == MusicPacket) {
         [aCoder encodeObject:self.song forKey:@"song"];

@@ -16,6 +16,6 @@
 - (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item;
 
-- (NSData*)getNextPacket;
+-(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes;
 
 @end

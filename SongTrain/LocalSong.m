@@ -125,12 +125,19 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     return 0;
 }
 
--(NSData *)getNextPacket
+-(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes
 {
-    sampleBuffer = [assetOutput copyNextSampleBuffer];
+    
+    if (sampleBuffer == NULL) {
+        sampleBuffer = [assetOutput copyNextSampleBuffer];
+    }
     
     if (sampleBuffer == NULL || CMSampleBufferGetNumSamples(sampleBuffer) == 0) {
-        CFRelease(sampleBuffer);
+        if(sampleBuffer) {
+            CFRelease(sampleBuffer);
+            sampleBuffer = NULL;
+        }
+        NSLog(@"No more to stream, end of song\n");
         return nil;
     }
     
@@ -160,6 +167,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         buffSize += audioBuffer.mDataByteSize;
     }
     
+    if (buffSize > maxBytes) {
+        CFRelease(blockBuffer);
+        return nil;
+    }
+    
     uint8_t *totalBuffer = malloc(buffSize);
     size_t offset = 0;
     
@@ -174,6 +186,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     CFRelease(blockBuffer);
     CFRelease(sampleBuffer);
+    sampleBuffer = NULL;
     
     return bufferData;
 }
