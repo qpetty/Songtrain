@@ -28,6 +28,7 @@
     [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:song.persistantID forProperty:MPMediaItemPropertyPersistentID]];
     NSArray *displayItems = [query items];
     
+    self.isFinishedSendingSong = NO;
     mediaItem = [displayItems firstObject];
     
     if (mediaItem)
@@ -43,6 +44,8 @@
         sampleBuffer = NULL;
         blockBuffer = NULL;
 
+        self.isFinishedSendingSong = NO;
+        
         NSError *assetError;
         assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
         
@@ -138,6 +141,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
             sampleBuffer = NULL;
         }
         NSLog(@"No more to stream, end of song\n");
+        self.isFinishedSendingSong = YES;
         return nil;
     }
     

@@ -13,6 +13,8 @@
 
 @interface LocalSong : Song <NSStreamDelegate>
 
+@property(nonatomic) BOOL isFinishedSendingSong;
+
 - (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (instancetype)initWithOutputASBD:(AudioStreamBasicDescription)audioStreamBD andItem:(MPMediaItem*)item;
 
