@@ -95,7 +95,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
     for (int i = 0; i < *ioNumberDataPackets; i++) {
         buffer = TPCircularBufferTail(&myInfo->cBuffer, &availableBytes);
         
-        if (availableBytes <= kBufferLength / 16) {
+        if (availableBytes <= kBufferLength / 4) {
             if (myInfo->timer) {
                 myInfo->timer--;
                 if (myInfo->timer == -250) {
@@ -106,9 +106,9 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             else {
                 myInfo->timer = -1;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"requesting %d more bytes\n", kBufferLength - availableBytes);
+                    NSLog(@"requesting %d more bytes\n", kBufferLength - kBufferLength / 4);
                     NSLog(@"Converter SELF = %@\n", myInfo);
-                    [[QPSessionManager sessionManager] requestMusicDataForSong:myInfo withAvailableBytes:kBufferLength - availableBytes];
+                    [[QPSessionManager sessionManager] requestMusicDataForSong:myInfo withAvailableBytes:kBufferLength - kBufferLength / 4];
                 });
             }
             
@@ -121,7 +121,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         
         if (myInfo->isFormatVBR && availableBytes >= sizeof(AudioStreamPacketDescription)
                                 && availableBytes >= sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize) {
-            printf("VBR and there is enough in the buffer: %d\n", availableBytes);
+            //printf("VBR and there is enough in the buffer: %d\n", availableBytes);
             memcpy(myInfo->aspds + i, buffer, sizeof(AudioStreamPacketDescription));
             
             (myInfo->aspds + i)->mStartOffset = 0;
