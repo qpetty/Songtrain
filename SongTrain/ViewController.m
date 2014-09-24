@@ -11,6 +11,8 @@
 #import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
 
+#import "TableViewController.h"
+
 @interface ViewController ()
 
 @end
@@ -67,6 +69,21 @@
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
 }
 
+
+-(IBAction)browseForOthers:(id)sender {
+    TableViewController *tc = [[TableViewController alloc] initWithNibName:@"TableViewController" bundle:[NSBundle mainBundle]];
+    
+    tc.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popPC = tc.popoverPresentationController;
+    popPC.sourceView = self.browseForOtherTrains;
+    popPC.delegate = self;
+    [self presentViewController:tc animated:YES completion:nil];
+}
+
+-(void)closePresentationController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 -(IBAction)playAndPause:(id)sender {
     [musicPlayer play];
     [self updatePlayOrPauseImage];
@@ -93,6 +110,18 @@
     }
     
     label.text = [NSString stringWithFormat:@"%lu:%.2lu", minutes, sec];
+}
+
+#pragma mark PopoverPresentationControllerDelegate
+
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
+    return UIModalPresentationFullScreen;
+}
+
+-(UIViewController *)presentationController:(UIPresentationController *)controller viewControllerForAdaptivePresentationStyle:(UIModalPresentationStyle)style {
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller.presentedViewController];
+    controller.presentedViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(closePresentationController)];
+    return navController;
 }
 
 #pragma mark MusicPickerDelegate

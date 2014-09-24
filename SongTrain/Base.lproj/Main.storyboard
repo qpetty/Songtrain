@@ -186,6 +186,9 @@
                                 <state key="normal" image="railroad_car-50">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="browseForOthers:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Q7D-5x-vkQ"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOMething important" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wco-2X-hgb" customClass="MarqueeLabel">
                                 <rect key="frame" x="118" y="131" width="466" height="20.5"/>
@@ -235,6 +238,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="browseForOtherTrains" destination="1qp-hg-bK3" id="mNk-sd-IcS"/>
                         <outlet property="currentAlbumArtwork" destination="UGe-gO-CiS" id="z9v-tQ-OW5"/>
                         <outlet property="currentSongArtist" destination="5mu-8i-uAv" id="AhX-ak-0Af"/>
                         <outlet property="currentSongTitle" destination="wco-2X-hgb" id="iHd-dT-YhY"/>

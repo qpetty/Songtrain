@@ -25,6 +25,8 @@
 		5A5B80B119CF995C000A4681 /* SongTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B80AF19CF995C000A4681 /* SongTableViewCell.m */; };
 		5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5B80B019CF995C000A4681 /* SongTableViewCell.xib */; };
 		5A5B80B419CFABA5000A4681 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5B80B319CFABA5000A4681 /* AVFoundation.framework */; };
+		5A5B80B819CFF34E000A4681 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B80B619CFF34E000A4681 /* TableViewController.m */; };
+		5A5B80B919CFF34E000A4681 /* TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5B80B719CFF34E000A4681 /* TableViewController.xib */; };
 		5A743C1219CBD9540008C989 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1119CBD9540008C989 /* main.m */; };
 		5A743C1519CBD9540008C989 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1419CBD9540008C989 /* AppDelegate.m */; };
 		5A743C1819CBD9540008C989 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1719CBD9540008C989 /* ViewController.m */; };
@@ -79,6 +81,9 @@
 		5A5B80AF19CF995C000A4681 /* SongTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongTableViewCell.m; sourceTree = "<group>"; };
 		5A5B80B019CF995C000A4681 /* SongTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
 		5A5B80B319CFABA5000A4681 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5A5B80B519CFF34E000A4681 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		5A5B80B619CFF34E000A4681 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
+		5A5B80B719CFF34E000A4681 /* TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewController.xib; sourceTree = "<group>"; };
 		5A743C0C19CBD9540008C989 /* Songtrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Songtrain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A743C1019CBD9540008C989 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A743C1119CBD9540008C989 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -220,6 +225,9 @@
 				5A5B80AD19CF98DC000A4681 /* Custom Views */,
 				5A743C1619CBD9540008C989 /* ViewController.h */,
 				5A743C1719CBD9540008C989 /* ViewController.m */,
+				5A5B80B519CFF34E000A4681 /* TableViewController.h */,
+				5A5B80B619CFF34E000A4681 /* TableViewController.m */,
+				5A5B80B719CFF34E000A4681 /* TableViewController.xib */,
 				5A743C1919CBD9540008C989 /* Main.storyboard */,
 				5A743C1C19CBD9540008C989 /* Images.xcassets */,
 				5A743C1E19CBD9540008C989 /* LaunchScreen.xib */,
@@ -339,6 +347,7 @@
 				5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
 				5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */,
+				5A5B80B919CFF34E000A4681 /* TableViewController.xib in Resources */,
 				5A743C1D19CBD9540008C989 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -373,6 +382,7 @@
 				5A743C1519CBD9540008C989 /* AppDelegate.m in Sources */,
 				5A5B808B19CE7780000A4681 /* QPSessionManager.m in Sources */,
 				5A5B80A419CF89A7000A4681 /* ArtistTabViewController.m in Sources */,
+				5A5B80B819CFF34E000A4681 /* TableViewController.m in Sources */,
 				5A743C1219CBD9540008C989 /* main.m in Sources */,
 				5A5B807E19CE772E000A4681 /* QPMusicPlayerController.m in Sources */,
 			);

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MusicPickerViewController.h"
 #import "MarqueeLabel.h"
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MusicPickerViewControllerDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate>
 
 @property IBOutlet UITableView *mainTableView;
 
@@ -19,7 +19,7 @@
 @property IBOutlet UILabel *currentTime;
 @property IBOutlet UILabel *totalTime;
 
-
+@property IBOutlet UIButton *browseForOtherTrains;
 @property IBOutlet UIButton *playOrPauseButton;
 
 -(void)updatePlayOrPauseImage;
