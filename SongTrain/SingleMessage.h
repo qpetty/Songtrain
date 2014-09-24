@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Song.h"
 
 enum MessageTypes : NSInteger {
     AddSong = 1,

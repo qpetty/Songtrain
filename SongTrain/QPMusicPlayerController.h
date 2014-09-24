@@ -11,28 +11,18 @@
 
 #import "LocalSong.h"
 #import "RemoteSong.h"
-#import "ControlPanel.h"
-
-@protocol QPMusicPlayerControllerDelegate <NSObject>
-
-- (void)playListHasBeenUpdated;
-
-@end
 
 @interface QPMusicPlayerController : NSObject
-
-@property (weak, nonatomic) id <QPMusicPlayerControllerDelegate> delegate;
 
 @property (nonatomic, retain, readonly) Song *currentSong;
 @property (atomic, assign, readonly) NSRange currentSongTime;
 @property (atomic, assign, readonly) BOOL currentlyPlaying;
 
 @property (nonatomic, retain) NSMutableArray *playlist;
-@property (weak, nonatomic) ControlPanel *panel;
 
 @property (nonatomic, readonly) AudioStreamBasicDescription *audioFormat;
 
-+ (instancetype)musicPlayer;
++ (instancetype)sharedMusicPlayer;
 
 - (void)reset;
 - (void)resetToServer;
@@ -50,4 +40,5 @@
 - (void)nextSong;
 
 - (void)updateNowPlaying;
+- (BOOL)isRunning;
 @end

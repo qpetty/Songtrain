@@ -18,7 +18,7 @@
     BOOL isServer;
 }
 
-+ (instancetype)musicPlayer {
++ (instancetype)sharedMusicPlayer {
     static QPMusicPlayerController *sharedMusicPlayer = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -53,59 +53,62 @@
 
 - (void)resetToServer
 {
+    [self reset];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    [_playlist removeAllObjects];
-    AUGraphStop(graph);
+    
     isServer = YES;
     
-    MPMediaItem *currentItem = [[MPMusicPlayerController iPodMusicPlayer] nowPlayingItem];
+    MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
         [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
         [self skip];
-        [self.delegate playListHasBeenUpdated];
     }
 }
 
 - (void)resetToClient
 {
+    [self reset];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    [_playlist removeAllObjects];
     AUGraphStart(graph);
-    isServer = NO;
 }
 
 - (void)addSongToPlaylist:(Song*)song
 {
+    [self willChangeValueForKey:@"playlist"];
     [_playlist addObject:song];
-    [self.delegate playListHasBeenUpdated];
+    [self didChangeValueForKey:@"playlist"];
 }
 
 - (void)addSongsToPlaylist:(NSMutableArray*)songs
 {
+    [self willChangeValueForKey:@"playlist"];
     for (Song *item in songs){
         //NSLog(@"%@", item.url.path);
         [_playlist addObject:item];
     }
-    [self.delegate playListHasBeenUpdated];
+    
+    [self didChangeValueForKey:@"playlist"];
 
-    NSLog(@"Finished adding all songs to the playlist\n");
+    NSLog(@"Added %lu songs to the playlist\n", songs.count);
 }
 
 - (void)removeSongFromPlaylist:(NSUInteger)ndx
 {
+    [self willChangeValueForKey:@"playlist"];
     [_playlist removeObjectAtIndex:ndx];
-    [self.delegate playListHasBeenUpdated];
+    [self didChangeValueForKey:@"playlist"];
 }
 
 - (void)switchSongFromIndex:(NSUInteger)ndx to:(NSUInteger)ndx2
 {
+    [self willChangeValueForKey:@"playlist"];
     Song *tempSong = [_playlist objectAtIndex:ndx];
     [_playlist removeObjectAtIndex:ndx];
     [_playlist insertObject:tempSong atIndex:ndx2];
     
-    [self.delegate playListHasBeenUpdated];
+    [self didChangeValueForKey:@"playlist"];
 }
 
 - (void)play
@@ -159,15 +162,20 @@
         
         [_currentSong cleanUpSong];
         
-        [self willChangeValueForKey:@"currentSong"];
-        _currentSong = [_playlist firstObject];
-        [_playlist removeObjectAtIndex:0];
-        [self didChangeValueForKey:@"currentSong"];
+        [self willChangeValueForKey:@"playlist"];
+        
+            [self willChangeValueForKey:@"currentSong"];
+            _currentSong = [_playlist firstObject];
+            [_playlist removeObjectAtIndex:0];
+            [self didChangeValueForKey:@"currentSong"];
+        
+        [self didChangeValueForKey:@"playlist"];
         
         [self willChangeValueForKey:@"currentSongTime"];
         _currentSongTime.location = 0;
         _currentSongTime.length = _currentSong.songLength;
         [self didChangeValueForKey:@"currentSongTime"];
+        
         
         [self updateNowPlaying];
     }
@@ -175,10 +183,6 @@
 
 - (void)updateNowPlaying
 {
-    //Implement a default album artwork here
-    //_currenSong.albumImage = something;
-    //MPMediaItemArtwork *art = [[MPMediaItemArtwork alloc] initWithImage:_currentSong.albumImage];
-
     NSMutableArray *keys = [[NSMutableArray alloc] init];
     NSMutableArray *objects = [[NSMutableArray alloc] init];
     
@@ -195,13 +199,19 @@
     UIImage *songImage = _currentSong.albumImage;
     
     if (songImage == nil) {
-        songImage = [UIImage imageNamed:@"default_album_artwork"];
+        songImage = [UIImage imageNamed:@"albumart_default"];
     }
+    
     [keys addObject:MPMediaItemPropertyArtwork];
     [objects addObject:[[MPMediaItemArtwork alloc] initWithImage:songImage]];
     
-    NSDictionary *info = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+    [keys addObject:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [objects addObject:[NSNumber numberWithInteger:self.currentSongTime.location]];
     
+    [keys addObject:MPMediaItemPropertyPlaybackDuration];
+    [objects addObject: [NSNumber numberWithInteger:self.currentSongTime.length]];
+    
+    NSDictionary *info = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
     [nowPlayingCenter setNowPlayingInfo:info];
 }
 
@@ -217,6 +227,16 @@
     if(_currentSongTime.location > _currentSongTime.length)
         _currentSongTime.location = _currentSongTime.length;
     [self didChangeValueForKey:@"currentSongTime"];
+}
+
+- (BOOL)isRunning {
+    Boolean isRunning;
+    
+    AUGraphIsRunning(graph, &isRunning);
+    if (isRunning) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)initOutputDescription

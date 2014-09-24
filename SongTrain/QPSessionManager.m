@@ -9,6 +9,8 @@
 #import "QPSessionManager.h"
 #import "QPMusicPlayerController.h"
 
+#define SERVICE_TYPE @"Songtrain"
+
 @implementation QPSessionManager
 
 + (id)sessionManager {
@@ -71,15 +73,15 @@
     _currentRole = ServerConnection;
     [browse stopBrowsingForPeers];
     [advert startAdvertisingPeer];
-    [[QPMusicPlayerController musicPlayer] resetToServer];
-    [[QPMusicPlayerController musicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
-    [[QPMusicPlayerController musicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
+    [[QPMusicPlayerController sharedMusicPlayer] resetToServer];
+    [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
+    [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
-    [[QPMusicPlayerController musicPlayer] resetToClient];
+    [[QPMusicPlayerController sharedMusicPlayer] resetToClient];
     [browse stopBrowsingForPeers];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
 }
@@ -91,11 +93,11 @@
     [advert stopAdvertisingPeer];
     [browse startBrowsingForPeers];
     if (_currentRole == ServerConnection) {
-        [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSong"];
-        [[QPMusicPlayerController musicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
+        [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSong"];
+        [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
     }
     _currentRole = NotConnected;
-    [[QPMusicPlayerController musicPlayer] reset];
+    [[QPMusicPlayerController sharedMusicPlayer] reset];
 }
 
 -(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
@@ -157,30 +159,30 @@
             [self findSong:mess.song].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
         }
         else if (mess.message == AddSong && _currentRole == ServerConnection) {
-            RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
-            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
+            RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
+            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:newSong];
             [self addSongToAllPeers:newSong];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
             Song *newSong;
             
             if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
-                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song WithOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
+                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song WithOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
             }
             else {
-                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController musicPlayer].audioFormat)];
+                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
             }
-            [[QPMusicPlayerController musicPlayer] addSongToPlaylist:newSong];
+            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:newSong];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
-            [[QPMusicPlayerController musicPlayer] nextSong];
+            [[QPMusicPlayerController sharedMusicPlayer] nextSong];
         }
         else if (mess.message == RemoveSong && _currentRole == ClientConnection) {
-            [[QPMusicPlayerController musicPlayer] removeSongFromPlaylist:mess.firstIndex];
+            [[QPMusicPlayerController sharedMusicPlayer] removeSongFromPlaylist:mess.firstIndex];
         }
         else if (mess.message == SwitchSong && _currentRole == ClientConnection) {
             NSLog(@"first: %ld   second: %ld\n", (long)mess.firstIndex, (long)mess.secondIndex);
-            [[QPMusicPlayerController musicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
+            [[QPMusicPlayerController sharedMusicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
         else if (mess.message == MusicPacketRequest) {
             Song *streamSong = [self findSong:mess.song];
@@ -211,21 +213,21 @@
             }
         }
         else if (mess.message == FinishedStreaming) {
-            [[QPMusicPlayerController musicPlayer] skip];
+            [[QPMusicPlayerController sharedMusicPlayer] skip];
         }
         else if (mess.message == CurrentTime) {
-            [[QPMusicPlayerController musicPlayer] currentTime:mess.firstIndex];
+            [[QPMusicPlayerController sharedMusicPlayer] currentTime:mess.firstIndex];
         }
     });
 }
 
 - (Song*)findSong:(Song*)song
 {
-    if ([[[QPMusicPlayerController musicPlayer] currentSong] isEqual:song]) {
-        return [[QPMusicPlayerController musicPlayer] currentSong];
+    if ([[[QPMusicPlayerController sharedMusicPlayer] currentSong] isEqual:song]) {
+        return [[QPMusicPlayerController sharedMusicPlayer] currentSong];
     }
     
-    for (Song *songFromList in [[QPMusicPlayerController musicPlayer] playlist]) {
+    for (Song *songFromList in [[QPMusicPlayerController sharedMusicPlayer] playlist]) {
         if ([song isEqual:songFromList]) {
             return songFromList;
         }
@@ -386,12 +388,12 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([keyPath isEqualToString:@"currentSong"]) {
-            [self nextSong:[QPMusicPlayerController musicPlayer].currentSong];
+            [self nextSong:[QPMusicPlayerController sharedMusicPlayer].currentSong];
         }
         else if ([keyPath isEqualToString:@"currentSongTime"]) {
             SingleMessage *mess = [[SingleMessage alloc] init];
             mess.message = CurrentTime;
-            mess.firstIndex = [[QPMusicPlayerController musicPlayer] currentSongTime].location;
+            mess.firstIndex = [[QPMusicPlayerController sharedMusicPlayer] currentSongTime].location;
             [self sendDataUnreliablyToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:mess]];
         }
     });

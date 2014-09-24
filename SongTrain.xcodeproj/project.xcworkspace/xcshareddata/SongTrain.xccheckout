@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>9AF71364-BDCA-47A2-A4AE-15CB523DB496</string>
+	<string>B589DE49-E91D-41BF-A6A7-05F992D76A62</string>
 	<key>IDESourceControlProjectName</key>
-	<string>SongTrain</string>
+	<string>Songtrain</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>C89AE808-1DA9-415D-8E3F-CEF048C56ED5</key>
-		<string>ssh://github.com/qpetty/Songtrain.git</string>
+		<key>CEE609C22A63483778859FD9DC86964A35A57145</key>
+		<string>github.com:qpetty/Songtrain.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>SongTrain.xcodeproj/project.xcworkspace</string>
+	<string>Songtrain.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>C89AE808-1DA9-415D-8E3F-CEF048C56ED5</key>
+		<key>CEE609C22A63483778859FD9DC86964A35A57145</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/qpetty/Songtrain.git</string>
+	<string>github.com:qpetty/Songtrain.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>C89AE808-1DA9-415D-8E3F-CEF048C56ED5</string>
+	<string>CEE609C22A63483778859FD9DC86964A35A57145</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>C89AE808-1DA9-415D-8E3F-CEF048C56ED5</string>
+			<string>CEE609C22A63483778859FD9DC86964A35A57145</string>
 			<key>IDESourceControlWCCName</key>
 			<string>SongTrain</string>
 		</dict>

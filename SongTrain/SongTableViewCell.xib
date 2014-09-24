@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SongCell" id="nJ7-ae-RLh" customClass="SongTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000001192092896" contentMode="center" tableViewCell="nJ7-ae-RLh" id="hXn-IO-Kcu">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Futuristic Casket" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xOS-FG-VBe">
+                        <rect key="frame" x="15" y="5" width="570" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phantogram" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vYm-HJ-21j">
+                        <rect key="frame" x="15" y="28" width="570" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.7725490196" green="0.81960784310000001" blue="0.87058823529999996" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" red="0.30588235289999999" green="0.32156862749999998" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="xOS-FG-VBe" firstAttribute="top" secondItem="hXn-IO-Kcu" secondAttribute="top" constant="5" id="05Y-Fc-tBA"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="vYm-HJ-21j" secondAttribute="trailing" constant="7" id="9DY-sZ-Vjq"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="xOS-FG-VBe" secondAttribute="trailing" constant="7" id="D8h-sP-LGr"/>
+                    <constraint firstAttribute="bottom" secondItem="vYm-HJ-21j" secondAttribute="bottom" constant="4.5" id="SCk-xY-5i4"/>
+                    <constraint firstItem="vYm-HJ-21j" firstAttribute="leading" secondItem="hXn-IO-Kcu" secondAttribute="leadingMargin" constant="7" id="jC2-jW-Rje"/>
+                    <constraint firstItem="xOS-FG-VBe" firstAttribute="leading" secondItem="hXn-IO-Kcu" secondAttribute="leadingMargin" constant="7" id="uGJ-3p-ypJ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="detailLabel" destination="vYm-HJ-21j" id="4ox-ju-Pg9"/>
+                <outlet property="mainLabel" destination="xOS-FG-VBe" id="d4s-gw-lcR"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

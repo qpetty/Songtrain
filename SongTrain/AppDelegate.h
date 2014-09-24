@@ -1,16 +1,17 @@
 //
 //  AppDelegate.h
-//  SongTrain
+//  Songtrain
 //
-//  Created by Quinton Petty on 1/21/14.
-//  Copyright (c) 2014 Quinton Petty. All rights reserved.
+//  Created by Quinton Petty on 9/18/14.
+//  Copyright (c) 2014 Octave Labs LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#include "QPMusicPlayerController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+
 @end
+

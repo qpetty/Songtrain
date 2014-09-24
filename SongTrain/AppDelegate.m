@@ -1,54 +1,49 @@
 //
 //  AppDelegate.m
-//  SongTrain
+//  Songtrain
 //
-//  Created by Quinton Petty on 1/21/14.
-//  Copyright (c) 2014 Quinton Petty. All rights reserved.
+//  Created by Quinton Petty on 9/18/14.
+//  Copyright (c) 2014 Octave Labs LLC. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
+#import "QPMusicPlayerController.h"
+
+@interface AppDelegate ()
+
+@end
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
-    
-    //Sets status bar to white text
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setTintColor:UIColorFromRGB(0x7FA8D7)];
-    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:UIColorFromRGB(0xC5D1DE)];
 
-    //[[[UITableViewCell appearance] textLabel] setFont:[UIFont fontWithName:@"Helvetica Neue Light" size:14]];
-    
-     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // Override point for customization after application launch.
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     return YES;
 }
-							
-- (void)applicationWillResignActive:(UIApplication *)application
-{
+
+- (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
+- (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [((ViewController*)self.window.rootViewController) updatePlayOrPauseImage];
+    [[QPMusicPlayerController sharedMusicPlayer] updateNowPlaying];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
+- (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
@@ -57,18 +52,18 @@
     if (event.type == UIEventTypeRemoteControl) {
         switch (event.subtype) {
             case UIEventSubtypeRemoteControlPlay:
-                [[QPMusicPlayerController musicPlayer] play];
+                [[QPMusicPlayerController sharedMusicPlayer] play];
                 break;
-            
+                
             case UIEventSubtypeRemoteControlPause:
-                [[QPMusicPlayerController musicPlayer] play];
+                [[QPMusicPlayerController sharedMusicPlayer] play];
                 break;
                 
             case UIEventSubtypeRemoteControlPreviousTrack:
                 break;
                 
             case UIEventSubtypeRemoteControlNextTrack:
-                [[QPMusicPlayerController musicPlayer] skip];
+                [[QPMusicPlayerController sharedMusicPlayer] skip];
                 break;
                 
             default:
@@ -76,5 +71,4 @@
         }
     }
 }
-
 @end
