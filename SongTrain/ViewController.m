@@ -10,8 +10,9 @@
 
 #import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
+#import "QPSessionManager.h"
 
-#import "TableViewController.h"
+#import "NearbyTrainViewController.h"
 
 @interface ViewController ()
 
@@ -20,6 +21,8 @@
 @implementation ViewController {
     QPMusicPlayerController *musicPlayer;
     MusicPickerViewController *musicPicker;
+    
+    QPSessionManager *sessionManager;
 }
 
 - (void)viewDidLoad {
@@ -29,6 +32,9 @@
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
+    
+    sessionManager = [QPSessionManager sessionManager];
+    [sessionManager createServer];
     
     musicPicker = [[MusicPickerViewController alloc] init];
     musicPicker.delegate = self;
@@ -56,6 +62,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.mainTitle.text = sessionManager.server.displayName;
     [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
@@ -71,7 +78,9 @@
 
 
 -(IBAction)browseForOthers:(id)sender {
-    TableViewController *tc = [[TableViewController alloc] initWithNibName:@"TableViewController" bundle:[NSBundle mainBundle]];
+    [sessionManager startBrowsingForTrains];
+    NearbyTrainViewController *tc = [[NearbyTrainViewController alloc] initWithNibName:@"NearbyTrainViewController" bundle:[NSBundle mainBundle]];
+    tc.mainViewController = self;
     
     tc.modalPresentationStyle = UIModalPresentationPopover;
     UIPopoverPresentationController *popPC = tc.popoverPresentationController;
@@ -81,6 +90,7 @@
 }
 
 -(void)closePresentationController {
+    [sessionManager stopBrowsingForTrains];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -96,7 +106,7 @@
 -(void)updateCurrentTime {
     NSRange currentTime = musicPlayer.currentSongTime;
     //songProgress.progress = (float)currentTime.location / (float)currentTime.length;
-    
+    NSLog(@"Current time: %lu", (unsigned long)currentTime.location);
     [self updateLabel:self.currentTime withSeconds:currentTime.location];
     [self updateLabel:self.totalTime withSeconds:currentTime.length];
 }
@@ -176,15 +186,21 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"playlist"]) {
-        [self.mainTableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mainTableView reloadData];
+        });
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
-        self.currentSongTitle.text = musicPlayer.currentSong.title;
-        self.currentSongArtist.text = musicPlayer.currentSong.artistName;
-        self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.currentSongTitle.text = musicPlayer.currentSong.title;
+            self.currentSongArtist.text = musicPlayer.currentSong.artistName;
+            self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
+        });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
-        [self updateCurrentTime];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateCurrentTime];
+        });
     }
 }
 

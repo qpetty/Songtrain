@@ -43,12 +43,14 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 @property (atomic, retain, readonly) MCPeerID *pid;
 @property (atomic, retain, readonly) MCPeerID *server;
 @property (atomic, retain, readonly) NSMutableArray *peerArray;
-@property (atomic, assign, readonly) NSUInteger currentRole;
-@property (atomic, retain) NSMutableArray *connectedPeersArray;
+@property (atomic, assign, readonly) enum CurrentConnectionRole currentRole;
 
 + (id)sessionManager;
 
 - (void)createServer;
+- (void)startBrowsingForTrains;
+- (void)stopBrowsingForTrains;
+
 - (void)connectToPeer:(MCPeerID*)peerID;
 - (void)restartSession;
 

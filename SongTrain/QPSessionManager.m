@@ -30,8 +30,6 @@
         
         _peerArray = [[NSMutableArray alloc] init];
         
-        _connectedPeersArray = [[NSMutableArray alloc] init];
-        
         mainSession = [[MCSession alloc] initWithPeer:self.pid];
         mainSession.delegate = self;
         
@@ -42,7 +40,7 @@
         advert.delegate = self;
         
         _currentRole = NotConnected;
-        _server = nil;
+        _server = _pid;
     }
     return self;
 }
@@ -71,33 +69,46 @@
 - (void)createServer
 {
     _currentRole = ServerConnection;
-    [browse stopBrowsingForPeers];
     [advert startAdvertisingPeer];
     [[QPMusicPlayerController sharedMusicPlayer] resetToServer];
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
 }
 
+- (void)startBrowsingForTrains {
+    [self willChangeValueForKey:@"peerArray"];
+    [_peerArray removeAllObjects];
+    [self didChangeValueForKey:@"peerArray"];
+    [browse startBrowsingForPeers];
+}
+
+- (void)stopBrowsingForTrains {
+    [browse stopBrowsingForPeers];
+    [self willChangeValueForKey:@"peerArray"];
+    [_peerArray removeAllObjects];
+    [self didChangeValueForKey:@"peerArray"];
+}
+
 - (void)connectToPeer:(MCPeerID*)peerID
 {
     _currentRole = ClientConnection;
+    [advert stopAdvertisingPeer];
     [[QPMusicPlayerController sharedMusicPlayer] resetToClient];
-    [browse stopBrowsingForPeers];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
+    
+    _server = peerID;
+    
+    [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSong"];
+    [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
 }
 
 - (void)restartSession
 {
     [mainSession disconnect];
-    [_peerArray removeAllObjects];
-    [advert stopAdvertisingPeer];
-    [browse startBrowsingForPeers];
-    if (_currentRole == ServerConnection) {
-        [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSong"];
-        [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
-    }
     _currentRole = NotConnected;
     [[QPMusicPlayerController sharedMusicPlayer] reset];
+    
+    [self createServer];
 }
 
 -(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
@@ -107,24 +118,17 @@
         
     } else if (state == MCSessionStateConnected) {
         NSLog(@"Connected to %@", peerID.displayName);
-        
-        if (_currentRole == ClientConnection) {
-            _server = peerID;
-            [browse stopBrowsingForPeers];
+        if (peerID != self.server) {
+            NSLog(@"Giving songs to %@", peerID.displayName);
+            for (Song *s in [QPMusicPlayerController sharedMusicPlayer].playlist) {
+                [self addSong:s toPeer:peerID];
+            }
         }
-        [[self mutableArrayValueForKey:@"connectedPeersArray"] addObject:peerID];
-        [self.delegate connectedToPeer:peerID];
-  
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
-        
-        if (_currentRole == ClientConnection) {
-            _server = nil;
-            _currentRole = NotConnected;
-            [browse startBrowsingForPeers];
+        if (peerID != self.pid && peerID == self.server) {
+            [self restartSession];
         }
-        [[self mutableArrayValueForKey:@"connectedPeersArray"] removeObject:peerID];
-        [self.delegate disconnectedFromPeer:peerID];
     }
 }
 
@@ -247,16 +251,19 @@
 
 - (void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info
 {
-    NSLog(@"Added Peer: %@", peerID.displayName);
-    [_peerArray addObject:peerID];
-    [self.delegate availablePeersUpdated:self.peerArray];
+    if ([peerID isEqual:self.server] == NO) {
+        [self willChangeValueForKey:@"peerArray"];
+        [_peerArray addObject:peerID];
+        [self didChangeValueForKey:@"peerArray"];
+    }
 }
 
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
 {
     NSLog(@"Removed Peer: %@", peerID.displayName);
+    [self willChangeValueForKey:@"peerArray"];
     [_peerArray removeObjectIdenticalTo:peerID];
-    [self.delegate availablePeersUpdated:self.peerArray];
+    [self didChangeValueForKey:@"peerArray"];
 }
 
 #pragma mark - Data Methods
