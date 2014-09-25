@@ -13,6 +13,8 @@
 
 @property IBOutlet UITableView *mainTableView;
 
+@property IBOutlet UILabel *mainTitle;
+
 @property IBOutlet MarqueeLabel *currentSongTitle;
 @property IBOutlet UILabel *currentSongArtist;
 @property IBOutlet UIImageView *currentAlbumArtwork;
@@ -21,6 +23,8 @@
 
 @property IBOutlet UIButton *browseForOtherTrains;
 @property IBOutlet UIButton *playOrPauseButton;
+
+@property IBOutlet UISegmentedControl *tracksAndPassengers;
 
 -(void)updatePlayOrPauseImage;
 

@@ -244,8 +244,10 @@
                         <outlet property="currentSongTitle" destination="wco-2X-hgb" id="iHd-dT-YhY"/>
                         <outlet property="currentTime" destination="JkF-pG-cgf" id="HEJ-1O-3Ew"/>
                         <outlet property="mainTableView" destination="UEy-Lb-6G7" id="92p-fQ-Pfb"/>
+                        <outlet property="mainTitle" destination="awa-AC-RSY" id="xPQ-HG-nQV"/>
                         <outlet property="playOrPauseButton" destination="GTL-Ih-9bH" id="J78-nU-33J"/>
                         <outlet property="totalTime" destination="nbK-B8-S1t" id="s7n-el-P3S"/>
+                        <outlet property="tracksAndPassengers" destination="FM8-D0-d6n" id="HYH-yV-JB5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
