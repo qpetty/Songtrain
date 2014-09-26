@@ -96,6 +96,10 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(IBAction)skip:(id)sender {
+    [musicPlayer skip];
+}
+
 -(IBAction)playAndPause:(id)sender {
     [musicPlayer play];
     [self updatePlayOrPauseImage];

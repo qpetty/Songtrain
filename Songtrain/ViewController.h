@@ -23,6 +23,7 @@
 
 @property IBOutlet UIButton *browseForOtherTrains;
 @property IBOutlet UIButton *playOrPauseButton;
+@property IBOutlet UIButton *skip;
 
 @property IBOutlet UISegmentedControl *tracksAndPassengers;
 
