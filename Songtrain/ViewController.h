@@ -28,6 +28,8 @@
 
 @property IBOutlet UISegmentedControl *tracksAndPassengers;
 
+@property UIImageView *backgroundImage;
+
 -(void)updatePlayOrPauseImage;
 
 @end
