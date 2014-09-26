@@ -69,6 +69,9 @@
 - (void)createServer
 {
     _currentRole = ServerConnection;
+    [self willChangeValueForKey:@"server"];
+    _server = _pid;
+    [self didChangeValueForKey:@"server"];
     [advert startAdvertisingPeer];
     [[QPMusicPlayerController sharedMusicPlayer] resetToServer];
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
@@ -96,7 +99,9 @@
     [[QPMusicPlayerController sharedMusicPlayer] resetToClient];
     [browse invitePeer:peerID toSession:mainSession withContext:nil timeout:0];
     
+    [self willChangeValueForKey:@"server"];
     _server = peerID;
+    [self didChangeValueForKey:@"server"];
     
     [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSong"];
     [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
@@ -118,7 +123,7 @@
         
     } else if (state == MCSessionStateConnected) {
         NSLog(@"Connected to %@", peerID.displayName);
-        if (peerID != self.server) {
+        if ([self.pid isEqual:self.server]) {
             NSLog(@"Giving songs to %@", peerID.displayName);
             for (Song *s in [QPMusicPlayerController sharedMusicPlayer].playlist) {
                 [self addSong:s toPeer:peerID];
@@ -126,7 +131,7 @@
         }
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
-        if (peerID != self.pid && peerID == self.server) {
+        if (self.currentRole == ClientConnection && [peerID isEqual:self.server]) {
             [self restartSession];
         }
     }
@@ -283,7 +288,9 @@
 - (void)sendDataToAllPeers:(NSData*)data
 {
     [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
-    NSLog(@"Sent Data to All Peers\n");
+    for (MCPeerID *peer in mainSession.connectedPeers) {
+        NSLog(@"Sending to %@", peer.displayName);
+    }
     //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
