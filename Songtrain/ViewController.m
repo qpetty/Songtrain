@@ -7,12 +7,19 @@
 //
 
 #import "ViewController.h"
-
+#import <CoreImage/CoreImage.h>
 #import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
 #import "QPSessionManager.h"
 
 #import "NearbyTrainViewController.h"
+
+#ifndef HEX_COLOR
+#define HEX_COLOR
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define UIColorFromRGBWithAlpha(rgbValue, alp) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha: alp]
+#endif
 
 @interface ViewController ()
 
@@ -27,6 +34,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(-self.currentAlbumArtwork.image.size.width/2, 0, self.currentAlbumArtwork.image.size.width * 2, self.currentAlbumArtwork.image.size.height * 2)];
+    self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+    [self.view addSubview:self.backgroundImage];
+
+    
+    UIImageView *backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
+    backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    
+    [self.view addSubview:backgroundOverlay];
+    [self.view sendSubviewToBack:backgroundOverlay];
+    [self.view sendSubviewToBack:self.backgroundImage];
+    
     
     [self.mainTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     
@@ -45,6 +65,17 @@
     self.currentSongTitle.continuousMarqueeExtraBuffer = 25.0;
     self.currentSongTitle.animationDelay = 5.0;
 }
+
+-(UIImage *)blurImage:(UIImage *)image
+{
+    CIImage *imageToBlur = [CIImage imageWithCGImage:image.CGImage];
+    CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
+    [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
+    [gaussianBlurFilter setValue:[NSNumber numberWithFloat: 1] forKey: @"inputRadius"];
+    CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+    return [[UIImage alloc] initWithCIImage:resultImage];
+}
+
 
 -(void)viewDidLayoutSubviews {
     
@@ -195,8 +226,7 @@
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
-
-            self.view.backgroundColor = [UIColor colorWithPatternImage:self.currentAlbumArtwork.image];
+            self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
