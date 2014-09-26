@@ -10,6 +10,7 @@
 
 #import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
+#import "PeerTableViewCell.h"
 #import "QPSessionManager.h"
 
 #import "NearbyTrainViewController.h"
@@ -28,7 +29,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.mainTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
+    [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
+    [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
+    [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
@@ -39,6 +42,8 @@
     musicPicker = [[MusicPickerViewController alloc] init];
     musicPicker.delegate = self;
 
+    self.peerTableView.hidden = YES;
+    
     self.currentSongTitle.rate = 75.0;
     self.currentSongTitle.fadeLength = 10.0;
     self.currentSongTitle.marqueeType = MLContinuous;
@@ -64,6 +69,7 @@
     [super viewWillAppear:animated];
     self.mainTitle.text = sessionManager.server.displayName;
     [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
+    [sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
@@ -73,6 +79,7 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"server"];
+    [sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
     [musicPlayer removeObserver:self forKeyPath:@"playlist"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
@@ -127,6 +134,19 @@
     label.text = [NSString stringWithFormat:@"%lu:%.2lu", minutes, sec];
 }
 
+#pragma mark UISegmentedControl
+
+-(IBAction)switchTableView:(id)sender {
+    if (self.tracksAndPassengers.selectedSegmentIndex == 0) {
+        self.songTableView.hidden = NO;
+        self.peerTableView.hidden = YES;
+    }
+    else {
+        self.songTableView.hidden = YES;
+        self.peerTableView.hidden = NO;
+    }
+}
+
 #pragma mark PopoverPresentationControllerDelegate
 
 -(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
@@ -173,25 +193,67 @@
 
 #pragma mark TableViewDelegate
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return musicPlayer.playlist.count < 1 ? 1 : musicPlayer.playlist.count;
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger numRows = 0;
+    if (tableView == self.songTableView) {
+        numRows = musicPlayer.playlist.count;
+    } else if (tableView == self.peerTableView) {
+        numRows = sessionManager.connectedPeerArray.count;
+    }
+    return numRows < 1 ? 1 : numRows;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SongCell"];
+    UITableViewCell *cell = nil;
+    if (tableView == self.songTableView) {
+        cell = [self songTableView:tableView withIndexPath:indexPath];
+    }
+    else if (tableView == self.peerTableView) {
+        cell = [self peerTableView:tableView withIndexPath:indexPath];
+    }
+    return cell;
+}
+
+-(UITableViewCell *)songTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *finalCell = nil;
+    
+    if (musicPlayer.playlist.count < 1){
+        PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
+        if (!cell) {
+            NSLog(@"Something went wrong because we dont have a tableviewcell");
+        }
+        cell.mainLabel.text = @"No Songs";
+        finalCell = cell;
+    }
+    else {
+        SongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SongCell"];
+        if (!cell) {
+            NSLog(@"Something went wrong because we dont have a tableviewcell");
+        }
+        
+        Song *oneSong = [musicPlayer.playlist objectAtIndex:indexPath.row];
+        cell.mainLabel.text = oneSong.title;
+        cell.detailLabel.text = oneSong.artistName;
+        finalCell = cell;
+    }
+    
+    return finalCell;
+}
+
+-(UITableViewCell *)peerTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
+    PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
     if (!cell) {
         NSLog(@"Something went wrong because we dont have a tableviewcell");
     }
     
-    if (musicPlayer.playlist.count < 1){
-        cell.mainLabel.text = @"No Songs";
-        cell.detailLabel.text = @"";
+    if (sessionManager.connectedPeerArray.count < 1){
+        cell.mainLabel.text = @"No Passengers";
     }
     else {
-        Song *oneSong = [musicPlayer.playlist objectAtIndex:indexPath.row];
-        cell.mainLabel.text = oneSong.title;
-        cell.detailLabel.text = oneSong.artistName;
+        MCPeerID *onePeer = [sessionManager.connectedPeerArray objectAtIndex:indexPath.row];
+        cell.mainLabel.text = onePeer.displayName;
     }
     
     return cell;
@@ -200,7 +262,12 @@
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"playlist"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.mainTableView reloadData];
+            [self.songTableView reloadData];
+        });
+    }
+    else if ([keyPath isEqualToString:@"connectedPeerArray"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.peerTableView reloadData];
         });
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {

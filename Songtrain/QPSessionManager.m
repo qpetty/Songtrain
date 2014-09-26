@@ -29,6 +29,7 @@
         _pid = [self getDevicePeerID];
         
         _peerArray = [[NSMutableArray alloc] init];
+        _connectedPeerArray = [[NSMutableArray alloc] init];
         
         mainSession = [[MCSession alloc] initWithPeer:self.pid];
         mainSession.delegate = self;
@@ -123,6 +124,10 @@
         
     } else if (state == MCSessionStateConnected) {
         NSLog(@"Connected to %@", peerID.displayName);
+        [self willChangeValueForKey:@"connectedPeerArray"];
+        [_connectedPeerArray addObject:peerID];
+        [self didChangeValueForKey:@"connectedPeerArray"];
+        
         if ([self.pid isEqual:self.server]) {
             NSLog(@"Giving songs to %@", peerID.displayName);
             for (Song *s in [QPMusicPlayerController sharedMusicPlayer].playlist) {
@@ -131,6 +136,10 @@
         }
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
+        [self willChangeValueForKey:@"connectedPeerArray"];
+        [_connectedPeerArray removeObjectIdenticalTo:peerID];
+        [self didChangeValueForKey:@"connectedPeerArray"];
+         
         if (self.currentRole == ClientConnection && [peerID isEqual:self.server]) {
             [self restartSession];
         }

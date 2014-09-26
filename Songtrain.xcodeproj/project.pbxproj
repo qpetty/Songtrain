@@ -25,6 +25,8 @@
 		5A5B80B119CF995C000A4681 /* SongTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B80AF19CF995C000A4681 /* SongTableViewCell.m */; };
 		5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5B80B019CF995C000A4681 /* SongTableViewCell.xib */; };
 		5A5B80B419CFABA5000A4681 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5B80B319CFABA5000A4681 /* AVFoundation.framework */; };
+		5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A60069E19D53F240062865A /* PeerTableViewCell.m */; };
+		5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A60069F19D53F240062865A /* PeerTableViewCell.xib */; };
 		5A743C1219CBD9540008C989 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1119CBD9540008C989 /* main.m */; };
 		5A743C1519CBD9540008C989 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1419CBD9540008C989 /* AppDelegate.m */; };
 		5A743C1819CBD9540008C989 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1719CBD9540008C989 /* ViewController.m */; };
@@ -82,6 +84,9 @@
 		5A5B80AF19CF995C000A4681 /* SongTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SongTableViewCell.m; sourceTree = "<group>"; };
 		5A5B80B019CF995C000A4681 /* SongTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
 		5A5B80B319CFABA5000A4681 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5A60069D19D53F240062865A /* PeerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerTableViewCell.h; sourceTree = "<group>"; };
+		5A60069E19D53F240062865A /* PeerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerTableViewCell.m; sourceTree = "<group>"; };
+		5A60069F19D53F240062865A /* PeerTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PeerTableViewCell.xib; sourceTree = "<group>"; };
 		5A743C0C19CBD9540008C989 /* Songtrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Songtrain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A743C1019CBD9540008C989 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A743C1119CBD9540008C989 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -193,6 +198,9 @@
 				5A5B80AE19CF995C000A4681 /* SongTableViewCell.h */,
 				5A5B80AF19CF995C000A4681 /* SongTableViewCell.m */,
 				5A5B80B019CF995C000A4681 /* SongTableViewCell.xib */,
+				5A60069D19D53F240062865A /* PeerTableViewCell.h */,
+				5A60069E19D53F240062865A /* PeerTableViewCell.m */,
+				5A60069F19D53F240062865A /* PeerTableViewCell.xib */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -351,6 +359,7 @@
 			files = (
 				5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */,
 				5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */,
+				5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
 				5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */,
 				5A96041019D3E357002D2B29 /* NearbyTrainViewController.xib in Resources */,
@@ -381,6 +390,7 @@
 				5A5B80A919CF89A7000A4681 /* MusicNavigationViewController.m in Sources */,
 				5A5B808719CE7751000A4681 /* RemoteSong.m in Sources */,
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
+				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
 				5A5B80A619CF89A7000A4681 /* PlaylistTabViewController.m in Sources */,
 				5A96040F19D3E357002D2B29 /* NearbyTrainViewController.m in Sources */,
 				5A743C1819CBD9540008C989 /* ViewController.m in Sources */,

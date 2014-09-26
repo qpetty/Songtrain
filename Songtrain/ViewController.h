@@ -11,7 +11,8 @@
 #import "MarqueeLabel.h"
 @interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate>
 
-@property IBOutlet UITableView *mainTableView;
+@property IBOutlet UITableView *songTableView;
+@property IBOutlet UITableView *peerTableView;
 
 @property IBOutlet UILabel *mainTitle;
 

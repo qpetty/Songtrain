@@ -39,10 +39,10 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 }
 
 @property (weak, nonatomic) id <QPSessionManagerDelegate> delegate;
-//@property (atomic, strong, readonly) MCSession *mainSession;
 @property (atomic, retain, readonly) MCPeerID *pid;
 @property (atomic, retain, readonly) MCPeerID *server;
 @property (atomic, retain, readonly) NSMutableArray *peerArray;
+@property (atomic, strong, readonly) NSMutableArray *connectedPeerArray;
 @property (atomic, assign, readonly) enum CurrentConnectionRole currentRole;
 
 + (id)sessionManager;

@@ -25,8 +25,11 @@
                                 </constraints>
                                 <segments>
                                     <segment title="Tracks"/>
-                                    <segment title="Second"/>
+                                    <segment title="Passengers"/>
                                 </segments>
+                                <connections>
+                                    <action selector="switchTableView:" destination="BYZ-38-t0r" eventType="valueChanged" id="3Bb-A6-TV4"/>
+                                </connections>
                             </segmentedControl>
                             <tableView opaque="NO" clipsSubviews="YES" alpha="0.79999999999999982" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UEy-Lb-6G7">
                                 <rect key="frame" x="0.0" y="220" width="600" height="322"/>
@@ -205,25 +208,38 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView opaque="NO" clipsSubviews="YES" alpha="0.80000001192092896" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="OnN-vS-rLS">
+                                <rect key="frame" x="0.0" y="220" width="600" height="322"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="2Ql-v8-WRr"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="n9a-tO-v8V"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="5mu-8i-uAv" firstAttribute="top" secondItem="wco-2X-hgb" secondAttribute="bottom" id="1gH-5b-XKr"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wco-2X-hgb" secondAttribute="trailing" id="9c5-AG-rHv"/>
+                            <constraint firstItem="OnN-vS-rLS" firstAttribute="top" secondItem="FM8-D0-d6n" secondAttribute="bottom" constant="8" id="9r4-5v-xsG"/>
                             <constraint firstAttribute="trailing" secondItem="FM8-D0-d6n" secondAttribute="trailing" id="AwX-80-bTT"/>
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="UEy-Lb-6G7" secondAttribute="bottom" id="BhC-07-PYa"/>
                             <constraint firstItem="dkq-BQ-Od4" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="CrS-TK-YaC"/>
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="Fol-Ic-dpt"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="top" secondItem="5mu-8i-uAv" secondAttribute="bottom" constant="12" id="FyM-fM-ccL"/>
+                            <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="OnN-vS-rLS" secondAttribute="bottom" id="HHu-hD-ExO"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="trailing" secondItem="5mu-8i-uAv" secondAttribute="trailing" id="L69-DK-uvS"/>
                             <constraint firstItem="UEy-Lb-6G7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Lg4-E1-7cg"/>
+                            <constraint firstAttribute="trailing" secondItem="OnN-vS-rLS" secondAttribute="trailing" id="M5o-jC-dIO"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="leading" secondItem="5mu-8i-uAv" secondAttribute="leading" id="Miu-NI-9wT"/>
                             <constraint firstAttribute="trailing" secondItem="UEy-Lb-6G7" secondAttribute="trailing" id="PJL-F7-3fH"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="PpL-uw-VN1"/>
                             <constraint firstAttribute="centerX" secondItem="awa-AC-RSY" secondAttribute="centerX" id="QM6-MA-4Ng"/>
                             <constraint firstAttribute="bottom" secondItem="JL0-VU-Pra" secondAttribute="bottom" id="XaM-fB-5HA"/>
+                            <constraint firstItem="OnN-vS-rLS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="aqm-89-y97"/>
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="b2z-lg-zlk"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="top" secondItem="1qp-hg-bK3" secondAttribute="bottom" constant="31" id="dBW-Li-Ypg"/>
+                            <constraint firstItem="OnN-vS-rLS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="8" id="jEF-mi-4bf"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="top" secondItem="UGe-gO-CiS" secondAttribute="bottom" constant="16" id="nar-EY-miK"/>
                             <constraint firstItem="5mu-8i-uAv" firstAttribute="leading" secondItem="UGe-gO-CiS" secondAttribute="trailing" constant="17" id="oJi-Fe-iI1"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="oWX-1s-kCI"/>
@@ -237,6 +253,7 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="oJi-Fe-iI1"/>
+                                <exclude reference="jEF-mi-4bf"/>
                             </mask>
                         </variation>
                     </view>
@@ -246,10 +263,11 @@
                         <outlet property="currentSongArtist" destination="5mu-8i-uAv" id="AhX-ak-0Af"/>
                         <outlet property="currentSongTitle" destination="wco-2X-hgb" id="iHd-dT-YhY"/>
                         <outlet property="currentTime" destination="JkF-pG-cgf" id="HEJ-1O-3Ew"/>
-                        <outlet property="mainTableView" destination="UEy-Lb-6G7" id="92p-fQ-Pfb"/>
                         <outlet property="mainTitle" destination="awa-AC-RSY" id="xPQ-HG-nQV"/>
+                        <outlet property="peerTableView" destination="OnN-vS-rLS" id="fgi-Za-4Du"/>
                         <outlet property="playOrPauseButton" destination="GTL-Ih-9bH" id="J78-nU-33J"/>
                         <outlet property="skip" destination="1g0-dg-3Zf" id="lkm-sC-ymc"/>
+                        <outlet property="songTableView" destination="UEy-Lb-6G7" id="sNa-Vk-9op"/>
                         <outlet property="totalTime" destination="nbK-B8-S1t" id="s7n-el-P3S"/>
                         <outlet property="tracksAndPassengers" destination="FM8-D0-d6n" id="HYH-yV-JB5"/>
                     </connections>
