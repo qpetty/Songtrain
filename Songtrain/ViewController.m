@@ -63,6 +63,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.mainTitle.text = sessionManager.server.displayName;
+    [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
@@ -71,6 +72,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [sessionManager removeObserver:self forKeyPath:@"server"];
     [musicPlayer removeObserver:self forKeyPath:@"playlist"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
@@ -106,7 +108,6 @@
 -(void)updateCurrentTime {
     NSRange currentTime = musicPlayer.currentSongTime;
     //songProgress.progress = (float)currentTime.location / (float)currentTime.length;
-    NSLog(@"Current time: %lu", (unsigned long)currentTime.location);
     [self updateLabel:self.currentTime withSeconds:currentTime.location];
     [self updateLabel:self.totalTime withSeconds:currentTime.length];
 }
@@ -149,7 +150,15 @@
     }
 
     [self dismissViewControllerAnimated:YES completion:^{
-        [musicPlayer addSongsToPlaylist:newSongs];
+        for (Song *song in newSongs) {
+            if (sessionManager.currentRole == ClientConnection) {
+                [sessionManager addSongToServer:song];
+            }
+            else {
+                [sessionManager addSongToAllPeers:song];
+                [musicPlayer addSongToPlaylist:song];
+            }
+        }
     }];
 }
 
@@ -200,6 +209,12 @@
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateCurrentTime];
+        });
+    }
+    else if ([keyPath isEqualToString:@"server"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mainTitle.text = sessionManager.server.displayName;
+            [self updatePlayOrPauseImage];
         });
     }
 }

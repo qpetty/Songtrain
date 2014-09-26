@@ -45,10 +45,12 @@
 
 -(void)reset
 {
-    [[AVAudioSession sharedInstance] setActive:NO error:nil];
     AUGraphStop(graph);
+    [[AVAudioSession sharedInstance] setActive:NO error:nil];
     isServer = NO;
+    [self willChangeValueForKey:@"playlist"];
     [_playlist removeAllObjects];
+    [self didChangeValueForKey:@"playlist"];
 }
 
 - (void)resetToServer
