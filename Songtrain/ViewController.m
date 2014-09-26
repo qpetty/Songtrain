@@ -195,6 +195,8 @@
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
+
+            self.view.backgroundColor = [UIColor colorWithPatternImage:self.currentAlbumArtwork.image];
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
