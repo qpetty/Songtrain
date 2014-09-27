@@ -36,12 +36,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
     
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
+    self.nearbyTrainsModal = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    self.nearbyTrainsModal.delegate = self;
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     
@@ -95,13 +96,13 @@
     [self.view addSubview:self.backgroundOverlay];
     [self.view sendSubviewToBack:self.backgroundOverlay];
     
-    [self.backgroundImage setFrame:self.view.frame];
+    [self.backgroundImage setFrame:CGRectMake(self.view.frame.origin.x - 10, self.view.frame.origin.y - 10, self.view.frame.size.width + 20, self.view.frame.size.height + 20)];
     
     self.backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
-    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -135,11 +136,19 @@
     NearbyTrainViewController *tc = [[NearbyTrainViewController alloc] initWithNibName:@"NearbyTrainViewController" bundle:[NSBundle mainBundle]];
     tc.mainViewController = self;
     
-    tc.modalPresentationStyle = UIModalPresentationPopover;
-    UIPopoverPresentationController *popPC = tc.popoverPresentationController;
-    popPC.sourceView = self.browseForOtherTrains;
-    popPC.delegate = self;
-    [self presentViewController:tc animated:YES completion:nil];
+   // tc.modalPresentationStyle = UIModalPresentationPopover;
+    //UIPopoverPresentationController *popPC = tc.popoverPresentationController;
+    //popPC.sourceView = self.browseForOtherTrains;
+    //popPC.delegate = self;
+    //[self presentViewController:tc animated:YES completion:nil];
+    self.nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:self.nearbyTrainsModal];
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+        [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+    } completion:^(BOOL finished) {
+    }];
+    
 }
 
 -(void)closePresentationController {
@@ -194,10 +203,11 @@
 #pragma mark PopoverPresentationControllerDelegate
 
 -(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
-    return UIModalPresentationFullScreen;
+    return UIModalPresentationCustom;
 }
 
 -(UIViewController *)presentationController:(UIPresentationController *)controller viewControllerForAdaptivePresentationStyle:(UIModalPresentationStyle)style {
+    
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller.presentedViewController];
     controller.presentedViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(closePresentationController)];
     return navController;

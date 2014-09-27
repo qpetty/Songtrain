@@ -31,6 +31,8 @@
 @property UIImageView *backgroundImage;
 @property UIImageView *backgroundOverlay;
 
+@property UITableView *nearbyTrainsModal;
+
 -(void)updatePlayOrPauseImage;
 
 @end
