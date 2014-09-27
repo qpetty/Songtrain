@@ -55,16 +55,21 @@
     self.peerTableView.hidden = YES;
     
     self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
-    self.currentSongTitle.text = @"Really Long Current Song Title";
+    self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    //self.currentSongTitle.text = @"Really Long Current Song Title";
+    [self configureMarqueeLabel:self.currentSongTitle];
+    [self configureMarqueeLabel:self.currentSongArtist];
+    self.currentSongTitle.text = @"   ";
+    self.currentSongArtist.text = @"  ";
 }
 
--(void)configureMarqueeLabel {
-    self.currentSongTitle.rate = 75.0;
-    self.currentSongTitle.fadeLength = 10.0;
-    self.currentSongTitle.marqueeType = MLContinuous;
-    self.currentSongTitle.continuousMarqueeExtraBuffer = 25.0;
-    self.currentSongTitle.animationDelay = 5.0;
-    self.currentSongTitle.text = @"Really Long Current Song Title";
+-(void)configureMarqueeLabel:(MarqueeLabel*)label {
+    label.rate = 75.0;
+    label.fadeLength = 10.0;
+    label.marqueeType = MLContinuous;
+    label.continuousMarqueeExtraBuffer = 25.0;
+    label.animationDelay = 5.0;
 }
 
 -(UIImage *)blurImage:(UIImage *)image
@@ -86,13 +91,6 @@
 
 -(void)viewDidLayoutSubviews {
     
-    //Adjusts the label's positioning due to the MarqueeLabel fadeLength
-    /*
-    self.currentSongTitle.frame = CGRectMake(self.currentSongTitle.frame.origin.x - 10.0,
-                                             self.currentSongTitle.frame.origin.y,
-                                             self.currentSongTitle.frame.size.width,
-                                             self.currentSongTitle.frame.size.height);
-    */
     [self.backgroundOverlay setFrame:self.view.frame];
 
     self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
@@ -106,9 +104,6 @@
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
-    
-    [self configureMarqueeLabel];
-    //[MarqueeLabel restartLabelsOfController:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -323,6 +318,7 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Change title");
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
