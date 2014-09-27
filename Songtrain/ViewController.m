@@ -35,9 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-
-    
+        
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
@@ -56,11 +54,17 @@
 
     self.peerTableView.hidden = YES;
     
+    self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    self.currentSongTitle.text = @"Really Long Current Song Title";
+}
+
+-(void)configureMarqueeLabel {
     self.currentSongTitle.rate = 75.0;
     self.currentSongTitle.fadeLength = 10.0;
     self.currentSongTitle.marqueeType = MLContinuous;
     self.currentSongTitle.continuousMarqueeExtraBuffer = 25.0;
     self.currentSongTitle.animationDelay = 5.0;
+    self.currentSongTitle.text = @"Really Long Current Song Title";
 }
 
 -(UIImage *)blurImage:(UIImage *)image
@@ -83,11 +87,12 @@
 -(void)viewDidLayoutSubviews {
     
     //Adjusts the label's positioning due to the MarqueeLabel fadeLength
+    /*
     self.currentSongTitle.frame = CGRectMake(self.currentSongTitle.frame.origin.x - 10.0,
                                              self.currentSongTitle.frame.origin.y,
                                              self.currentSongTitle.frame.size.width,
                                              self.currentSongTitle.frame.size.height);
-    
+    */
     [self.backgroundOverlay setFrame:self.view.frame];
 
     self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
@@ -102,6 +107,8 @@
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
     
+    [self configureMarqueeLabel];
+    //[MarqueeLabel restartLabelsOfController:self];
 }
 
 - (void)didReceiveMemoryWarning {
