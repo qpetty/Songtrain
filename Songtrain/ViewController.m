@@ -36,21 +36,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
+    
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
-    self.backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(-self.currentAlbumArtwork.image.size.width/2, 0, self.currentAlbumArtwork.image.size.width * 2, self.currentAlbumArtwork.image.size.height * 2)];
-    self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
-    [self.view addSubview:self.backgroundImage];
-    
-    UIImageView *backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
-    backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
-    
-    [self.view addSubview:backgroundOverlay];
-    [self.view sendSubviewToBack:backgroundOverlay];
-    [self.view sendSubviewToBack:self.backgroundImage];
-    
+    self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
+    self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
@@ -80,6 +73,12 @@
     return [[UIImage alloc] initWithCIImage:resultImage];
 }
 
+- (UIImage*)cropAlbumImage:(UIImage*)image withScreenRect:(CGRect)screenSize
+{
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake((image.size.width - screenSize.size.width) / 2, 0, screenSize.size.width, screenSize.size.height));
+    
+    return [UIImage imageWithCGImage:imageRef];
+}
 
 -(void)viewDidLayoutSubviews {
     
@@ -88,6 +87,21 @@
                                              self.currentSongTitle.frame.origin.y,
                                              self.currentSongTitle.frame.size.width,
                                              self.currentSongTitle.frame.size.height);
+    
+    [self.backgroundOverlay setFrame:self.view.frame];
+
+    self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    
+    [self.view addSubview:self.backgroundOverlay];
+    [self.view sendSubviewToBack:self.backgroundOverlay];
+    
+    [self.backgroundImage setFrame:self.view.frame];
+    
+    self.backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
+
+    [self.view addSubview:self.backgroundImage];
+    [self.view sendSubviewToBack:self.backgroundImage];
+    
 }
 
 - (void)didReceiveMemoryWarning {

@@ -328,12 +328,12 @@
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = JX9WQKUYGV;
+						DevelopmentTeam = L89AYMBA9C;
 						TestTargetID = 5A743C0B19CBD9540008C989;
 					};
 				};
 			};
-			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */;
+			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -524,12 +524,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				INFOPLIST_FILE = Songtrain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -538,12 +540,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				INFOPLIST_FILE = Songtrain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -585,7 +589,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */ = {
+		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5A743C2D19CBD9540008C989 /* Debug */,
