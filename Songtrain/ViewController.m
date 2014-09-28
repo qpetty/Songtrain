@@ -41,7 +41,11 @@
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
     self.nearbyTrainsModal = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"TrainCellView" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"TrainCell"];
     self.nearbyTrainsModal.delegate = self;
+    self.nearbyTrainsModal.dataSource = self;
+
+    
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     
@@ -118,6 +122,7 @@
     [super viewWillAppear:animated];
     self.mainTitle.text = sessionManager.server.displayName;
     [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
+    [sessionManager addObserver:self forKeyPath:@"peerArray" options:NSKeyValueObservingOptionNew context:nil];
     [sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
@@ -129,6 +134,7 @@
     [super viewWillDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"server"];
     [sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
+    [sessionManager removeObserver:self forKeyPath:@"peerArray"];
     [musicPlayer removeObserver:self forKeyPath:@"playlist"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
@@ -137,14 +143,7 @@
 
 -(IBAction)browseForOthers:(id)sender {
     [sessionManager startBrowsingForTrains];
-    NearbyTrainViewController *tc = [[NearbyTrainViewController alloc] initWithNibName:@"NearbyTrainViewController" bundle:[NSBundle mainBundle]];
-    tc.mainViewController = self;
-    
-   // tc.modalPresentationStyle = UIModalPresentationPopover;
-    //UIPopoverPresentationController *popPC = tc.popoverPresentationController;
-    //popPC.sourceView = self.browseForOtherTrains;
-    //popPC.delegate = self;
-    //[self presentViewController:tc animated:YES completion:nil];
+
     self.nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:self.nearbyTrainsModal];
     
@@ -153,6 +152,14 @@
     } completion:^(BOOL finished) {
     }];
     
+}
+
+-(void)finishBrowsingForOthers
+{
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+        [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    } completion:^(BOOL finished) {
+    }];
 }
 
 -(void)closePresentationController {
@@ -249,6 +256,15 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView != self.nearbyTrainsModal) {
+        return;
+    }
+    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
+    [self finishBrowsingForOthers];
+}
+
 #pragma mark TableViewDelegate
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -258,6 +274,9 @@
         numRows = musicPlayer.playlist.count;
     } else if (tableView == self.peerTableView) {
         numRows = sessionManager.connectedPeerArray.count;
+    } else if (tableView == self.nearbyTrainsModal) {
+        NSLog(@"Found %lu trains", sessionManager.peerArray.count);
+        return sessionManager.peerArray.count;
     }
     return numRows < 1 ? 1 : numRows;
 }
@@ -270,6 +289,10 @@
     }
     else if (tableView == self.peerTableView) {
         cell = [self peerTableView:tableView withIndexPath:indexPath];
+    } else if (tableView == self.nearbyTrainsModal) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"TrainCell" forIndexPath:indexPath];
+        MCPeerID *peerID = [sessionManager.peerArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = peerID.displayName;
     }
     return cell;
 }
@@ -347,7 +370,14 @@
             self.mainTitle.text = sessionManager.server.displayName;
             [self updatePlayOrPauseImage];
         });
+    } else if ([keyPath isEqualToString:@"peerArray"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.nearbyTrainsModal reloadData];
+        });
     }
 }
+
+
+
 
 @end
