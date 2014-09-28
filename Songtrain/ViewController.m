@@ -59,7 +59,7 @@
     self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
-    //self.currentSongTitle.text = @"Really Long Current Song Title";
+
     [self configureMarqueeLabel:self.currentSongTitle];
     [self configureMarqueeLabel:self.currentSongArtist];
     self.currentSongTitle.text = @"   ";
