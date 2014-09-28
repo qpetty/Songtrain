@@ -35,8 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
+
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
@@ -57,11 +56,22 @@
 
     self.peerTableView.hidden = YES;
     
-    self.currentSongTitle.rate = 75.0;
-    self.currentSongTitle.fadeLength = 10.0;
-    self.currentSongTitle.marqueeType = MLContinuous;
-    self.currentSongTitle.continuousMarqueeExtraBuffer = 25.0;
-    self.currentSongTitle.animationDelay = 5.0;
+    self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+    //self.currentSongTitle.text = @"Really Long Current Song Title";
+    [self configureMarqueeLabel:self.currentSongTitle];
+    [self configureMarqueeLabel:self.currentSongArtist];
+    self.currentSongTitle.text = @"   ";
+    self.currentSongArtist.text = @"  ";
+}
+
+-(void)configureMarqueeLabel:(MarqueeLabel*)label {
+    label.rate = 75.0;
+    label.fadeLength = 10.0;
+    label.marqueeType = MLContinuous;
+    label.continuousMarqueeExtraBuffer = 25.0;
+    label.animationDelay = 5.0;
 }
 
 -(UIImage *)blurImage:(UIImage *)image
@@ -82,12 +92,6 @@
 }
 
 -(void)viewDidLayoutSubviews {
-    
-    //Adjusts the label's positioning due to the MarqueeLabel fadeLength
-    self.currentSongTitle.frame = CGRectMake(self.currentSongTitle.frame.origin.x - 10.0,
-                                             self.currentSongTitle.frame.origin.y,
-                                             self.currentSongTitle.frame.size.width,
-                                             self.currentSongTitle.frame.size.height);
     
     [self.backgroundOverlay setFrame:self.view.frame];
 
@@ -326,6 +330,7 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Change title");
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;

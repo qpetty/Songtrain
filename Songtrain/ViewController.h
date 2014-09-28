@@ -17,7 +17,7 @@
 @property IBOutlet UILabel *mainTitle;
 
 @property IBOutlet MarqueeLabel *currentSongTitle;
-@property IBOutlet UILabel *currentSongArtist;
+@property IBOutlet MarqueeLabel *currentSongArtist;
 @property IBOutlet UIImageView *currentAlbumArtwork;
 @property IBOutlet UILabel *currentTime;
 @property IBOutlet UILabel *totalTime;
