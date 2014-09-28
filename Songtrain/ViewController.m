@@ -275,7 +275,6 @@
     } else if (tableView == self.peerTableView) {
         numRows = sessionManager.connectedPeerArray.count;
     } else if (tableView == self.nearbyTrainsModal) {
-        NSLog(@"Found %lu trains", sessionManager.peerArray.count);
         return sessionManager.peerArray.count;
     }
     return numRows < 1 ? 1 : numRows;
@@ -353,7 +352,6 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Change title");
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
