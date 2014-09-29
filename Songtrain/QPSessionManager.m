@@ -130,6 +130,8 @@
         
         if ([self.pid isEqual:self.server]) {
             NSLog(@"Giving songs to %@", peerID.displayName);
+            [self addSong:[QPMusicPlayerController sharedMusicPlayer].currentSong toPeer:peerID];
+            [self nextSong:[QPMusicPlayerController sharedMusicPlayer].currentSong forPeer:peerID];
             for (Song *s in [QPMusicPlayerController sharedMusicPlayer].playlist) {
                 [self addSong:s toPeer:peerID];
             }
@@ -316,6 +318,14 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
+- (void)nextSong:(Song*)song forPeer:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = SkipSong;
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+
 - (void)addSongToServer:(Song*)song
 {
     SingleMessage *message = [[SingleMessage alloc] init];
@@ -326,10 +336,12 @@
 
 - (void)addSong:(Song*)song toPeer:(MCPeerID*)peer
 {
-    SingleMessage *message = [[SingleMessage alloc] init];
-    message.message = AddSong;
-    message.song = song;
-    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+    if (song != nil) {
+        SingleMessage *message = [[SingleMessage alloc] init];
+        message.message = AddSong;
+        message.song = song;
+        [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+    }
 }
 
 - (void)addSongToAllPeers:(Song*)song
