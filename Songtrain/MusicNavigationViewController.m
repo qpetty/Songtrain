@@ -19,6 +19,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.navigationBar.tintColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
     }
     return self;
 }

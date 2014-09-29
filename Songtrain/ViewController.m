@@ -44,7 +44,6 @@
     [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"TrainCellView" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"TrainCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
-
     
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -66,11 +65,15 @@
     self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
-    //self.currentSongTitle.text = @"Really Long Current Song Title";
+
     [self configureMarqueeLabel:self.currentSongTitle];
     [self configureMarqueeLabel:self.currentSongArtist];
     self.currentSongTitle.text = @"   ";
     self.currentSongArtist.text = @"  ";
+    
+    //Removes the separators below the last row of the tableviews
+    self.songTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -190,7 +193,7 @@
 
 -(void)updateCurrentTime {
     NSRange currentTime = musicPlayer.currentSongTime;
-    //songProgress.progress = (float)currentTime.location / (float)currentTime.length;
+    self.progressBar.progress = (float)currentTime.location / (float)currentTime.length;
     [self updateLabel:self.currentTime withSeconds:currentTime.location];
     [self updateLabel:self.totalTime withSeconds:currentTime.length];
 }
@@ -283,7 +286,6 @@
     } else if (tableView == self.peerTableView) {
         numRows = sessionManager.connectedPeerArray.count;
     } else if (tableView == self.nearbyTrainsModal) {
-        NSLog(@"Found %lu trains", sessionManager.peerArray.count);
         return sessionManager.peerArray.count;
     }
     return numRows < 1 ? 1 : numRows;
@@ -333,6 +335,7 @@
 
 -(UITableViewCell *)peerTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
     PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
+    cell.backgroundColor = [UIColor clearColor];
     if (!cell) {
         NSLog(@"Something went wrong because we dont have a tableviewcell");
     }
@@ -361,7 +364,6 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Change title");
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
             self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;

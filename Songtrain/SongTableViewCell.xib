@@ -10,7 +10,7 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SongCell" id="nJ7-ae-RLh" customClass="SongTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
-            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000001192092896" contentMode="center" tableViewCell="nJ7-ae-RLh" id="hXn-IO-Kcu">
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000000000000004" contentMode="center" tableViewCell="nJ7-ae-RLh" id="hXn-IO-Kcu">
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Futuristic Casket" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xOS-FG-VBe">
@@ -26,7 +26,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
-                <color key="backgroundColor" red="0.30588235289999999" green="0.32156862749999998" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                <color key="backgroundColor" red="0.30588235289999999" green="0.32156862749999998" blue="0.3411764706" alpha="0.0" colorSpace="calibratedRGB"/>
                 <constraints>
                     <constraint firstItem="xOS-FG-VBe" firstAttribute="top" secondItem="hXn-IO-Kcu" secondAttribute="top" constant="5" id="05Y-Fc-tBA"/>
                     <constraint firstAttribute="trailingMargin" secondItem="vYm-HJ-21j" secondAttribute="trailing" constant="7" id="9DY-sZ-Vjq"/>
@@ -36,6 +36,7 @@
                     <constraint firstItem="xOS-FG-VBe" firstAttribute="leading" secondItem="hXn-IO-Kcu" secondAttribute="leadingMargin" constant="7" id="uGJ-3p-ypJ"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="detailLabel" destination="vYm-HJ-21j" id="4ox-ju-Pg9"/>
                 <outlet property="mainLabel" destination="xOS-FG-VBe" id="d4s-gw-lcR"/>
