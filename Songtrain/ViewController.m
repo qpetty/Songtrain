@@ -185,7 +185,7 @@
 
 -(void)updateCurrentTime {
     NSRange currentTime = musicPlayer.currentSongTime;
-    //songProgress.progress = (float)currentTime.location / (float)currentTime.length;
+    self.progressBar.progress = (float)currentTime.location / (float)currentTime.length;
     [self updateLabel:self.currentTime withSeconds:currentTime.location];
     [self updateLabel:self.totalTime withSeconds:currentTime.length];
 }

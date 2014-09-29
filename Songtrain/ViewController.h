@@ -28,6 +28,8 @@
 
 @property IBOutlet UISegmentedControl *tracksAndPassengers;
 
+@property IBOutlet UIProgressView *progressBar;
+
 @property UIImageView *backgroundImage;
 @property UIImageView *backgroundOverlay;
 
