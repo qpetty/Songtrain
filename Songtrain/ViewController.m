@@ -307,6 +307,7 @@
         if (!cell) {
             NSLog(@"Something went wrong because we dont have a tableviewcell");
         }
+        cell.backgroundColor = [UIColor clearColor];
         cell.mainLabel.text = @"No Songs";
         finalCell = cell;
     }
@@ -315,7 +316,7 @@
         if (!cell) {
             NSLog(@"Something went wrong because we dont have a tableviewcell");
         }
-        
+        cell.backgroundColor = [UIColor clearColor];
         Song *oneSong = [musicPlayer.playlist objectAtIndex:indexPath.row];
         cell.mainLabel.text = oneSong.title;
         cell.detailLabel.text = oneSong.artistName;
