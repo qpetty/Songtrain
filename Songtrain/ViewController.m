@@ -44,7 +44,6 @@
     [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"TrainCellView" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"TrainCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
-
     
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -68,6 +67,10 @@
     [self configureMarqueeLabel:self.currentSongArtist];
     self.currentSongTitle.text = @"   ";
     self.currentSongArtist.text = @"  ";
+    
+    //Removes the separators below the last row of the tableviews
+    self.songTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -324,6 +327,7 @@
 
 -(UITableViewCell *)peerTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
     PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
+    cell.backgroundColor = [UIColor clearColor];
     if (!cell) {
         NSLog(@"Something went wrong because we dont have a tableviewcell");
     }
