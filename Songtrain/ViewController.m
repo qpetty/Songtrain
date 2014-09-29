@@ -133,6 +133,7 @@
     [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
     [self updatePlayOrPauseImage];
 }
 
@@ -144,6 +145,7 @@
     [musicPlayer removeObserver:self forKeyPath:@"playlist"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
+    [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
 }
 
 
@@ -207,6 +209,16 @@
     }
     
     label.text = [NSString stringWithFormat:@"%lu:%.2lu", minutes, sec];
+}
+
+-(void)updateImage:(UIImage*)image {
+    
+    if (image == nil) {
+        image = [UIImage imageNamed:@"albumart_default"];
+    }
+    
+    self.currentAlbumArtwork.image = image;
+    self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
 }
 
 #pragma mark UISegmentedControl
@@ -367,8 +379,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.currentSongTitle.text = musicPlayer.currentSong.title;
             self.currentSongArtist.text = musicPlayer.currentSong.artistName;
-            self.currentAlbumArtwork.image = musicPlayer.currentSong.albumImage == nil ? [UIImage imageNamed:@"albumart_default"] : musicPlayer.currentSong.albumImage;
-            self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+            [self updateImage:musicPlayer.currentSong.albumImage];
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
@@ -385,6 +396,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.nearbyTrainsModal reloadData];
         });
+    } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
+        [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }
 
