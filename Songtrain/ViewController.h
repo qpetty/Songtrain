@@ -23,6 +23,8 @@
 @property IBOutlet UILabel *totalTime;
 
 @property IBOutlet UIButton *browseForOtherTrains;
+@property IBOutlet UIButton *editTableViews;
+
 @property IBOutlet UIButton *playOrPauseButton;
 @property IBOutlet UIButton *skip;
 

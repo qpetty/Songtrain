@@ -34,8 +34,6 @@
 		5A743C1D19CBD9540008C989 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A743C1C19CBD9540008C989 /* Images.xcassets */; };
 		5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A743C1E19CBD9540008C989 /* LaunchScreen.xib */; };
 		5A743C2C19CBD9540008C989 /* SongtrainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C2B19CBD9540008C989 /* SongtrainTests.m */; };
-		5A96040F19D3E357002D2B29 /* NearbyTrainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A96040D19D3E357002D2B29 /* NearbyTrainViewController.m */; };
-		5A96041019D3E357002D2B29 /* NearbyTrainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A96040E19D3E357002D2B29 /* NearbyTrainViewController.xib */; };
 		5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A96041119D3E69F002D2B29 /* TrainCellView.xib */; };
 /* End PBXBuildFile section */
 
@@ -100,9 +98,6 @@
 		5A743C2519CBD9540008C989 /* SongtrainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongtrainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A743C2A19CBD9540008C989 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A743C2B19CBD9540008C989 /* SongtrainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SongtrainTests.m; sourceTree = "<group>"; };
-		5A96040C19D3E357002D2B29 /* NearbyTrainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearbyTrainViewController.h; sourceTree = "<group>"; };
-		5A96040D19D3E357002D2B29 /* NearbyTrainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearbyTrainViewController.m; sourceTree = "<group>"; };
-		5A96040E19D3E357002D2B29 /* NearbyTrainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NearbyTrainViewController.xib; sourceTree = "<group>"; };
 		5A96041119D3E69F002D2B29 /* TrainCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrainCellView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -235,9 +230,6 @@
 				5A5B80AD19CF98DC000A4681 /* Custom Views */,
 				5A743C1619CBD9540008C989 /* ViewController.h */,
 				5A743C1719CBD9540008C989 /* ViewController.m */,
-				5A96040C19D3E357002D2B29 /* NearbyTrainViewController.h */,
-				5A96040D19D3E357002D2B29 /* NearbyTrainViewController.m */,
-				5A96040E19D3E357002D2B29 /* NearbyTrainViewController.xib */,
 				5A96041119D3E69F002D2B29 /* TrainCellView.xib */,
 				5A743C1919CBD9540008C989 /* Main.storyboard */,
 				5A743C1C19CBD9540008C989 /* Images.xcassets */,
@@ -362,7 +354,6 @@
 				5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
 				5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */,
-				5A96041019D3E357002D2B29 /* NearbyTrainViewController.xib in Resources */,
 				5A743C1D19CBD9540008C989 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,7 +383,6 @@
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
 				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
 				5A5B80A619CF89A7000A4681 /* PlaylistTabViewController.m in Sources */,
-				5A96040F19D3E357002D2B29 /* NearbyTrainViewController.m in Sources */,
 				5A743C1819CBD9540008C989 /* ViewController.m in Sources */,
 				5A5B80A719CF89A7000A4681 /* SongTabViewController.m in Sources */,
 				5A5B809419CE77EF000A4681 /* MarqueeLabel.m in Sources */,

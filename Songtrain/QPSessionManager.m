@@ -40,7 +40,7 @@
         advert = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.pid discoveryInfo:nil serviceType:service];
         advert.delegate = self;
         
-        _currentRole = NotConnected;
+        _currentRole = ServerConnection;
         _server = _pid;
     }
     return self;
@@ -111,9 +111,6 @@
 - (void)restartSession
 {
     [mainSession disconnect];
-    _currentRole = NotConnected;
-    [[QPMusicPlayerController sharedMusicPlayer] reset];
-    
     [self createServer];
 }
 
@@ -237,6 +234,10 @@
         }
         else if (mess.message == CurrentTime) {
             [[QPMusicPlayerController sharedMusicPlayer] currentTime:mess.firstIndex];
+        }
+        else if (mess.message == Booted) {
+            NSLog(@"I just got booted");
+            [self restartSession];
         }
     });
 }
@@ -390,7 +391,6 @@
     message.data = [NSKeyedArchiver archivedDataWithRootObject:song.albumImage];
     
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
-    //NSLog(@"Sending Image %@\n", song.albumImage);
 }
 
 - (void)requestMusicDataForSong:(RemoteSong*)song withAvailableBytes:(NSInteger)bytes
@@ -416,6 +416,13 @@
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = FinishedStreaming;
     message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+
+- (void)bootPeer:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = Booted;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
 }
 

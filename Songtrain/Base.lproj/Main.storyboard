@@ -50,6 +50,9 @@
                                 <state key="normal" image="dj-32">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="editAllTableViews:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wzq-AS-51d"/>
+                                </connections>
                             </button>
                             <view alpha="0.79999999999999982" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JL0-VU-Pra">
                                 <rect key="frame" x="0.0" y="542" width="600" height="58"/>
@@ -307,6 +310,7 @@
                         <outlet property="currentSongArtist" destination="5mu-8i-uAv" id="AhX-ak-0Af"/>
                         <outlet property="currentSongTitle" destination="wco-2X-hgb" id="iHd-dT-YhY"/>
                         <outlet property="currentTime" destination="JkF-pG-cgf" id="HEJ-1O-3Ew"/>
+                        <outlet property="editTableViews" destination="dkq-BQ-Od4" id="vGz-cq-eSB"/>
                         <outlet property="mainTitle" destination="awa-AC-RSY" id="xPQ-HG-nQV"/>
                         <outlet property="peerTableView" destination="OnN-vS-rLS" id="fgi-Za-4Du"/>
                         <outlet property="playOrPauseButton" destination="GTL-Ih-9bH" id="J78-nU-33J"/>

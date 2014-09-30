@@ -20,7 +20,8 @@ enum MessageTypes : NSInteger {
     MusicPacketRequest,
     MusicPacket,
     FinishedStreaming,
-    CurrentTime
+    CurrentTime,
+    Booted
 };
 
 @interface SingleMessage : NSObject

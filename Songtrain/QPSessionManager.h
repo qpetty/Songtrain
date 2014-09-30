@@ -10,8 +10,7 @@
 #import "QPMusicPlayerController.h"
 
 enum CurrentConnectionRole : NSInteger {
-    NotConnected = 1,
-    ServerConnection,
+    ServerConnection = 1,
     ClientConnection
 };
 
@@ -63,4 +62,6 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 - (void)requestAlbumArtwork:(RemoteSong*)song;
 
 - (void)requestMusicDataForSong:(RemoteSong*)song withAvailableBytes:(NSInteger)bytes;
+
+- (void)bootPeer:(MCPeerID*)peer;
 @end

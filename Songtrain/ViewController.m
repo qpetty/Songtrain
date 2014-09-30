@@ -13,8 +13,6 @@
 #import "PeerTableViewCell.h"
 #import "QPSessionManager.h"
 
-#import "NearbyTrainViewController.h"
-
 #ifndef HEX_COLOR
 #define HEX_COLOR
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
@@ -31,6 +29,7 @@
     MusicPickerViewController *musicPicker;
     
     QPSessionManager *sessionManager;
+    BOOL editingTableViews;
 }
 
 - (void)viewDidLoad {
@@ -74,6 +73,8 @@
     //Removes the separators below the last row of the tableviews
     self.songTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    editingTableViews = NO;
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -166,6 +167,7 @@
 
 -(void)finishBrowsingForOthers
 {
+    [sessionManager stopBrowsingForTrains];
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
@@ -173,11 +175,6 @@
     }];
     [self.nearbyTrainBackground removeFromSuperview];
     [self.nearbyTrainsModal removeFromSuperview];
-}
-
--(void)closePresentationController {
-    [sessionManager stopBrowsingForTrains];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)skip:(id)sender {
@@ -221,6 +218,19 @@
     self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
 }
 
+-(IBAction)editAllTableViews:(id)sender {
+    if (editingTableViews == YES) {
+        editingTableViews = NO;
+        self.songTableView.editing = NO;
+        self.peerTableView.editing = NO;
+    }
+    else {
+        editingTableViews = YES;
+        self.songTableView.editing = YES;
+        self.peerTableView.editing = YES;
+    }
+}
+
 #pragma mark UISegmentedControl
 
 -(IBAction)switchTableView:(id)sender {
@@ -232,19 +242,6 @@
         self.songTableView.hidden = YES;
         self.peerTableView.hidden = NO;
     }
-}
-
-#pragma mark PopoverPresentationControllerDelegate
-
--(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
-    return UIModalPresentationCustom;
-}
-
--(UIViewController *)presentationController:(UIPresentationController *)controller viewControllerForAdaptivePresentationStyle:(UIModalPresentationStyle)style {
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller.presentedViewController];
-    controller.presentedViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(closePresentationController)];
-    return navController;
 }
 
 #pragma mark MusicPickerDelegate
@@ -308,9 +305,11 @@
     UITableViewCell *cell = nil;
     if (tableView == self.songTableView) {
         cell = [self songTableView:tableView withIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     else if (tableView == self.peerTableView) {
         cell = [self peerTableView:tableView withIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (tableView == self.nearbyTrainsModal) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"TrainCell" forIndexPath:indexPath];
         MCPeerID *peerID = [sessionManager.peerArray objectAtIndex:indexPath.row];
@@ -342,7 +341,6 @@
         cell.detailLabel.text = oneSong.artistName;
         finalCell = cell;
     }
-    
     return finalCell;
 }
 
@@ -360,8 +358,50 @@
         MCPeerID *onePeer = [sessionManager.connectedPeerArray objectAtIndex:indexPath.row];
         cell.mainLabel.text = onePeer.displayName;
     }
-    
     return cell;
+}
+
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (sessionManager.currentRole == ClientConnection) {
+        return NO;
+    } else if (tableView == self.songTableView && musicPlayer.playlist.count > 0) {
+        return YES;
+    } else if (tableView == self.peerTableView && sessionManager.connectedPeerArray.count > 0) {
+        return YES;
+    }
+    return NO;
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView == self.songTableView && editingStyle == UITableViewCellEditingStyleDelete) {
+        [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
+        if (musicPlayer.playlist.count > 0) {
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        } else {
+            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+        [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
+    } else if (tableView == self.peerTableView && editingStyle == UITableViewCellEditingStyleDelete) {
+        //Remove peer from connectedpeerarray
+        MCPeerID *bootedPeer = [sessionManager.connectedPeerArray objectAtIndex:[indexPath row]];
+        [sessionManager.connectedPeerArray removeObjectAtIndex:[indexPath row]];
+        //Send message to remove peer
+        [sessionManager bootPeer:bootedPeer];
+        
+        if (sessionManager.connectedPeerArray.count > 0) {
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        } else {
+            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+    }
+}
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    Song *tempSong = [musicPlayer.playlist objectAtIndex:sourceIndexPath.row];
+    [musicPlayer.playlist removeObjectAtIndex:sourceIndexPath.row];
+    [musicPlayer.playlist insertObject:tempSong atIndex:destinationIndexPath.row];
+    
+    [sessionManager switchSongFrom:sourceIndexPath.row to:destinationIndexPath.row];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -377,9 +417,16 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.currentSongTitle.text = musicPlayer.currentSong.title;
-            self.currentSongArtist.text = musicPlayer.currentSong.artistName;
-            [self updateImage:musicPlayer.currentSong.albumImage];
+            if (musicPlayer.currentSong == nil) {
+                self.currentSongTitle.text = @" ";
+                self.currentSongArtist.text = @" ";
+                [self updateImage:nil];
+            }
+            else {
+                self.currentSongTitle.text = musicPlayer.currentSong.title;
+                self.currentSongArtist.text = musicPlayer.currentSong.artistName;
+                [self updateImage:musicPlayer.currentSong.albumImage];
+            }
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
@@ -391,6 +438,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.mainTitle.text = sessionManager.server.displayName;
             [self updatePlayOrPauseImage];
+            self.editTableViews.hidden = sessionManager.currentRole == ClientConnection ? YES : NO;
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -400,8 +448,5 @@
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }
-
-
-
 
 @end

@@ -48,6 +48,16 @@
     AUGraphStop(graph);
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
     isServer = NO;
+    
+    [self willChangeValueForKey:@"currentSong"];
+    _currentSong = nil;
+    [self didChangeValueForKey:@"currentSong"];
+    
+    [self willChangeValueForKey:@"currentSongTime"];
+    _currentSongTime.location = 0;
+    _currentSongTime.length = 0;
+    [self didChangeValueForKey:@"currentSongTime"];
+    
     [self willChangeValueForKey:@"playlist"];
     [_playlist removeAllObjects];
     [self didChangeValueForKey:@"playlist"];
