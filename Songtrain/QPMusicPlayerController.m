@@ -103,7 +103,7 @@
     
     [self didChangeValueForKey:@"playlist"];
 
-    NSLog(@"Added %lu songs to the playlist\n", songs.count);
+    NSLog(@"Added %lu songs to the playlist\n", (unsigned long)songs.count);
 }
 
 - (void)removeSongFromPlaylist:(NSUInteger)ndx

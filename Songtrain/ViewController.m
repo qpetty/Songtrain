@@ -198,7 +198,7 @@
         sec -= 60;
     }
     
-    label.text = [NSString stringWithFormat:@"%lu:%.2lu", minutes, sec];
+    label.text = [NSString stringWithFormat:@"%lu:%.2lu", (unsigned long)minutes, (unsigned long)sec];
 }
 
 -(void)updateImage:(UIImage*)image {

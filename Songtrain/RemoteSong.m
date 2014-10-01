@@ -101,7 +101,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
                 if (myInfo->timer == -250) {
                     myInfo->timer = 0;
                 }
-                printf("timer %d\n", myInfo->timer);
+                printf("timer %d\n", (unsigned int)myInfo->timer);
             }
             else {
                 myInfo->timer = -1;

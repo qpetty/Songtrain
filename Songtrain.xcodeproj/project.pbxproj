@@ -316,7 +316,7 @@
 				TargetAttributes = {
 					5A743C0B19CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = L89AYMBA9C;
+						DevelopmentTeam = JX9WQKUYGV;
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -514,7 +514,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
@@ -530,7 +530,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
