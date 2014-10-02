@@ -113,6 +113,12 @@
     [self didChangeValueForKey:@"playlist"];
 }
 
+- (void)removeSongIndexesFromPlaylist:(NSIndexSet*)set {
+    [self willChangeValueForKey:@"playlist"];
+    [_playlist removeObjectsAtIndexes:set];
+    [self didChangeValueForKey:@"playlist"];
+}
+
 - (void)switchSongFromIndex:(NSUInteger)ndx to:(NSUInteger)ndx2
 {
     [self willChangeValueForKey:@"playlist"];

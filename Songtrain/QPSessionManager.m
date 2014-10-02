@@ -424,6 +424,17 @@
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = Booted;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+    
+    NSMutableIndexSet *songsToRemove = [[NSMutableIndexSet alloc] init];
+    
+    [[QPMusicPlayerController sharedMusicPlayer].playlist enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)obj).peer isEqual:peer]) {
+            [songsToRemove addIndex:idx];
+            NSLog(@"Removing: %@ at %lu", ((Song*)obj).title, (unsigned long)idx);
+        }
+    }];
+    
+    [[QPMusicPlayerController sharedMusicPlayer] removeSongIndexesFromPlaylist:songsToRemove];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

@@ -33,6 +33,7 @@
 - (void)addSongToPlaylist:(Song*)song;
 - (void)addSongsToPlaylist:(NSMutableArray*)songs;
 - (void)removeSongFromPlaylist:(NSUInteger)ndx;
+- (void)removeSongIndexesFromPlaylist:(NSIndexSet*)set;
 - (void)switchSongFromIndex:(NSUInteger)ndx to:(NSUInteger)ndx2;
 
 - (void)play;
