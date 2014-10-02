@@ -179,7 +179,6 @@
 
 -(void)updatePlayOrPauseImage {
     [self.controlBar currentlyPlaying:musicPlayer.isRunning];
-    //[self.playOrPauseButton setImage:musicPlayer.isRunning ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
 }
 
 -(void)updateCurrentTime {

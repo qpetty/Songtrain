@@ -530,6 +530,7 @@
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				INFOPLIST_FILE = Songtrain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -546,6 +547,7 @@
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				INFOPLIST_FILE = Songtrain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;

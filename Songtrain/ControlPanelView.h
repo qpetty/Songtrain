@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@interface PassengerView : UIView
+
+@property (weak) IBOutlet UILabel *time;
+
+@end
+
+@interface ConductorView : UIView
+
+@property (weak) IBOutlet UIButton *playButton;
+@property (weak) IBOutlet UILabel *currentTime;
+@property (weak) IBOutlet UILabel *totalTime;
+
+@end
+
 typedef NS_ENUM(NSUInteger, ControlPanelType) {
     ControlPanelConductor,
     ControlPanelPassenger
@@ -25,8 +39,8 @@ typedef NS_ENUM(NSUInteger, ControlPanelType) {
 
 @property (weak) IBOutlet id <ControlPanelDelegate> delegate;
 
-@property UIView *conductorView;
-@property UIView *passengerView;
+@property ConductorView *conductorView;
+@property PassengerView *passengerView;
 
 @property CGRect frame;
 
@@ -34,9 +48,4 @@ typedef NS_ENUM(NSUInteger, ControlPanelType) {
 
 -(void)currentlyPlaying:(BOOL)playing;
 
-/*
--(IBAction)addButtonWasPressed:(id)sender;
--(IBAction)skipButtonWasPressed:(id)sender;
--(IBAction)playButtonWasPressed:(id)sender;
-*/
 @end

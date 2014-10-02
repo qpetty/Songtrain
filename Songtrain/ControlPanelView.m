@@ -10,6 +10,14 @@
 
 #define CONTROLPANEL_XIB_NAME @"ControlPanelView"
 
+@implementation PassengerView
+
+@end
+
+@implementation ConductorView
+
+@end
+
 @implementation ControlPanelView {
     UIButton *playbutton;
 }
@@ -58,13 +66,7 @@
 }
 
 -(void)currentlyPlaying:(BOOL)playing {
-    //NSLog(@"updating play/pause, playing %@", playing == YES ? @"YES" : @"NO");
-    /*
-    NSLog(@"play button: %@", playbutton);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [playbutton setImage:playing ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-    });
-     */
+    [self.conductorView.playButton setImage:playing ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
 }
 
 -(IBAction)addButtonWasPressed:(id)sender {

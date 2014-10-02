@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ControlPanelView"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view alpha="0.80000001192092896" contentMode="scaleToFill" id="W3m-nh-BXj" userLabel="Conductor">
+        <view alpha="0.80000001192092896" contentMode="scaleToFill" id="W3m-nh-BXj" userLabel="Conductor" customClass="ConductorView">
             <rect key="frame" x="0.0" y="0.0" width="492" height="113"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -140,9 +140,14 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="currentTime" destination="PJ3-Zf-J5s" id="Vf4-ML-mp7"/>
+                <outlet property="playButton" destination="c2c-pv-NTv" id="ngt-xP-GW7"/>
+                <outlet property="totalTime" destination="zzj-5Z-H3d" id="l3Y-ky-F3U"/>
+            </connections>
             <point key="canvasLocation" x="-516" y="46.5"/>
         </view>
-        <view alpha="0.80000001192092896" contentMode="scaleToFill" id="wJd-5e-XeE" userLabel="Passenger">
+        <view alpha="0.80000001192092896" contentMode="scaleToFill" id="wJd-5e-XeE" userLabel="Passenger" customClass="PassengerView">
             <rect key="frame" x="0.0" y="0.0" width="491" height="113"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -228,6 +233,9 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="time" destination="TGa-h8-n6m" id="0ec-4P-NkS"/>
+            </connections>
             <point key="canvasLocation" x="-515.5" y="226.5"/>
         </view>
     </objects>
