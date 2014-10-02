@@ -9,28 +9,31 @@
 #import <UIKit/UIKit.h>
 #import "MusicPickerViewController.h"
 #import "MarqueeLabel.h"
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate>
+#import "ControlPanelView.h"
 
-@property IBOutlet UITableView *songTableView;
-@property IBOutlet UITableView *peerTableView;
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate>
 
-@property IBOutlet UILabel *mainTitle;
+@property (weak) IBOutlet UITableView *songTableView;
+@property (weak) IBOutlet UITableView *peerTableView;
 
-@property IBOutlet MarqueeLabel *currentSongTitle;
-@property IBOutlet MarqueeLabel *currentSongArtist;
-@property IBOutlet UIImageView *currentAlbumArtwork;
-@property IBOutlet UILabel *currentTime;
-@property IBOutlet UILabel *totalTime;
+@property (weak) IBOutlet UILabel *mainTitle;
 
-@property IBOutlet UIButton *browseForOtherTrains;
-@property IBOutlet UIButton *editTableViews;
+@property (weak) IBOutlet MarqueeLabel *currentSongTitle;
+@property (weak) IBOutlet MarqueeLabel *currentSongArtist;
+@property (weak) IBOutlet UIImageView *currentAlbumArtwork;
+@property (weak) IBOutlet UILabel *currentTime;
+@property (weak) IBOutlet UILabel *totalTime;
 
-@property IBOutlet UIButton *playOrPauseButton;
-@property IBOutlet UIButton *skip;
+@property (weak) IBOutlet UIButton *browseForOtherTrains;
+@property (weak) IBOutlet UIButton *editTableViews;
 
-@property IBOutlet UISegmentedControl *tracksAndPassengers;
+@property (weak) IBOutlet UIButton *playOrPauseButton;
+@property (weak) IBOutlet UIButton *skip;
 
-@property IBOutlet UIProgressView *progressBar;
+@property (weak) IBOutlet UISegmentedControl *tracksAndPassengers;
+
+@property (weak) IBOutlet UIProgressView *progressBar;
+@property (weak) IBOutlet ControlPanelView *controlBar;
 
 @property UIImageView *backgroundImage;
 @property UIImageView *backgroundOverlay;

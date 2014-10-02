@@ -96,7 +96,6 @@
 }
 
 -(void)viewDidLayoutSubviews {
-    
     [self.backgroundOverlay setFrame:self.view.frame];
 
     self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
@@ -110,7 +109,6 @@
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -170,17 +168,18 @@
     [self.nearbyTrainsModal removeFromSuperview];
 }
 
--(IBAction)skip:(id)sender {
+-(void)skipPressed:(UIButton *)sender {
     [musicPlayer skip];
 }
 
--(IBAction)playAndPause:(id)sender {
+-(void)playOrPausedPressed:(UIButton *)sender {
     [musicPlayer play];
     [self updatePlayOrPauseImage];
 }
 
 -(void)updatePlayOrPauseImage {
-    [self.playOrPauseButton setImage:musicPlayer.isRunning ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.controlBar currentlyPlaying:musicPlayer.isRunning];
+    //[self.playOrPauseButton setImage:musicPlayer.isRunning ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
 }
 
 -(void)updateCurrentTime {
@@ -239,7 +238,7 @@
 
 #pragma mark MusicPickerDelegate
 
--(IBAction)openMusicPicker:(id)sender {
+-(void)addPressed:(UIButton *)sender {
     [self presentViewController:musicPicker animated:YES completion:nil];
 }
 
@@ -431,7 +430,15 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.mainTitle.text = sessionManager.server.displayName;
             [self updatePlayOrPauseImage];
-            self.editTableViews.hidden = sessionManager.currentRole == ClientConnection ? YES : NO;
+
+            if (sessionManager.currentRole == ClientConnection) {
+                self.editTableViews.hidden = YES;
+                [self.controlBar switchControlPanel:ControlPanelPassenger];
+            }
+            else {
+                self.editTableViews.hidden = NO;
+                [self.controlBar switchControlPanel:ControlPanelConductor];
+            }
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
