@@ -184,19 +184,7 @@
 -(void)updateCurrentTime {
     NSRange currentTime = musicPlayer.currentSongTime;
     self.progressBar.progress = (float)currentTime.location / (float)currentTime.length;
-    [self updateLabel:self.currentTime withSeconds:currentTime.location];
-    [self updateLabel:self.totalTime withSeconds:currentTime.length];
-}
-
--(void)updateLabel:(UILabel*)label withSeconds:(NSUInteger)sec {
-    NSUInteger minutes = 0;
-    
-    while (sec >= 60) {
-        minutes++;
-        sec -= 60;
-    }
-    
-    label.text = [NSString stringWithFormat:@"%lu:%.2lu", (unsigned long)minutes, (unsigned long)sec];
+    [self.controlBar updateTimeLabel:currentTime];
 }
 
 -(void)updateImage:(UIImage*)image {

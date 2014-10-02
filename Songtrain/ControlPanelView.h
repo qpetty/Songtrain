@@ -42,10 +42,8 @@ typedef NS_ENUM(NSUInteger, ControlPanelType) {
 @property ConductorView *conductorView;
 @property PassengerView *passengerView;
 
-@property CGRect frame;
-
 -(void)switchControlPanel:(ControlPanelType)type;
-
 -(void)currentlyPlaying:(BOOL)playing;
+-(void)updateTimeLabel:(NSRange)timeRange;
 
 @end

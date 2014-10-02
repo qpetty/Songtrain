@@ -69,6 +69,29 @@
     [self.conductorView.playButton setImage:playing ? [UIImage imageNamed:@"pause"] :[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
 }
 
+-(void)updateTimeLabel:(NSRange)timeRange {
+    NSString *currentTimeString = [self timeStringFromSeconds:timeRange.location];
+    NSString *totalTimeString = [self timeStringFromSeconds:timeRange.length];
+    
+    //Conductor Label
+    self.conductorView.currentTime.text = currentTimeString;
+    self.conductorView.totalTime.text = totalTimeString;
+    
+    //Passenger Label
+    self.passengerView.time.text = [NSString stringWithFormat:@"%@-%@", currentTimeString, totalTimeString];
+}
+
+-(NSString*)timeStringFromSeconds:(NSUInteger)sec {
+    NSUInteger minutes = 0;
+    
+    while (sec >= 60) {
+        minutes++;
+        sec -= 60;
+    }
+    
+    return [NSString stringWithFormat:@"%lu:%.2lu", (unsigned long)minutes, (unsigned long)sec];
+}
+
 -(IBAction)addButtonWasPressed:(id)sender {
     [self.delegate addPressed:sender];
 }
