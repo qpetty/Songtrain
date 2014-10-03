@@ -26,15 +26,6 @@
     return self;
 }
 
-- (UIImage *)applyBlurOnImage: (UIImage *)imageToBlur withRadius: (CGFloat)blurRadius {
-    
-    CIImage *originalImage = [CIImage imageWithCGImage: imageToBlur.CGImage];
-    CIFilter *filter = [CIFilter filterWithName: @"CIGaussianBlur" keysAndValues: kCIInputImageKey, originalImage, @"inputRadius", @(blurRadius), nil];
-    CIImage *outputImage = filter.outputImage;
-    CIContext *context = [CIContext contextWithOptions:nil];
-    CGImageRef outImage = [context createCGImage: outputImage fromRect: [outputImage extent]]; return [UIImage imageWithCGImage: outImage];
-}
-
 -(id)init
 {
     self = [super init];
@@ -43,17 +34,14 @@
         wholeTableView.dataSource = self;
         wholeTableView.delegate = self;
         
-        UIImage *blurredImage = [UIImage imageNamed:@"station_splash2"];
-        wholeTableView.backgroundView = [[UIImageView alloc] initWithImage:blurredImage];
-        wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
+        wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
         wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
-        wholeTableView.sectionIndexColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
+        wholeTableView.sectionIndexColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
         
-        [wholeTableView setBackgroundColor: [UIColor clearColor]];
-        [wholeTableView setSeparatorColor:UIColorFromRGBWithAlpha(0x222222, 1.0)];
+        wholeTableView.separatorColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
         
-        [wholeTableView.layer setBorderWidth:0.5f];
-        [wholeTableView.layer setBorderColor:UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor];
+        wholeTableView.layer.borderWidth = 0.5f;
+        wholeTableView.layer.borderColor = UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor;
         
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
         self.navigationItem.rightBarButtonItem = item;

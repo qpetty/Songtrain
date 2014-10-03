@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="FM8-D0-d6n">
-                                <rect key="frame" x="8" y="184" width="584" height="29"/>
+                                <rect key="frame" x="16" y="184" width="568" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="g0t-En-nHy"/>
                                 </constraints>
@@ -68,6 +68,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="185" y="33" width="33" height="21"/>
+                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="albumart_default" translatesAutoresizingMaskIntoConstraints="NO" id="UGe-gO-CiS">
                                 <rect key="frame" x="16" y="83" width="85" height="85"/>
@@ -127,7 +130,9 @@
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="wmX-yx-Jqm" secondAttribute="bottom" id="6Va-Px-Jut"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wco-2X-hgb" secondAttribute="trailing" id="9c5-AG-rHv"/>
                             <constraint firstItem="OnN-vS-rLS" firstAttribute="top" secondItem="FM8-D0-d6n" secondAttribute="bottom" constant="8" id="9r4-5v-xsG"/>
-                            <constraint firstAttribute="trailing" secondItem="FM8-D0-d6n" secondAttribute="trailing" constant="8" id="AwX-80-bTT"/>
+                            <constraint firstAttribute="trailing" secondItem="FM8-D0-d6n" secondAttribute="trailing" constant="16" id="AwX-80-bTT">
+                                <variation key="widthClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstItem="wmX-yx-Jqm" firstAttribute="top" secondItem="OnN-vS-rLS" secondAttribute="bottom" id="AyN-06-Dx4"/>
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="UEy-Lb-6G7" secondAttribute="bottom" id="BhC-07-PYa"/>
                             <constraint firstItem="dkq-BQ-Od4" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="CrS-TK-YaC"/>
@@ -139,7 +144,9 @@
                             <constraint firstAttribute="trailing" secondItem="OnN-vS-rLS" secondAttribute="trailing" id="M5o-jC-dIO"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="leading" secondItem="5mu-8i-uAv" secondAttribute="leading" id="Miu-NI-9wT"/>
                             <constraint firstAttribute="trailing" secondItem="UEy-Lb-6G7" secondAttribute="trailing" id="PJL-F7-3fH"/>
-                            <constraint firstItem="FM8-D0-d6n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="PpL-uw-VN1"/>
+                            <constraint firstItem="FM8-D0-d6n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="PpL-uw-VN1">
+                                <variation key="widthClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstAttribute="centerX" secondItem="awa-AC-RSY" secondAttribute="centerX" id="QM6-MA-4Ng"/>
                             <constraint firstAttribute="bottom" secondItem="JL0-VU-Pra" secondAttribute="bottom" id="XaM-fB-5HA"/>
                             <constraint firstItem="OnN-vS-rLS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="aqm-89-y97"/>
