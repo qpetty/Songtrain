@@ -10,8 +10,9 @@
 #import "MusicPickerViewController.h"
 #import "MarqueeLabel.h"
 #import "ControlPanelView.h"
+#import "AnimatedCollectionViewCell.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (weak) IBOutlet UITableView *songTableView;
 @property (weak) IBOutlet UITableView *peerTableView;
@@ -38,8 +39,10 @@
 @property UIImageView *backgroundImage;
 @property UIImageView *backgroundOverlay;
 
-@property UITableView *nearbyTrainsModal;
+@property UICollectionView *nearbyTrainsModal;
 @property UIView *nearbyTrainBackground;
+
+@property int lastIndex;
 
 -(void)updatePlayOrPauseImage;
 

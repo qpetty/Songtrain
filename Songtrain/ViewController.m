@@ -12,6 +12,7 @@
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
 #import "QPSessionManager.h"
+#import "AnimatedCollectionViewFlowLayout.h"
 
 @interface ViewController ()
 
@@ -32,8 +33,9 @@
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
-    self.nearbyTrainsModal = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"TrainCellView" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"TrainCell"];
+    UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
+    self.nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 0, 0) collectionViewLayout:layout];
+    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
     
@@ -152,6 +154,7 @@
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
 
     } completion:^(BOOL finished) {
+
     }];
     
 }
@@ -256,10 +259,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (tableView != self.nearbyTrainsModal) {
-        return;
-    }
+   
     [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
     [self finishBrowsingForOthers];
 }
@@ -273,8 +273,6 @@
         numRows = musicPlayer.playlist.count;
     } else if (tableView == self.peerTableView) {
         numRows = sessionManager.connectedPeerArray.count;
-    } else if (tableView == self.nearbyTrainsModal) {
-        return sessionManager.peerArray.count;
     }
     return numRows < 1 ? 1 : numRows;
 }
@@ -289,10 +287,6 @@
     else if (tableView == self.peerTableView) {
         cell = [self peerTableView:tableView withIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (tableView == self.nearbyTrainsModal) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"TrainCell" forIndexPath:indexPath];
-        MCPeerID *peerID = [sessionManager.peerArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = peerID.displayName;
     }
     return cell;
 }
@@ -429,11 +423,47 @@
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.nearbyTrainsModal reloadData];
+            NSMutableArray *indexes = [[NSMutableArray alloc] init];
+            if (sessionManager.peerArray.count >= 1) {
+                for (int i = 0; i < sessionManager.peerArray.count; i++) {
+                    [indexes addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+                }
+               // [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:sessionManager.peerArray.count -1 inSection:0]]];
+                //[self.nearbyTrainsModal reloadData];
+               
+                [self.nearbyTrainsModal performBatchUpdates:^{
+                    //[self.nearbyTrainsModal insertItemsAtIndexPaths:indexes];
+                }completion:^(BOOL done){
+                    [self.nearbyTrainsModal  reloadData];
+                }];
+            }
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if (section == 0)
+        return sessionManager.peerArray.count;
+    else
+        return 0;
+}
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    AnimatedCollectionViewCell *cell = [self.nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
+    
+    if (!cell) {
+        NSLog(@"something is very wrong");
+    }
+
+    cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.item] displayName];
+    return cell;
 }
 
 @end
