@@ -10,8 +10,9 @@
 
 @interface PassengerView : UIView
 
-@property (weak) IBOutlet UILabel *time;
-
+//@property (weak) IBOutlet UILabel *time;
+@property (weak) IBOutlet UILabel *currentTime;
+@property (weak) IBOutlet UILabel *totalTime;
 @end
 
 @interface ConductorView : UIView

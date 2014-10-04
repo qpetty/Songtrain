@@ -78,7 +78,10 @@
     self.conductorView.totalTime.text = totalTimeString;
     
     //Passenger Label
-    self.passengerView.time.text = [NSString stringWithFormat:@"%@-%@", currentTimeString, totalTimeString];
+    self.passengerView.currentTime.text = currentTimeString;
+    self.passengerView.totalTime.text = totalTimeString;
+    //Use for the longer time format if we ever need it. Will need to remove the currentTime and totalTime IBOutlets and replace with a single time Label
+    //self.passengerView.time.text = [NSString stringWithFormat:@"%@-%@", currentTimeString, totalTimeString];
 }
 
 -(NSString*)timeStringFromSeconds:(NSUInteger)sec {
