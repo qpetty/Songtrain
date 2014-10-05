@@ -12,7 +12,19 @@
 #import "LocalSong.h"
 #import "RemoteSong.h"
 
+@protocol QPMusicPlayerPlaylistDelegate <NSObject>
+
+-(void)songAdded:(Song*)song atIndex:(NSUInteger)ndx;
+-(void)songRemoved:(Song*)song atIndex:(NSInteger)ndx;
+-(void)songsRemovedAtIndexSet:(NSIndexSet*)ndxSet;
+
+-(void)songMoved:(Song*)song fromIndex:(NSUInteger)ndx1 toIndex:(NSUInteger)ndx2;
+
+@end
+
 @interface QPMusicPlayerController : NSObject
+
+@property (weak, nonatomic) id <QPMusicPlayerPlaylistDelegate> delegate;
 
 @property (nonatomic, retain, readonly) Song *currentSong;
 @property (atomic, assign, readonly) NSRange currentSongTime;

@@ -10,8 +10,9 @@
 #import "MusicPickerViewController.h"
 #import "MarqueeLabel.h"
 #import "ControlPanelView.h"
+#import "QPMusicPlayerController.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate, QPMusicPlayerPlaylistDelegate>
 
 @property (weak) IBOutlet UITableView *songTableView;
 @property (weak) IBOutlet UITableView *peerTableView;

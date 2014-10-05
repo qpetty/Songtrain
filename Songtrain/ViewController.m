@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import <CoreImage/CoreImage.h>
-#import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
 #import "QPSessionManager.h"
@@ -45,6 +44,7 @@
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
+    musicPlayer.delegate = self;
     
     sessionManager = [QPSessionManager sessionManager];
     [sessionManager createServer];
@@ -122,7 +122,6 @@
     [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
     [sessionManager addObserver:self forKeyPath:@"peerArray" options:NSKeyValueObservingOptionNew context:nil];
     [sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
-    [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
@@ -134,7 +133,6 @@
     [sessionManager removeObserver:self forKeyPath:@"server"];
     [sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
     [sessionManager removeObserver:self forKeyPath:@"peerArray"];
-    [musicPlayer removeObserver:self forKeyPath:@"playlist"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
@@ -378,20 +376,48 @@
 }
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    Song *tempSong = [musicPlayer.playlist objectAtIndex:sourceIndexPath.row];
-    [musicPlayer.playlist removeObjectAtIndex:sourceIndexPath.row];
-    [musicPlayer.playlist insertObject:tempSong atIndex:destinationIndexPath.row];
-    
+    [musicPlayer switchSongFromIndex:sourceIndexPath.row to:destinationIndexPath.row];
     [sessionManager switchSongFrom:sourceIndexPath.row to:destinationIndexPath.row];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"playlist"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.songTableView reloadData];
-        });
+#pragma mark QPMusicPlayerPlaylistDelegate
+
+-(void)songAdded:(Song *)song atIndex:(NSUInteger)ndx {
+    
+    [self.songTableView beginUpdates];
+    if (musicPlayer.playlist.count == 1) {
+        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
     }
-    else if ([keyPath isEqualToString:@"connectedPeerArray"]) {
+    [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    [self.songTableView endUpdates];
+}
+
+-(void)songRemoved:(Song *)song atIndex:(NSInteger)ndx {
+    [self.songTableView beginUpdates];
+    [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    if (musicPlayer.playlist.count == 0) {
+        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+    [self.songTableView endUpdates];
+}
+
+-(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
+    [self.songTableView beginUpdates];
+    [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:idx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    if (musicPlayer.playlist.count == 0) {
+        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+    [self.songTableView endUpdates];
+}
+
+-(void)songMoved:(Song *)song fromIndex:(NSUInteger)ndx1 toIndex:(NSUInteger)ndx2 {
+    [self.songTableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:ndx1 inSection:0] toIndexPath:[NSIndexPath indexPathForRow:ndx2 inSection:0]];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"connectedPeerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.peerTableView reloadData];
         });
@@ -428,6 +454,7 @@
                 self.editTableViews.hidden = NO;
                 [self.controlBar switchControlPanel:ControlPanelConductor];
             }
+            [self.songTableView reloadData];
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{

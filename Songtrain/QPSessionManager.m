@@ -189,7 +189,6 @@
             [[QPMusicPlayerController sharedMusicPlayer] removeSongFromPlaylist:mess.firstIndex];
         }
         else if (mess.message == SwitchSong && _currentRole == ClientConnection) {
-            NSLog(@"first: %ld   second: %ld\n", (long)mess.firstIndex, (long)mess.secondIndex);
             [[QPMusicPlayerController sharedMusicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
         else if (mess.message == MusicPacketRequest) {
@@ -230,7 +229,7 @@
             [[QPMusicPlayerController sharedMusicPlayer] updateCurrentSong:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
         }
         else if (mess.message == Booted) {
-            NSLog(@"I just got booted");
+            NSLog(@"I, %@, just got booted :(", self.pid.displayName);
             [self restartSession];
         }
     });
@@ -238,6 +237,10 @@
 
 - (Song*)makeSongFromReceivedSong:(Song*)song fromPeer:(MCPeerID*)peerID {
     Song *newSong;
+    
+    if (song == nil) {
+        return nil;
+    }
     
     if ([song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)song).peer isEqual:self.pid]) {
         newSong = [[LocalSong alloc] initLocalSongFromSong:song WithOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
@@ -440,12 +443,15 @@
     message.message = Booted;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
     
+    [self removeSongsFromPeer:peer];
+}
+
+-(void)removeSongsFromPeer:(MCPeerID*)peer {
     NSMutableIndexSet *songsToRemove = [[NSMutableIndexSet alloc] init];
     
     [[QPMusicPlayerController sharedMusicPlayer].playlist enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ([obj isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)obj).peer isEqual:peer]) {
             [songsToRemove addIndex:idx];
-            NSLog(@"Removing: %@ at %lu", ((Song*)obj).title, (unsigned long)idx);
         }
     }];
     

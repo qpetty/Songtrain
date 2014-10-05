@@ -91,32 +91,34 @@
     [self willChangeValueForKey:@"playlist"];
     [_playlist addObject:song];
     [self didChangeValueForKey:@"playlist"];
+    [self.delegate songAdded:song atIndex:self.playlist.count - 1];
 }
 
 - (void)addSongsToPlaylist:(NSMutableArray*)songs
 {
-    [self willChangeValueForKey:@"playlist"];
     for (Song *item in songs){
-        //NSLog(@"%@", item.url.path);
-        [_playlist addObject:item];
+        [self addSongToPlaylist:item];
     }
-    
-    [self didChangeValueForKey:@"playlist"];
 
     NSLog(@"Added %lu songs to the playlist\n", (unsigned long)songs.count);
 }
 
 - (void)removeSongFromPlaylist:(NSUInteger)ndx
 {
+    Song *removedSong = [_playlist objectAtIndex:ndx];
     [self willChangeValueForKey:@"playlist"];
     [_playlist removeObjectAtIndex:ndx];
     [self didChangeValueForKey:@"playlist"];
+    
+    [self.delegate songRemoved:removedSong atIndex:ndx];
 }
 
 - (void)removeSongIndexesFromPlaylist:(NSIndexSet*)set {
     [self willChangeValueForKey:@"playlist"];
     [_playlist removeObjectsAtIndexes:set];
     [self didChangeValueForKey:@"playlist"];
+    
+    [self.delegate songsRemovedAtIndexSet:set];
 }
 
 - (void)switchSongFromIndex:(NSUInteger)ndx to:(NSUInteger)ndx2
@@ -125,8 +127,9 @@
     Song *tempSong = [_playlist objectAtIndex:ndx];
     [_playlist removeObjectAtIndex:ndx];
     [_playlist insertObject:tempSong atIndex:ndx2];
-    
     [self didChangeValueForKey:@"playlist"];
+    
+    [self.delegate songMoved:tempSong fromIndex:ndx toIndex:ndx2];
 }
 
 - (void)play
@@ -182,7 +185,8 @@
         
         [self willChangeValueForKey:@"playlist"];
             [self updateCurrentSong:[_playlist firstObject]];
-            [_playlist removeObjectAtIndex:0];
+            //[_playlist removeObjectAtIndex:0];
+            [self removeSongFromPlaylist:0];
         [self didChangeValueForKey:@"playlist"];
     }
 }
