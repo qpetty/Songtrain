@@ -14,13 +14,10 @@ enum CurrentConnectionRole : NSInteger {
     ClientConnection
 };
 
-@protocol QPSessionManagerDelegate <NSObject>
+@protocol QPBrowsingManagerDelegate <NSObject>
 
 - (void)connectedToPeer:(MCPeerID*)peerID;
 - (void)disconnectedFromPeer:(MCPeerID*)peerID;
-
-@optional
-- (void)availablePeersUpdated:(NSMutableArray*)peerArray;
 
 @end
 
@@ -37,7 +34,7 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
     MCSession *mainSession;
 }
 
-@property (weak, nonatomic) id <QPSessionManagerDelegate> delegate;
+@property (weak, nonatomic) id <QPBrowsingManagerDelegate> delegate;
 @property (atomic, retain, readonly) MCPeerID *pid;
 @property (atomic, retain, readonly) MCPeerID *server;
 @property (atomic, retain, readonly) NSMutableArray *peerArray;

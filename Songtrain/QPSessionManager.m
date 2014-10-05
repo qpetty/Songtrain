@@ -272,6 +272,7 @@
         [self willChangeValueForKey:@"peerArray"];
         [_peerArray addObject:peerID];
         [self didChangeValueForKey:@"peerArray"];
+        [self.delegate connectedToPeer:peerID];
     }
 }
 
@@ -281,6 +282,7 @@
     [self willChangeValueForKey:@"peerArray"];
     [_peerArray removeObjectIdenticalTo:peerID];
     [self didChangeValueForKey:@"peerArray"];
+    [self.delegate disconnectedFromPeer:peerID];
 }
 
 #pragma mark - Data Methods

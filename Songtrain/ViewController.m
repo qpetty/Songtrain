@@ -11,7 +11,6 @@
 #import "QPMusicPlayerController.h"
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
-#import "QPSessionManager.h"
 #import "AnimatedCollectionViewFlowLayout.h"
 
 @interface ViewController ()
@@ -49,6 +48,7 @@
     [musicPlayer resetToServer];
     
     sessionManager = [QPSessionManager sessionManager];
+    sessionManager.delegate = self;
     [sessionManager createServer];
     
     musicPicker = [[MusicPickerViewController alloc] init];
@@ -142,6 +142,7 @@
     [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
 }
 
+#pragma mark Browsing Popup
 
 -(IBAction)browseForOthers:(id)sender {
     [sessionManager startBrowsingForTrains];
@@ -296,18 +297,12 @@
     
     if (musicPlayer.playlist.count < 1){
         PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
-        if (!cell) {
-            NSLog(@"Something went wrong because we dont have a tableviewcell");
-        }
         cell.backgroundColor = [UIColor clearColor];
         cell.mainLabel.text = @"No Songs";
         finalCell = cell;
     }
     else {
         SongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SongCell"];
-        if (!cell) {
-            NSLog(@"Something went wrong because we dont have a tableviewcell");
-        }
         cell.backgroundColor = [UIColor clearColor];
         Song *oneSong = [musicPlayer.playlist objectAtIndex:indexPath.row];
         cell.mainLabel.text = oneSong.title;
@@ -320,9 +315,6 @@
 -(UITableViewCell *)peerTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
     PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
     cell.backgroundColor = [UIColor clearColor];
-    if (!cell) {
-        NSLog(@"Something went wrong because we dont have a tableviewcell");
-    }
     
     if (sessionManager.connectedPeerArray.count < 1){
         cell.mainLabel.text = @"No Passengers";
@@ -375,6 +367,20 @@
     [musicPlayer.playlist insertObject:tempSong atIndex:destinationIndexPath.row];
     
     [sessionManager switchSongFrom:sourceIndexPath.row to:destinationIndexPath.row];
+}
+
+#pragma mark QPBrowsingManagerDelegate methods
+
+-(void)connectedToPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"Cnnected to peer in view controller");
+    });
+}
+
+-(void)disconnectedFromPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"disconnnected from peer in view controller");
+    });
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -430,12 +436,13 @@
                 }
                // [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:sessionManager.peerArray.count -1 inSection:0]]];
                 //[self.nearbyTrainsModal reloadData];
-               
+               /*
                 [self.nearbyTrainsModal performBatchUpdates:^{
                     [self.nearbyTrainsModal insertItemsAtIndexPaths:indexes];
                 }completion:^(BOOL done){
                     [self.nearbyTrainsModal  reloadData];
                 }];
+                */
             }
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
@@ -457,10 +464,6 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     AnimatedCollectionViewCell *cell = [self.nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
-    
-    if (!cell) {
-        NSLog(@"something is very wrong");
-    }
 
     cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.item] displayName];
     return cell;
