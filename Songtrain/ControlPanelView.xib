@@ -15,9 +15,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="123" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAH-vJ-Sg8">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="17.5" y="12.5" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="kAH-vJ-Sg8" secondAttribute="height" multiplier="1:1" id="Wfe-Xr-4LW"/>
+                                <constraint firstAttribute="width" secondItem="kAH-vJ-Sg8" secondAttribute="height" multiplier="1:1" id="nRG-1Q-Vg4"/>
                             </constraints>
                             <state key="normal" image="add">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -31,23 +31,22 @@
                     <constraints>
                         <constraint firstAttribute="centerX" secondItem="kAH-vJ-Sg8" secondAttribute="centerX" id="Gmg-i4-YOv"/>
                         <constraint firstAttribute="centerY" secondItem="kAH-vJ-Sg8" secondAttribute="centerY" id="nrv-dL-6AO"/>
-                        <constraint firstItem="kAH-vJ-Sg8" firstAttribute="top" secondItem="Qrn-a0-IlQ" secondAttribute="top" constant="10" id="oCy-SU-aeK"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Vv-Dy-Zex" userLabel="Time">
                     <rect key="frame" x="123" y="0.0" width="123" height="113"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e4f-D3-Y0C">
-                            <rect key="frame" x="0.0" y="41" width="123" height="32"/>
+                            <rect key="frame" x="0.0" y="41" width="123" height="31.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PJ3-Zf-J5s">
-                                    <rect key="frame" x="47" y="0.0" width="29" height="17"/>
+                                    <rect key="frame" x="47" y="0.0" width="28.5" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zzj-5Z-H3d">
-                                    <rect key="frame" x="49" y="17" width="25" height="15"/>
+                                    <rect key="frame" x="49" y="17" width="24.5" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.7725490196" green="0.81960784310000001" blue="0.87058823529999996" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -74,9 +73,9 @@
                     <rect key="frame" x="246" y="0.0" width="123" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c2c-pv-NTv">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="17.5" y="12.5" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="c2c-pv-NTv" secondAttribute="height" multiplier="1:1" id="dWE-hb-W4u"/>
+                                <constraint firstAttribute="width" secondItem="c2c-pv-NTv" secondAttribute="height" multiplier="1:1" id="Gs6-Mi-wtG"/>
                             </constraints>
                             <state key="normal" image="play">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -89,7 +88,6 @@
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="centerY" secondItem="c2c-pv-NTv" secondAttribute="centerY" id="7VJ-EK-rkV"/>
-                        <constraint firstItem="c2c-pv-NTv" firstAttribute="top" secondItem="iUj-LB-ZHs" secondAttribute="top" constant="10" id="B3f-4e-FRz"/>
                         <constraint firstAttribute="centerX" secondItem="c2c-pv-NTv" secondAttribute="centerX" id="E1R-rx-Qj5"/>
                     </constraints>
                 </view>
@@ -97,9 +95,9 @@
                     <rect key="frame" x="369" y="0.0" width="123" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ASe-O5-arA">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="17" y="12" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="ASe-O5-arA" secondAttribute="height" multiplier="1:1" id="jmQ-BF-cpq"/>
+                                <constraint firstAttribute="width" secondItem="ASe-O5-arA" secondAttribute="height" multiplier="1:1" id="4Mh-JJ-Idu"/>
                             </constraints>
                             <state key="normal" image="skip">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -112,7 +110,6 @@
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="centerX" secondItem="ASe-O5-arA" secondAttribute="centerX" id="HhJ-Nm-cbc"/>
-                        <constraint firstItem="ASe-O5-arA" firstAttribute="top" secondItem="6UQ-Qu-wkm" secondAttribute="top" constant="10" id="PoT-bo-CBM"/>
                         <constraint firstAttribute="centerY" secondItem="ASe-O5-arA" secondAttribute="centerY" id="p4S-bZ-HzB"/>
                     </constraints>
                 </view>
@@ -155,9 +152,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="123" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tom-Cs-TEi">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="17.5" y="12.5" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="tom-Cs-TEi" secondAttribute="height" multiplier="1:1" id="RRV-mA-Xgt"/>
+                                <constraint firstAttribute="width" secondItem="tom-Cs-TEi" secondAttribute="height" multiplier="1:1" id="KGh-Pb-kjG"/>
                             </constraints>
                             <state key="normal" image="add">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -170,24 +167,23 @@
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="centerX" secondItem="tom-Cs-TEi" secondAttribute="centerX" id="IO5-Ao-RRC"/>
-                        <constraint firstItem="tom-Cs-TEi" firstAttribute="top" secondItem="WPh-W6-CkU" secondAttribute="top" constant="10" id="U77-NX-gty"/>
                         <constraint firstAttribute="centerY" secondItem="tom-Cs-TEi" secondAttribute="centerY" id="Ztp-uf-80a"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zcz-YO-nkQ" userLabel="Time">
-                    <rect key="frame" x="123" y="0.0" width="123" height="113"/>
+                    <rect key="frame" x="123" y="0.0" width="122.5" height="113"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QWd-Yi-ygP">
-                            <rect key="frame" x="0.0" y="41" width="123" height="32"/>
+                            <rect key="frame" x="0.0" y="41" width="123" height="31.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5r-Lo-fpt">
-                                    <rect key="frame" x="47" y="0.0" width="29" height="17"/>
+                                    <rect key="frame" x="47" y="0.0" width="28.5" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UbO-Ja-J3A">
-                                    <rect key="frame" x="49" y="17" width="25" height="15"/>
+                                    <rect key="frame" x="49" y="17" width="24.5" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.7725490196" green="0.81960784310000001" blue="0.87058823529999996" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -214,34 +210,30 @@
                     <rect key="frame" x="245" y="0.0" width="123" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eoV-iw-WLV">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="17" y="12" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="eoV-iw-WLV" secondAttribute="height" multiplier="1:1" id="rAX-Sy-5UA"/>
+                                <constraint firstAttribute="width" secondItem="eoV-iw-WLV" secondAttribute="height" multiplier="1:1" id="YhI-HS-GeD"/>
                             </constraints>
-                            <state key="normal" image="skip">
+                            <state key="normal" image="pause_disabled">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
-                            <connections>
-                                <action selector="skipButtonWasPressed:" destination="-1" eventType="touchUpInside" id="pAw-uz-fhE"/>
-                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="eoV-iw-WLV" firstAttribute="top" secondItem="U9c-KS-VvK" secondAttribute="top" constant="10" id="1eE-Jk-rOW"/>
                         <constraint firstAttribute="centerY" secondItem="eoV-iw-WLV" secondAttribute="centerY" id="6qU-PI-KiH"/>
                         <constraint firstAttribute="centerX" secondItem="eoV-iw-WLV" secondAttribute="centerX" id="PM5-DN-vS6"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FFq-6x-4WA" userLabel="Skip">
-                    <rect key="frame" x="368" y="0.0" width="123" height="113"/>
+                    <rect key="frame" x="368" y="0.0" width="122.5" height="113"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gul-cb-LHm">
-                            <rect key="frame" x="15" y="10" width="93" height="93"/>
+                            <rect key="frame" x="16.5" y="12.5" width="88" height="88"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="Gul-cb-LHm" secondAttribute="height" multiplier="1:1" id="F0H-1V-o5a"/>
+                                <constraint firstAttribute="width" secondItem="Gul-cb-LHm" secondAttribute="height" multiplier="1:1" id="TBP-HS-z7h"/>
                             </constraints>
-                            <state key="normal" image="skip">
+                            <state key="normal" image="skip_disabled">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
                             <connections>
@@ -251,7 +243,6 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="Gul-cb-LHm" firstAttribute="top" secondItem="FFq-6x-4WA" secondAttribute="top" constant="10" id="4Jv-5e-C6w"/>
                         <constraint firstAttribute="centerX" secondItem="Gul-cb-LHm" secondAttribute="centerX" id="4gF-Q1-Djc"/>
                         <constraint firstAttribute="centerY" secondItem="Gul-cb-LHm" secondAttribute="centerY" id="aVP-M1-W5l"/>
                     </constraints>
@@ -288,9 +279,11 @@
         </view>
     </objects>
     <resources>
-        <image name="add" width="100" height="100"/>
-        <image name="play" width="100" height="100"/>
-        <image name="skip" width="100" height="100"/>
+        <image name="add" width="88" height="88"/>
+        <image name="pause_disabled" width="88" height="88"/>
+        <image name="play" width="88" height="88"/>
+        <image name="skip" width="88" height="88"/>
+        <image name="skip_disabled" width="88" height="88"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

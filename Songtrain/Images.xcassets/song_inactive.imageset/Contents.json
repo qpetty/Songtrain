@@ -2,16 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "songs_b@1x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "song_inactive.png"
+      "filename" : "songs_b@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "songs_b@3x.png"
     }
   ],
   "info" : {

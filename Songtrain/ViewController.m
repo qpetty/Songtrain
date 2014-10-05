@@ -199,14 +199,16 @@
 
 -(IBAction)editAllTableViews:(id)sender {
     if (editingTableViews == YES) {
+        [self.editTableViews setImage:[UIImage imageNamed:@"dj"] forState:UIControlStateNormal];
         editingTableViews = NO;
-        self.songTableView.editing = NO;
-        self.peerTableView.editing = NO;
+        [self.songTableView setEditing:NO animated:YES];
+        [self.peerTableView setEditing:NO animated:YES];
     }
     else {
+        [self.editTableViews setImage:[UIImage imageNamed:@"dj_inuse"] forState:UIControlStateNormal];
         editingTableViews = YES;
-        self.songTableView.editing = YES;
-        self.peerTableView.editing = YES;
+        [self.songTableView setEditing:YES animated:YES];
+        [self.peerTableView setEditing:YES animated:YES];
     }
 }
 
