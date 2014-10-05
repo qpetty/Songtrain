@@ -37,6 +37,8 @@
 		5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A96041119D3E69F002D2B29 /* TrainCellView.xib */; };
 		5AC5ECF719DDD7C800EAD9A3 /* ControlPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC5ECF619DDD7C800EAD9A3 /* ControlPanelView.xib */; };
 		5AC5ECFA19DDD99E00EAD9A3 /* ControlPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC5ECF919DDD99E00EAD9A3 /* ControlPanelView.m */; };
+		5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */; };
+		5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,9 @@
 		5AC5ECF619DDD7C800EAD9A3 /* ControlPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ControlPanelView.xib; sourceTree = "<group>"; };
 		5AC5ECF819DDD99E00EAD9A3 /* ControlPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanelView.h; sourceTree = "<group>"; };
 		5AC5ECF919DDD99E00EAD9A3 /* ControlPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlPanelView.m; sourceTree = "<group>"; };
+		5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderSongCellView.xib; sourceTree = "<group>"; };
+		5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSongCellView.h; sourceTree = "<group>"; };
+		5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderSongCellView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +181,9 @@
 				5A5B809F19CF89A7000A4681 /* SongTabViewController.m */,
 				5A5B80A019CF89A7000A4681 /* TabViewController.h */,
 				5A5B80A119CF89A7000A4681 /* TabViewController.m */,
+				5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */,
+				5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */,
+				5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */,
 				5A5B80A219CF89A7000A4681 /* MusicNavigationViewController.h */,
 				5A5B80A319CF89A7000A4681 /* MusicNavigationViewController.m */,
 			);
@@ -359,6 +367,7 @@
 			files = (
 				5AC5ECF719DDD7C800EAD9A3 /* ControlPanelView.xib in Resources */,
 				5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */,
+				5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */,
 				5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */,
 				5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
@@ -392,6 +401,7 @@
 				5A5B808719CE7751000A4681 /* RemoteSong.m in Sources */,
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
 				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
+				5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */,
 				5A5B80A619CF89A7000A4681 /* PlaylistTabViewController.m in Sources */,
 				5A743C1819CBD9540008C989 /* ViewController.m in Sources */,
 				5A5B80A719CF89A7000A4681 /* SongTabViewController.m in Sources */,

@@ -7,7 +7,7 @@
 //
 
 #import "TabViewController.h"
-#import <CoreImage/CoreImage.h>
+#import "HeaderSongCellView.h"
 
 @interface TabViewController () {
     UITableView *wholeTableView;
@@ -45,6 +45,8 @@
         
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
         self.navigationItem.rightBarButtonItem = item;
+        
+        [wholeTableView registerNib:[UINib nibWithNibName:@"HeaderSongCellView" bundle:[NSBundle mainBundle]] forHeaderFooterViewReuseIdentifier:@"HeaderSong"];
     }
     return self;
 }
@@ -118,15 +120,9 @@
     view.frame = CGRectMake(view.frame.origin.x - 1, view.frame.origin.y, view.frame.size.width + 2, view.frame.size.height);
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    HeaderSongCellView *cell = [wholeTableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
+    cell.title.text = [[query.itemSections objectAtIndex:section] title];
+    return cell;
 }
-*/
-
 @end
