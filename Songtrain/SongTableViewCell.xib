@@ -14,13 +14,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Futuristic Casket" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xOS-FG-VBe">
-                        <rect key="frame" x="15" y="5" width="570" height="20.5"/>
+                        <rect key="frame" x="15" y="6" width="570" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phantogram" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vYm-HJ-21j">
-                        <rect key="frame" x="15" y="28" width="570" height="17"/>
+                        <rect key="frame" x="15" y="25.5" width="570" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.7725490196" green="0.81960784310000001" blue="0.87058823529999996" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -28,13 +28,19 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 <constraints>
-                    <constraint firstItem="xOS-FG-VBe" firstAttribute="top" secondItem="hXn-IO-Kcu" secondAttribute="top" constant="5" id="05Y-Fc-tBA"/>
+                    <constraint firstItem="xOS-FG-VBe" firstAttribute="top" secondItem="hXn-IO-Kcu" secondAttribute="top" constant="6" id="05Y-Fc-tBA"/>
                     <constraint firstAttribute="trailingMargin" secondItem="vYm-HJ-21j" secondAttribute="trailing" constant="7" id="9DY-sZ-Vjq"/>
                     <constraint firstAttribute="trailingMargin" secondItem="xOS-FG-VBe" secondAttribute="trailing" constant="7" id="D8h-sP-LGr"/>
                     <constraint firstAttribute="bottom" secondItem="vYm-HJ-21j" secondAttribute="bottom" constant="4.5" id="SCk-xY-5i4"/>
                     <constraint firstItem="vYm-HJ-21j" firstAttribute="leading" secondItem="hXn-IO-Kcu" secondAttribute="leadingMargin" constant="7" id="jC2-jW-Rje"/>
+                    <constraint firstItem="vYm-HJ-21j" firstAttribute="top" secondItem="xOS-FG-VBe" secondAttribute="bottom" constant="-1" id="qIM-Mn-IZ6"/>
                     <constraint firstItem="xOS-FG-VBe" firstAttribute="leading" secondItem="hXn-IO-Kcu" secondAttribute="leadingMargin" constant="7" id="uGJ-3p-ypJ"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="SCk-xY-5i4"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>

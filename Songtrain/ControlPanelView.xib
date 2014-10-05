@@ -14,7 +14,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qrn-a0-IlQ" userLabel="Add Button">
                     <rect key="frame" x="0.0" y="0.0" width="123" height="113"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAH-vJ-Sg8">
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAH-vJ-Sg8">
                             <rect key="frame" x="17.5" y="12.5" width="88" height="88"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="kAH-vJ-Sg8" secondAttribute="height" multiplier="1:1" id="nRG-1Q-Vg4"/>
@@ -151,7 +151,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WPh-W6-CkU" userLabel="Add Button">
                     <rect key="frame" x="0.0" y="0.0" width="123" height="113"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tom-Cs-TEi">
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tom-Cs-TEi">
                             <rect key="frame" x="17.5" y="12.5" width="88" height="88"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="tom-Cs-TEi" secondAttribute="height" multiplier="1:1" id="KGh-Pb-kjG"/>
