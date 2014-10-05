@@ -181,22 +181,24 @@
         [_currentSong cleanUpSong];
         
         [self willChangeValueForKey:@"playlist"];
-        
-            [self willChangeValueForKey:@"currentSong"];
-            _currentSong = [_playlist firstObject];
+            [self updateCurrentSong:[_playlist firstObject]];
             [_playlist removeObjectAtIndex:0];
-            [self didChangeValueForKey:@"currentSong"];
-        
         [self didChangeValueForKey:@"playlist"];
-        
-        [self willChangeValueForKey:@"currentSongTime"];
-        _currentSongTime.location = 0;
-        _currentSongTime.length = _currentSong.songLength;
-        [self didChangeValueForKey:@"currentSongTime"];
-        
-        
-        [self updateNowPlaying];
     }
+}
+
+-(void)updateCurrentSong:(Song*)song {
+    [self willChangeValueForKey:@"currentSong"];
+    _currentSong = song;
+    [self didChangeValueForKey:@"currentSong"];
+    
+    [self willChangeValueForKey:@"currentSongTime"];
+    _currentSongTime.location = 0;
+    _currentSongTime.length = _currentSong.songLength;
+    [self didChangeValueForKey:@"currentSongTime"];
+    
+    
+    [self updateNowPlaying];
 }
 
 - (void)updateNowPlaying

@@ -21,6 +21,7 @@ enum MessageTypes : NSInteger {
     MusicPacket,
     FinishedStreaming,
     CurrentTime,
+    CurrentSong,
     Booted
 };
 

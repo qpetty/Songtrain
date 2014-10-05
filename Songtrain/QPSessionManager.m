@@ -127,8 +127,7 @@
         
         if ([self.pid isEqual:self.server]) {
             NSLog(@"Giving songs to %@", peerID.displayName);
-            [self addSong:[QPMusicPlayerController sharedMusicPlayer].currentSong toPeer:peerID];
-            [self nextSong:[QPMusicPlayerController sharedMusicPlayer].currentSong forPeer:peerID];
+            [self sendCurrentSong:[QPMusicPlayerController sharedMusicPlayer].currentSong toPeer:peerID];
             for (Song *s in [QPMusicPlayerController sharedMusicPlayer].playlist) {
                 [self addSong:s toPeer:peerID];
             }
@@ -181,15 +180,7 @@
             [self addSongToAllPeers:newSong];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
-            Song *newSong;
-            
-            if ([mess.song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)mess.song).peer isEqual:self.pid]) {
-                newSong = [[LocalSong alloc] initLocalSongFromSong:mess.song WithOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-            }
-            else {
-                newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-            }
-            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:newSong];
+            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
             [[QPMusicPlayerController sharedMusicPlayer] nextSong];
@@ -235,11 +226,27 @@
         else if (mess.message == CurrentTime) {
             [[QPMusicPlayerController sharedMusicPlayer] currentTime:mess.firstIndex];
         }
+        else if (mess.message == CurrentSong) {
+            [[QPMusicPlayerController sharedMusicPlayer] updateCurrentSong:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
+        }
         else if (mess.message == Booted) {
             NSLog(@"I just got booted");
             [self restartSession];
         }
     });
+}
+
+- (Song*)makeSongFromReceivedSong:(Song*)song fromPeer:(MCPeerID*)peerID {
+    Song *newSong;
+    
+    if ([song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)song).peer isEqual:self.pid]) {
+        newSong = [[LocalSong alloc] initLocalSongFromSong:song WithOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
+    }
+    else {
+        newSong = [[RemoteSong alloc] initWithSong:song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
+    }
+    
+    return newSong;
 }
 
 - (Song*)findSong:(Song*)song
@@ -415,6 +422,14 @@
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = FinishedStreaming;
+    message.song = song;
+    [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+
+- (void)sendCurrentSong:(Song*)song toPeer:(MCPeerID*)peer
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = CurrentSong;
     message.song = song;
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
 }

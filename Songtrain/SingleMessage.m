@@ -50,6 +50,9 @@
         else if (self.message == CurrentTime) {
             self.firstIndex =[aDecoder decodeIntForKey:@"1ndx"];
         }
+        else if (self.message == CurrentSong) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
     }
     return self;
 }
@@ -92,6 +95,9 @@
     }
     else if (self.message == CurrentTime) {
         [aCoder encodeInteger:self.firstIndex forKey:@"1ndx"];
+    }
+    else if (self.message == CurrentSong) {
+        [aCoder encodeObject:self.song forKey:@"song"];
     }
 }
 
