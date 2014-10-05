@@ -16,7 +16,7 @@
     
     NSLog(@"\nanimating\n");
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
-    attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - 400, 600, self.itemSize.height);
+    attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - self.itemSize.height, 600, self.itemSize.height);
     attributes.transform3D = CATransform3DMakeTranslation(0, -self.collectionView.bounds.size.height, 0);
     return attributes;
 }
@@ -83,6 +83,6 @@
 }
 
 - (CGRect)getCellFrameAtIndex:(NSIndexPath *)indexPath {
-    return CGRectMake(0, (self.itemSize.height + 10) * indexPath.row, 600, self.itemSize.height);
+    return CGRectMake(0, ((self.itemSize.height + 10) * indexPath.row) + self.itemSize.height, 600, self.itemSize.height);
 }
 @end

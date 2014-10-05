@@ -432,7 +432,7 @@
                 //[self.nearbyTrainsModal reloadData];
                
                 [self.nearbyTrainsModal performBatchUpdates:^{
-                    //[self.nearbyTrainsModal insertItemsAtIndexPaths:indexes];
+                    [self.nearbyTrainsModal insertItemsAtIndexPaths:indexes];
                 }completion:^(BOOL done){
                     [self.nearbyTrainsModal  reloadData];
                 }];
