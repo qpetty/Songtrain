@@ -13,11 +13,14 @@
 
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
-    
-    NSLog(@"\nanimating\n");
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
-    attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - self.itemSize.height, 600, self.itemSize.height);
-    attributes.transform3D = CATransform3DMakeTranslation(0, -self.collectionView.bounds.size.height, 0);
+
+    NSLog(@"\nanimating\n");
+    if (itemIndexPath.row == 0) {
+        attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - (self.itemSize.height * itemIndexPath.row), 600, self.itemSize.height);
+    }
+    attributes.frame = CGRectMake(0, [self getCellFrameAtIndex:[NSIndexPath indexPathForRow:itemIndexPath.row - 1 inSection:0]].origin.y, 600, self.itemSize.height);
+    //attributes.transform3D = CATransform3DMakeTranslation(0, -self.collectionView.bounds.size.height, 0);
     return attributes;
 }
 

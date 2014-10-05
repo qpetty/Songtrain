@@ -37,12 +37,12 @@
     [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
+    self.nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
     
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
     
-    self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
@@ -373,13 +373,15 @@
 
 -(void)connectedToPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"Cnnected to peer in view controller");
+        self.lastIndex += 1;
+        [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
     });
 }
 
 -(void)disconnectedFromPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"disconnnected from peer in view controller");
+        [self.nearbyTrainsModal reloadData];
+        self.lastIndex = sessionManager.peerArray.count;
     });
 }
 
@@ -428,23 +430,7 @@
             }
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSMutableArray *indexes = [[NSMutableArray alloc] init];
-            if (sessionManager.peerArray.count >= 1) {
-                for (int i = 0; i < sessionManager.peerArray.count; i++) {
-                    [indexes addObject:[NSIndexPath indexPathForItem:i inSection:0]];
-                }
-               // [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:sessionManager.peerArray.count -1 inSection:0]]];
-                //[self.nearbyTrainsModal reloadData];
-               /*
-                [self.nearbyTrainsModal performBatchUpdates:^{
-                    [self.nearbyTrainsModal insertItemsAtIndexPaths:indexes];
-                }completion:^(BOOL done){
-                    [self.nearbyTrainsModal  reloadData];
-                }];
-                */
-            }
-        });
+
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
@@ -456,7 +442,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (section == 0)
-        return sessionManager.peerArray.count;
+        return self.lastIndex;//return sessionManager.peerArray.count;
     else
         return 0;
 }
@@ -467,6 +453,11 @@
 
     cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.item] displayName];
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
+    [self finishBrowsingForOthers];
 }
 
 @end
