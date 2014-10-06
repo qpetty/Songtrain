@@ -27,7 +27,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
@@ -37,8 +36,13 @@
     [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
+    [self.nearbyTrainsModal reloadData];
     self.nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
     
+    self.nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:self.nearbyTrainsModal.frame];
+    UITapGestureRecognizer *tapAnywhere = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(outsideOfCellTap:)];
+    self.nearbyTrainsModal.backgroundView.gestureRecognizers = @[tapAnywhere];
+
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
@@ -70,6 +74,12 @@
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     editingTableViews = NO;
+}
+
+
+- (void)outsideOfCellTap:(id)sender {
+   
+    [self finishBrowsingForOthers];
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -111,6 +121,8 @@
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -128,6 +140,8 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
+    [self.nearbyTrainsModal reloadData];
+    self.lastIndex = 0;
     [self updatePlayOrPauseImage];
 }
 
@@ -167,6 +181,8 @@
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     } completion:^(BOOL finished) {
+        self.lastIndex = 0;
+        [self.nearbyTrainsModal deleteItemsAtIndexPaths:[self.nearbyTrainsModal indexPathsForVisibleItems]];
     }];
     [self.nearbyTrainBackground removeFromSuperview];
     [self.nearbyTrainsModal removeFromSuperview];
