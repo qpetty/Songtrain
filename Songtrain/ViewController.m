@@ -10,7 +10,7 @@
 #import <CoreImage/CoreImage.h>
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
-#import "QPSessionManager.h"
+#import "AnimatedCollectionViewFlowLayout.h"
 
 @interface ViewController ()
 
@@ -26,27 +26,33 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
-    self.nearbyTrainsModal = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"TrainCellView" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"TrainCell"];
+    UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
+    self.nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 0, 0) collectionViewLayout:layout];
+    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
+    [self.nearbyTrainsModal reloadData];
+    self.nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
     
+    self.nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:self.nearbyTrainsModal.frame];
+    UITapGestureRecognizer *tapAnywhere = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(outsideOfCellTap:)];
+    self.nearbyTrainsModal.backgroundView.gestureRecognizers = @[tapAnywhere];
+
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
     
-    self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
     musicPlayer.delegate = self;
     
     sessionManager = [QPSessionManager sessionManager];
+    sessionManager.delegate = self;
     [sessionManager createServer];
     
     musicPicker = [[MusicPickerViewController alloc] init];
@@ -68,6 +74,12 @@
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     editingTableViews = NO;
+}
+
+
+- (void)outsideOfCellTap:(id)sender {
+   
+    [self finishBrowsingForOthers];
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -109,6 +121,8 @@
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -125,6 +139,8 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
+    [self.nearbyTrainsModal reloadData];
+    self.lastIndex = 0;
     [self updatePlayOrPauseImage];
 }
 
@@ -138,6 +154,7 @@
     [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
 }
 
+#pragma mark Browsing Popup
 
 -(IBAction)browseForOthers:(id)sender {
     [sessionManager startBrowsingForTrains];
@@ -150,6 +167,7 @@
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
 
     } completion:^(BOOL finished) {
+
     }];
     
 }
@@ -161,6 +179,8 @@
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     } completion:^(BOOL finished) {
+        self.lastIndex = 0;
+        [self.nearbyTrainsModal deleteItemsAtIndexPaths:[self.nearbyTrainsModal indexPathsForVisibleItems]];
     }];
     [self.nearbyTrainBackground removeFromSuperview];
     [self.nearbyTrainsModal removeFromSuperview];
@@ -256,10 +276,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (tableView != self.nearbyTrainsModal) {
-        return;
-    }
+   
     [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
     [self finishBrowsingForOthers];
 }
@@ -273,8 +290,6 @@
         numRows = musicPlayer.playlist.count;
     } else if (tableView == self.peerTableView) {
         numRows = sessionManager.connectedPeerArray.count;
-    } else if (tableView == self.nearbyTrainsModal) {
-        return sessionManager.peerArray.count;
     }
     return numRows < 1 ? 1 : numRows;
 }
@@ -289,10 +304,6 @@
     else if (tableView == self.peerTableView) {
         cell = [self peerTableView:tableView withIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (tableView == self.nearbyTrainsModal) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"TrainCell" forIndexPath:indexPath];
-        MCPeerID *peerID = [sessionManager.peerArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = peerID.displayName;
     }
     return cell;
 }
@@ -302,18 +313,12 @@
     
     if (musicPlayer.playlist.count < 1){
         PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
-        if (!cell) {
-            NSLog(@"Something went wrong because we dont have a tableviewcell");
-        }
         cell.backgroundColor = [UIColor clearColor];
         cell.mainLabel.text = @"No Songs";
         finalCell = cell;
     }
     else {
         SongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SongCell"];
-        if (!cell) {
-            NSLog(@"Something went wrong because we dont have a tableviewcell");
-        }
         cell.backgroundColor = [UIColor clearColor];
         Song *oneSong = [musicPlayer.playlist objectAtIndex:indexPath.row];
         cell.mainLabel.text = oneSong.title;
@@ -326,9 +331,6 @@
 -(UITableViewCell *)peerTableView:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath {
     PeerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PeerCell"];
     cell.backgroundColor = [UIColor clearColor];
-    if (!cell) {
-        NSLog(@"Something went wrong because we dont have a tableviewcell");
-    }
     
     if (sessionManager.connectedPeerArray.count < 1){
         cell.mainLabel.text = @"No Passengers";
@@ -401,6 +403,23 @@
     [self.songTableView endUpdates];
 }
 
+#pragma mark QPBrowsingManagerDelegate methods
+
+-(void)connectedToPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.lastIndex += 1;
+        [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
+    });
+}
+
+-(void)disconnectedFromPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.nearbyTrainsModal reloadData];
+        self.lastIndex = sessionManager.peerArray.count;
+    });
+}
+
+
 -(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
     [self.songTableView beginUpdates];
     [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
@@ -457,12 +476,34 @@
             [self.songTableView reloadData];
         });
     } else if ([keyPath isEqualToString:@"peerArray"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.nearbyTrainsModal reloadData];
-        });
+
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if (section == 0)
+        return self.lastIndex;//return sessionManager.peerArray.count;
+    else
+        return 0;
+}
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    AnimatedCollectionViewCell *cell = [self.nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
+
+    cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.item] displayName];
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
+    [self finishBrowsingForOthers];
 }
 
 @end

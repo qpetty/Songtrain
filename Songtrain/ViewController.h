@@ -11,8 +11,10 @@
 #import "MarqueeLabel.h"
 #import "ControlPanelView.h"
 #import "QPMusicPlayerController.h"
+#import "AnimatedCollectionViewCell.h"
+#import "QPSessionManager.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, ControlPanelDelegate, QPMusicPlayerPlaylistDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, QPBrowsingManagerDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate, QPMusicPlayerPlaylistDelegate>
 
 @property (weak) IBOutlet UITableView *songTableView;
 @property (weak) IBOutlet UITableView *peerTableView;
@@ -39,8 +41,10 @@
 @property UIImageView *backgroundImage;
 @property UIImageView *backgroundOverlay;
 
-@property UITableView *nearbyTrainsModal;
+@property UICollectionView *nearbyTrainsModal;
 @property UIView *nearbyTrainBackground;
+
+@property NSInteger lastIndex;
 
 -(void)updatePlayOrPauseImage;
 
