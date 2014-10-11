@@ -275,12 +275,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-   
-    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
-    [self finishBrowsingForOthers];
-}
-
 #pragma mark TableViewDelegate
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -418,7 +412,6 @@
         self.lastIndex = sessionManager.peerArray.count;
     });
 }
-
 
 -(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
     [self.songTableView beginUpdates];

@@ -24,14 +24,9 @@
 @property (weak) IBOutlet MarqueeLabel *currentSongTitle;
 @property (weak) IBOutlet MarqueeLabel *currentSongArtist;
 @property (weak) IBOutlet UIImageView *currentAlbumArtwork;
-@property (weak) IBOutlet UILabel *currentTime;
-@property (weak) IBOutlet UILabel *totalTime;
 
 @property (weak) IBOutlet UIButton *browseForOtherTrains;
 @property (weak) IBOutlet UIButton *editTableViews;
-
-@property (weak) IBOutlet UIButton *playOrPauseButton;
-@property (weak) IBOutlet UIButton *skip;
 
 @property (weak) IBOutlet UISegmentedControl *tracksAndPassengers;
 
