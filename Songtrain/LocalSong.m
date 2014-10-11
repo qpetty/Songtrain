@@ -105,7 +105,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     OSStatus err = CMSampleBufferGetAudioStreamPacketDescriptions(song->sampleBuffer, sizeof(song->aspds), song->aspds, NULL);
     
     CMSampleBufferGetAudioStreamPacketDescriptionsPtr(song->sampleBuffer, NULL, &packetDescriptionSize);
-    *ioNumberDataPackets = packetDescriptionSize / sizeof(AudioStreamPacketDescription);
+    *ioNumberDataPackets = (UInt32)packetDescriptionSize / sizeof(AudioStreamPacketDescription);
     
     //printf("number: %d\n", *ioNumberDataPackets);
     

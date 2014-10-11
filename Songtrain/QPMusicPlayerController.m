@@ -143,9 +143,10 @@
         OSErr err = AUGraphStart(graph);
         
         timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(addOneToTime) userInfo:nil repeats:YES];
-        //NSLog(@"%@", _currentSong.url.path);
         
-        NSAssert(err == noErr, @"Error starting graph.");
+        if (err != noErr) {
+            NSAssert(err == noErr, @"Error starting graph.");
+        }
         
         [self willChangeValueForKey:@"currentlyPlaying"];
         _currentlyPlaying = YES;
