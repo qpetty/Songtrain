@@ -173,6 +173,7 @@
         }
         else if (mess.message == AlbumImage) {
             [self findSong:mess.song].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
+            [[QPMusicPlayerController sharedMusicPlayer] updateNowPlaying];
         }
         else if (mess.message == AddSong && _currentRole == ServerConnection) {
             RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
