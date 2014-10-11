@@ -64,10 +64,10 @@
     self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
 
-    [self configureMarqueeLabel:self.currentSongTitle];
-    [self configureMarqueeLabel:self.currentSongArtist];
     self.currentSongTitle.text = @"   ";
     self.currentSongArtist.text = @"  ";
+    [self configureMarqueeLabel:self.currentSongTitle];
+    [self configureMarqueeLabel:self.currentSongArtist];
     
     //Removes the separators below the last row of the tableviews
     self.songTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -121,8 +121,6 @@
 
     [self.view addSubview:self.backgroundImage];
     [self.view sendSubviewToBack:self.backgroundImage];
-    
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -142,6 +140,11 @@
     [self.nearbyTrainsModal reloadData];
     self.lastIndex = 0;
     [self updatePlayOrPauseImage];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self updateCurrentSong];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -428,6 +431,19 @@
     [self.songTableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:ndx1 inSection:0] toIndexPath:[NSIndexPath indexPathForRow:ndx2 inSection:0]];
 }
 
+-(void)updateCurrentSong {
+    if (musicPlayer.currentSong == nil) {
+        self.currentSongTitle.text = @" ";
+        self.currentSongArtist.text = @" ";
+        [self updateImage:nil];
+    }
+    else {
+        self.currentSongTitle.text = musicPlayer.currentSong.title;
+        self.currentSongArtist.text = musicPlayer.currentSong.artistName;
+        [self updateImage:musicPlayer.currentSong.albumImage];
+    }
+}
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"connectedPeerArray"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -436,16 +452,7 @@
     }
     else if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (musicPlayer.currentSong == nil) {
-                self.currentSongTitle.text = @" ";
-                self.currentSongArtist.text = @" ";
-                [self updateImage:nil];
-            }
-            else {
-                self.currentSongTitle.text = musicPlayer.currentSong.title;
-                self.currentSongArtist.text = musicPlayer.currentSong.artistName;
-                [self updateImage:musicPlayer.currentSong.albumImage];
-            }
+            [self updateCurrentSong];
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
@@ -468,8 +475,6 @@
             }
             [self.songTableView reloadData];
         });
-    } else if ([keyPath isEqualToString:@"peerArray"]) {
-
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         [self updateImage:musicPlayer.currentSong.albumImage];
     }

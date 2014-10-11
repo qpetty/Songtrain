@@ -73,8 +73,7 @@
     
     MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
-        [self.playlist addObject:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
-        [self skip];
+        [self updateCurrentSong:[[LocalSong alloc] initWithOutputASBD:*(self.audioFormat) andItem:currentItem]];
     }
 }
 
