@@ -290,10 +290,11 @@
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
 {
     NSLog(@"Removed Peer: %@", peerID.displayName);
+    NSUInteger ndx = [_peerArray indexOfObject:peerID];
     [self willChangeValueForKey:@"peerArray"];
     [_peerArray removeObjectIdenticalTo:peerID];
     [self didChangeValueForKey:@"peerArray"];
-    [self.delegate disconnectedFromPeer:peerID];
+    [self.delegate disconnectedFromPeer:peerID atIndex:ndx];
 }
 
 #pragma mark - Data Methods

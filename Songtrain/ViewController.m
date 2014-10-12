@@ -31,11 +31,11 @@
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
     UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
-    self.nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 0, 0) collectionViewLayout:layout];
+    
+    self.nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     self.nearbyTrainsModal.delegate = self;
     self.nearbyTrainsModal.dataSource = self;
-    [self.nearbyTrainsModal reloadData];
     self.nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
     
     self.nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:self.nearbyTrainsModal.frame];
@@ -182,8 +182,7 @@
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     } completion:^(BOOL finished) {
-        self.lastIndex = 0;
-        [self.nearbyTrainsModal deleteItemsAtIndexPaths:[self.nearbyTrainsModal indexPathsForVisibleItems]];
+        [self.nearbyTrainsModal reloadData];
     }];
     [self.nearbyTrainBackground removeFromSuperview];
     [self.nearbyTrainsModal removeFromSuperview];
@@ -404,15 +403,13 @@
 
 -(void)connectedToPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.lastIndex += 1;
         [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
     });
 }
 
--(void)disconnectedFromPeer:(MCPeerID *)peerID {
+-(void)disconnectedFromPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.nearbyTrainsModal reloadData];
-        self.lastIndex = sessionManager.peerArray.count;
+         [self.nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
     });
 }
 
@@ -480,22 +477,16 @@
     }
 }
 
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (section == 0)
-        return self.lastIndex;//return sessionManager.peerArray.count;
-    else
-        return 0;
+    return sessionManager.peerArray.count;
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     AnimatedCollectionViewCell *cell = [self.nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
 
-    cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.item] displayName];
+    cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row] displayName];
     return cell;
 }
 
