@@ -39,8 +39,6 @@
 @property UICollectionView *nearbyTrainsModal;
 @property UIView *nearbyTrainBackground;
 
-@property NSInteger lastIndex;
-
 -(void)updatePlayOrPauseImage;
 
 @end

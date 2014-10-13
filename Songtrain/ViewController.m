@@ -22,6 +22,7 @@
     
     QPSessionManager *sessionManager;
     BOOL editingTableViews;
+    UIActivityIndicatorView *loadingIcon;
 }
 
 - (void)viewDidLoad {
@@ -45,6 +46,9 @@
     self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
+    self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    loadingIcon = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [self.nearbyTrainBackground addSubview:loadingIcon];
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
@@ -78,8 +82,7 @@
 
 
 - (void)outsideOfCellTap:(id)sender {
-   
-    [self finishBrowsingForOthers];
+    [self finishBrowsingForOthers:NO];
 }
 
 -(void)configureMarqueeLabel:(MarqueeLabel*)label {
@@ -109,14 +112,12 @@
 
 -(void)viewDidLayoutSubviews {
     [self.backgroundOverlay setFrame:self.view.frame];
-
     self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
     
     [self.view addSubview:self.backgroundOverlay];
     [self.view sendSubviewToBack:self.backgroundOverlay];
     
     [self.backgroundImage setFrame:CGRectMake(self.view.frame.origin.x - 10, self.view.frame.origin.y - 10, self.view.frame.size.width + 20, self.view.frame.size.height + 20)];
-    
     self.backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
 
     [self.view addSubview:self.backgroundImage];
@@ -138,7 +139,6 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
     [self.nearbyTrainsModal reloadData];
-    self.lastIndex = 0;
     [self updatePlayOrPauseImage];
 }
 
@@ -165,7 +165,6 @@
     [self.view addSubview:self.nearbyTrainsModal];
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
-        self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
 
     } completion:^(BOOL finished) {
         [sessionManager startBrowsingForTrains];
@@ -173,17 +172,29 @@
     
 }
 
--(void)finishBrowsingForOthers
+-(void)finishBrowsingForOthers:(BOOL)somethingSelected
 {
     [sessionManager stopBrowsingForTrains];
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-        self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0);
     } completion:^(BOOL finished) {
         [self.nearbyTrainsModal reloadData];
     }];
-    [self.nearbyTrainBackground removeFromSuperview];
+    
+    if (somethingSelected == NO) {
+        [self removeLoadingScreen];
+    } else {
+        loadingIcon.center = self.nearbyTrainBackground.center;
+        [loadingIcon startAnimating];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    }
     [self.nearbyTrainsModal removeFromSuperview];
+}
+
+-(void)removeLoadingScreen {
+    [loadingIcon stopAnimating];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [self.nearbyTrainBackground removeFromSuperview];
 }
 
 -(void)skipPressed:(UIButton *)sender {
@@ -206,7 +217,6 @@
 }
 
 -(void)updateImage:(UIImage*)image {
-    
     if (image == nil) {
         image = [UIImage imageNamed:@"albumart_default"];
     }
@@ -388,27 +398,23 @@
 }
 
 -(void)songRemoved:(Song *)song atIndex:(NSInteger)ndx {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.songTableView beginUpdates];
-        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-        if (musicPlayer.playlist.count == 0) {
-            [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-        }
-        [self.songTableView endUpdates];
-    });
+    [self.songTableView beginUpdates];
+    [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    if (musicPlayer.playlist.count == 0) {
+        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+    [self.songTableView endUpdates];
 }
 
 -(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.songTableView beginUpdates];
-        [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-            [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:idx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-        }];
-        if (musicPlayer.playlist.count == 0) {
-            [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-        }
-        [self.songTableView endUpdates];
-    });
+    [self.songTableView beginUpdates];
+    [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:idx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    if (musicPlayer.playlist.count == 0) {
+        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+    [self.songTableView endUpdates];
 }
 
 -(void)songMoved:(Song *)song fromIndex:(NSUInteger)ndx1 toIndex:(NSUInteger)ndx2 {
@@ -433,6 +439,12 @@
 
 -(void)connectedToPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if ([peerID isEqual:sessionManager.server]) {
+            NSLog(@"Successfully to server: %@", peerID.displayName);
+            [self removeLoadingScreen];
+        }
+        
         NSUInteger ndx = [sessionManager.connectedPeerArray indexOfObject:peerID];
         [self.peerTableView beginUpdates];
         if (sessionManager.connectedPeerArray.count == 1) {
@@ -513,7 +525,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
-    [self finishBrowsingForOthers];
+    [self finishBrowsingForOthers:YES];
 }
 
 @end

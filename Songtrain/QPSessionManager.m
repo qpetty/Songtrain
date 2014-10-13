@@ -146,11 +146,13 @@
         NSLog(@"Disconnected from %@", peerID.displayName);
         NSUInteger ndx = [_connectedPeerArray indexOfObject:peerID];
         if (ndx != NSNotFound) {
-            [self removeSongsFromPeer:peerID];
-            [self willChangeValueForKey:@"connectedPeerArray"];
-            [_connectedPeerArray removeObjectIdenticalTo:peerID];
-            [self didChangeValueForKey:@"connectedPeerArray"];
-            [self.sessionDelegate disconnectedFromPeer:peerID atIndex:ndx];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self removeSongsFromPeer:peerID];
+                [self willChangeValueForKey:@"connectedPeerArray"];
+                [_connectedPeerArray removeObjectIdenticalTo:peerID];
+                [self didChangeValueForKey:@"connectedPeerArray"];
+                [self.sessionDelegate disconnectedFromPeer:peerID atIndex:ndx];
+            });
         }
         
         if (self.currentRole == ClientConnection && [peerID isEqual:self.server]) {
