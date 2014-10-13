@@ -41,7 +41,8 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
     MCSession *mainSession;
 }
 
-@property (weak, nonatomic) id <QPBrowsingManagerDelegate> delegate;
+@property (weak, nonatomic) id <QPBrowsingManagerDelegate> browsingDelegate;
+@property (weak, nonatomic) id <QPSessionDelegate> sessionDelegate;
 @property (atomic, retain, readonly) MCPeerID *pid;
 @property (atomic, retain, readonly) MCPeerID *server;
 @property (atomic, retain, readonly) NSMutableArray *peerArray;

@@ -73,6 +73,9 @@
     [self willChangeValueForKey:@"server"];
     _server = _pid;
     [self didChangeValueForKey:@"server"];
+    [self willChangeValueForKey:@"connectedPeerArray"];
+    [_connectedPeerArray removeAllObjects];
+    [self didChangeValueForKey:@"connectedPeerArray"];
     NSLog(@"AVERTISING PEER");
     [advert startAdvertisingPeer];
     [[QPMusicPlayerController sharedMusicPlayer] resetToServer];
@@ -106,6 +109,10 @@
     _server = peerID;
     [self didChangeValueForKey:@"server"];
     
+    [self willChangeValueForKey:@"connectedPeerArray"];
+    [_connectedPeerArray removeAllObjects];
+    [self didChangeValueForKey:@"connectedPeerArray"];
+    
     [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSong"];
     [[QPMusicPlayerController sharedMusicPlayer] removeObserver:self forKeyPath:@"currentSongTime"];
 }
@@ -126,6 +133,7 @@
         [self willChangeValueForKey:@"connectedPeerArray"];
         [_connectedPeerArray addObject:peerID];
         [self didChangeValueForKey:@"connectedPeerArray"];
+        [self.sessionDelegate connectedToPeer:peerID];
         
         if ([self.pid isEqual:self.server]) {
             NSLog(@"Giving songs to %@", peerID.displayName);
@@ -136,10 +144,15 @@
         }
     } else if (state == MCSessionStateNotConnected) {
         NSLog(@"Disconnected from %@", peerID.displayName);
-        [self willChangeValueForKey:@"connectedPeerArray"];
-        [_connectedPeerArray removeObjectIdenticalTo:peerID];
-        [self didChangeValueForKey:@"connectedPeerArray"];
-         
+        NSUInteger ndx = [_connectedPeerArray indexOfObject:peerID];
+        if (ndx != NSNotFound) {
+            [self removeSongsFromPeer:peerID];
+            [self willChangeValueForKey:@"connectedPeerArray"];
+            [_connectedPeerArray removeObjectIdenticalTo:peerID];
+            [self didChangeValueForKey:@"connectedPeerArray"];
+            [self.sessionDelegate disconnectedFromPeer:peerID atIndex:ndx];
+        }
+        
         if (self.currentRole == ClientConnection && [peerID isEqual:self.server]) {
             [self restartSession];
         }
@@ -295,7 +308,7 @@
         [self willChangeValueForKey:@"peerArray"];
         [_peerArray addObject:peerID];
         [self didChangeValueForKey:@"peerArray"];
-        [self.delegate foundPeer:peerID];
+        [self.browsingDelegate foundPeer:peerID];
     }
 }
 
@@ -305,7 +318,7 @@
     [self willChangeValueForKey:@"peerArray"];
     [_peerArray removeObjectIdenticalTo:peerID];
     [self didChangeValueForKey:@"peerArray"];
-    [self.delegate lostPeer:peerID atIndex:ndx];
+    [self.browsingDelegate lostPeer:peerID atIndex:ndx];
 }
 
 #pragma mark - Data Methods

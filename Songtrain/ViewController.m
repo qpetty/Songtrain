@@ -51,7 +51,8 @@
     musicPlayer.delegate = self;
     
     sessionManager = [QPSessionManager sessionManager];
-    sessionManager.delegate = self;
+    sessionManager.browsingDelegate = self;
+    sessionManager.sessionDelegate = self;
     [sessionManager createServer];
     
     musicPicker = [[MusicPickerViewController alloc] init];
@@ -378,7 +379,6 @@
 #pragma mark QPMusicPlayerPlaylistDelegate
 
 -(void)songAdded:(Song *)song atIndex:(NSUInteger)ndx {
-    
     [self.songTableView beginUpdates];
     if (musicPlayer.playlist.count == 1) {
         [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
@@ -388,12 +388,31 @@
 }
 
 -(void)songRemoved:(Song *)song atIndex:(NSInteger)ndx {
-    [self.songTableView beginUpdates];
-    [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-    if (musicPlayer.playlist.count == 0) {
-        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-    }
-    [self.songTableView endUpdates];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.songTableView beginUpdates];
+        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        if (musicPlayer.playlist.count == 0) {
+            [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+        [self.songTableView endUpdates];
+    });
+}
+
+-(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.songTableView beginUpdates];
+        [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+            [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:idx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        }];
+        if (musicPlayer.playlist.count == 0) {
+            [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+        [self.songTableView endUpdates];
+    });
+}
+
+-(void)songMoved:(Song *)song fromIndex:(NSUInteger)ndx1 toIndex:(NSUInteger)ndx2 {
+    [self.songTableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:ndx1 inSection:0] toIndexPath:[NSIndexPath indexPathForRow:ndx2 inSection:0]];
 }
 
 #pragma mark QPBrowsingManagerDelegate methods
@@ -410,19 +429,29 @@
     });
 }
 
--(void)songsRemovedAtIndexSet:(NSIndexSet *)ndxSet {
-    [self.songTableView beginUpdates];
-    [ndxSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        [self.songTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:idx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-    }];
-    if (musicPlayer.playlist.count == 0) {
-        [self.songTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-    }
-    [self.songTableView endUpdates];
+#pragma mark QPSessionDelegate methods
+
+-(void)connectedToPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSUInteger ndx = [sessionManager.connectedPeerArray indexOfObject:peerID];
+        [self.peerTableView beginUpdates];
+        if (sessionManager.connectedPeerArray.count == 1) {
+            [self.peerTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+        [self.peerTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.peerTableView endUpdates];
+    });
 }
 
--(void)songMoved:(Song *)song fromIndex:(NSUInteger)ndx1 toIndex:(NSUInteger)ndx2 {
-    [self.songTableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:ndx1 inSection:0] toIndexPath:[NSIndexPath indexPathForRow:ndx2 inSection:0]];
+-(void)disconnectedFromPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.peerTableView beginUpdates];
+        [self.peerTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        if (sessionManager.connectedPeerArray.count == 0) {
+            [self.peerTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:ndx inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+        [self.peerTableView endUpdates];
+    });
 }
 
 -(void)updateCurrentSong {
@@ -439,12 +468,7 @@
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"connectedPeerArray"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.peerTableView reloadData];
-        });
-    }
-    else if ([keyPath isEqualToString:@"currentSong"]) {
+    if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateCurrentSong];
         });

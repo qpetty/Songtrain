@@ -14,7 +14,7 @@
 #import "AnimatedCollectionViewCell.h"
 #import "QPSessionManager.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, QPBrowsingManagerDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate, QPMusicPlayerPlaylistDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, QPBrowsingManagerDelegate, QPSessionDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate, QPMusicPlayerPlaylistDelegate>
 
 @property (weak) IBOutlet UITableView *songTableView;
 @property (weak) IBOutlet UITableView *peerTableView;
