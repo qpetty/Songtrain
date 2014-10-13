@@ -10,6 +10,5 @@
 
 @interface AnimatedCollectionViewCell : UICollectionViewCell
 
-
 @property IBOutlet UILabel *peerName;
 @end

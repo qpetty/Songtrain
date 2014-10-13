@@ -160,8 +160,6 @@
 #pragma mark Browsing Popup
 
 -(IBAction)browseForOthers:(id)sender {
-    [sessionManager startBrowsingForTrains];
-
     self.nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:self.nearbyTrainBackground];
     [self.view addSubview:self.nearbyTrainsModal];
@@ -170,7 +168,7 @@
         self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
 
     } completion:^(BOOL finished) {
-
+        [sessionManager startBrowsingForTrains];
     }];
     
 }

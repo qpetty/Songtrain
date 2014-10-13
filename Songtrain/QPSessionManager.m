@@ -161,35 +161,38 @@
 
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
-    NSLog(@"Got some data from %@\n", peerID.displayName);
-    
-    //NSLog(@"Recieved on thread: %@\n", [NSThread currentThread]);
-    
     SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (mess.message == AlbumRequest) {
+             NSLog(@"Sending artwork for %@ to %@", mess.song.title, peerID.displayName);
             [self sendAlbumArtwork:[self findSong:mess.song] to:peerID];
         }
         else if (mess.message == AlbumImage) {
+            NSLog(@"Got artwork for %@ from %@", mess.song.title, peerID.displayName);
             [self findSong:mess.song].albumImage = [NSKeyedUnarchiver unarchiveObjectWithData:mess.data];
             [[QPMusicPlayerController sharedMusicPlayer] updateNowPlaying];
         }
         else if (mess.message == AddSong && _currentRole == ServerConnection) {
+            NSLog(@"Requesting to add %@ to playlist from %@", mess.song.title, peerID.displayName);
             RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
             [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:newSong];
             [self addSongToAllPeers:newSong];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
+            NSLog(@"Adding %@ to playlist", mess.song.title);
             [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
+            NSLog(@"Skip song");
             [[QPMusicPlayerController sharedMusicPlayer] nextSong];
         }
         else if (mess.message == RemoveSong && _currentRole == ClientConnection) {
+            NSLog(@"Remove song at index: %ld, from %@\n", (long)mess.firstIndex, peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] removeSongFromPlaylist:mess.firstIndex];
         }
         else if (mess.message == SwitchSong && _currentRole == ClientConnection) {
+            NSLog(@"Switched index %ld with %ld, from %@\n", (long)mess.firstIndex, (long)mess.secondIndex, peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] switchSongFromIndex:mess.firstIndex to:mess.secondIndex];
         }
         else if (mess.message == MusicPacketRequest) {
@@ -221,17 +224,23 @@
             }
         }
         else if (mess.message == FinishedStreaming) {
+            NSLog(@"Finished streaming from %@\n", peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] skip];
         }
         else if (mess.message == CurrentTime) {
+            NSLog(@"Got current time, %ld, from %@\n", (long)mess.firstIndex, peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] currentTime:mess.firstIndex];
         }
         else if (mess.message == CurrentSong) {
+            NSLog(@"Got current song from %@\n", peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] updateCurrentSong:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
         }
         else if (mess.message == Booted) {
-            NSLog(@"I, %@, just got booted :(", self.pid.displayName);
+            NSLog(@"%@:I just got booted :(", self.pid.displayName);
             [self restartSession];
+        }
+        else {
+            NSLog(@"Got some unknown data from %@\n", peerID.displayName);
         }
     });
 }
@@ -301,28 +310,56 @@
 
 - (void)sendData:(NSData*)data ToPeer:(MCPeerID*)peerID
 {
-    NSLog(@"Sending Data to %@\n", peerID.displayName);
+    //NSLog(@"Sending Data to %@\n", peerID.displayName);
     
     NSError *error;
     [mainSession sendData:data toPeers:[NSArray arrayWithObject:peerID] withMode:MCSessionSendDataReliable error:&error];
     
     if (error != nil) {
+        SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        NSLog(@"Tried to send message of type %ld to %@", (long)mess.message, peerID.displayName);
         NSLog(@"Error: %@\n", error.localizedDescription);
     }
 }
 
 - (void)sendDataToAllPeers:(NSData*)data
 {
-    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:nil];
+    if (mainSession.connectedPeers.count == 0) {
+        NSLog(@"No one to send a message to :(");
+        return;
+    }
+    
+    NSError *error;
+    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataReliable error:&error];
+    if (error != nil) {
+        SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        NSLog(@"Tried to send message of type %ld to everyone", (long)mess.message);
+        NSLog(@"Error: %@\n", error.localizedDescription);
+    }
+    
+    /*
     for (MCPeerID *peer in mainSession.connectedPeers) {
         NSLog(@"Sending to %@", peer.displayName);
     }
+     */
     //NSLog(@"This is the main Thread: %@\n", [NSThread isMainThread] ? @"YES" : @"NO");
 }
 
 - (void)sendDataUnreliablyToAllPeers:(NSData*)data
 {
-    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataUnreliable error:nil];
+    if (mainSession.connectedPeers.count == 0) {
+        NSLog(@"No one to send a message to :(");
+        return;
+    }
+    
+    NSError *error;
+    [mainSession sendData:data toPeers:mainSession.connectedPeers withMode:MCSessionSendDataUnreliable error:&error];
+    
+    if (error != nil) {
+        SingleMessage *mess = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        NSLog(@"Tried to send message unreliably of type %ld to everyone", (long)mess.message);
+        NSLog(@"Error: %@\n", error.localizedDescription);
+    }
 }
 
 - (void)nextSong:(Song*)song

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "QPSessionManager.h"
 
 @interface AnimatedCollectionViewFlowLayout : UICollectionViewFlowLayout
 

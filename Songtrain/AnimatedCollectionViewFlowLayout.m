@@ -8,10 +8,7 @@
 
 #import "AnimatedCollectionViewFlowLayout.h"
 
-@implementation AnimatedCollectionViewFlowLayout {
-    QPSessionManager *sessionManager;
-}
-
+@implementation AnimatedCollectionViewFlowLayout
 
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
@@ -19,11 +16,8 @@
 
     attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - (self.itemSize.height * itemIndexPath.row), self.itemSize.width, self.itemSize.height);
     
-
     return attributes;
 }
-
-
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
 
