@@ -16,6 +16,13 @@ enum CurrentConnectionRole : NSInteger {
 
 @protocol QPBrowsingManagerDelegate <NSObject>
 
+- (void)foundPeer:(MCPeerID*)peerID;
+- (void)lostPeer:(MCPeerID*)peerID atIndex:(NSUInteger)ndx;
+
+@end
+
+@protocol QPSessionDelegate <NSObject>
+
 - (void)connectedToPeer:(MCPeerID*)peerID;
 - (void)disconnectedFromPeer:(MCPeerID*)peerID atIndex:(NSUInteger)ndx;
 

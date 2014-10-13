@@ -46,7 +46,6 @@
     self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
     
-    
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
     musicPlayer.delegate = self;
@@ -63,7 +62,7 @@
     self.currentSongTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.currentSongArtist.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
     self.mainTitle.textColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
-
+    
     self.currentSongTitle.text = @"   ";
     self.currentSongArtist.text = @"  ";
     [self configureMarqueeLabel:self.currentSongTitle];
@@ -399,15 +398,15 @@
 
 #pragma mark QPBrowsingManagerDelegate methods
 
--(void)connectedToPeer:(MCPeerID *)peerID {
+-(void)foundPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
     });
 }
 
--(void)disconnectedFromPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
+-(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
     dispatch_async(dispatch_get_main_queue(), ^{
-         [self.nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
+        [self.nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
     });
 }
 

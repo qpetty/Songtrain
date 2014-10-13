@@ -33,7 +33,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView opaque="NO" clipsSubviews="YES" alpha="0.79999999999999982" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UEy-Lb-6G7">
-                                <rect key="frame" x="0.0" y="231" width="600" height="308.5"/>
+                                <rect key="frame" x="0.0" y="231" width="600" height="310"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -42,7 +42,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dkq-BQ-Od4">
-                                <rect key="frame" x="496.5" y="-1" width="95.5" height="88"/>
+                                <rect key="frame" x="504" y="-1" width="88" height="89"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="8lp-Vy-G5Z"/>
                                     <constraint firstAttribute="height" constant="24" id="Meb-c6-GZ8"/>
@@ -71,7 +71,7 @@
                                 </connections>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awa-AC-RSY">
-                                <rect key="frame" x="104" y="33" width="392.5" height="20.5"/>
+                                <rect key="frame" x="105" y="33" width="391" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -93,19 +93,19 @@
                                 </variation>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Something Important" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wco-2X-hgb" customClass="MarqueeLabel">
-                                <rect key="frame" x="118" y="141" width="466" height="20.5"/>
+                                <rect key="frame" x="118" y="142" width="466" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5mu-8i-uAv" customClass="MarqueeLabel">
-                                <rect key="frame" x="118" y="162" width="466" height="20.5"/>
+                                <rect key="frame" x="118" y="162" width="466" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="OnN-vS-rLS">
-                                <rect key="frame" x="0.0" y="231" width="600" height="308.5"/>
+                                <rect key="frame" x="0.0" y="231" width="600" height="310"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -118,7 +118,7 @@
                                 <color key="progressTintColor" red="0.49803921569999998" green="0.6588235294" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qp-hg-bK3">
-                                <rect key="frame" x="8" y="0.0" width="88" height="88"/>
+                                <rect key="frame" x="8" y="-1" width="89" height="89"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="RXs-Rr-aLm"/>
                                     <constraint firstAttribute="width" secondItem="1qp-hg-bK3" secondAttribute="height" multiplier="1:1" id="Yqw-AK-Ect"/>
@@ -176,7 +176,7 @@
                             <constraint firstItem="awa-AC-RSY" firstAttribute="centerY" secondItem="1qp-hg-bK3" secondAttribute="centerY" id="fXd-LQ-ljn"/>
                             <constraint firstItem="awa-AC-RSY" firstAttribute="leading" secondItem="1qp-hg-bK3" secondAttribute="trailing" constant="8" id="g5q-Lz-pjh"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="63" id="gkt-gj-DcE"/>
-                            <constraint firstItem="dkq-BQ-Od4" firstAttribute="leading" secondItem="awa-AC-RSY" secondAttribute="trailing" id="h4S-wN-Zdr"/>
+                            <constraint firstItem="dkq-BQ-Od4" firstAttribute="leading" secondItem="awa-AC-RSY" secondAttribute="trailing" constant="8" id="h4S-wN-Zdr"/>
                             <constraint firstItem="OnN-vS-rLS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="8" id="jEF-mi-4bf"/>
                             <constraint firstItem="dkq-BQ-Od4" firstAttribute="centerY" secondItem="awa-AC-RSY" secondAttribute="centerY" id="jEg-t7-BvK"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="top" secondItem="UGe-gO-CiS" secondAttribute="bottom" constant="16" id="nar-EY-miK"/>
