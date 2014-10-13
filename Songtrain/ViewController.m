@@ -23,6 +23,12 @@
     QPSessionManager *sessionManager;
     BOOL editingTableViews;
     UIActivityIndicatorView *loadingIcon;
+    
+    UIImageView *backgroundImage;
+    UIImageView *backgroundOverlay;
+    
+    UICollectionView *nearbyTrainsModal;
+    UIView *nearbyTrainBackground;
 }
 
 - (void)viewDidLoad {
@@ -33,22 +39,22 @@
 
     UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
     
-    self.nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    [self.nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
-    self.nearbyTrainsModal.delegate = self;
-    self.nearbyTrainsModal.dataSource = self;
-    self.nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
+    nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    [nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
+    nearbyTrainsModal.delegate = self;
+    nearbyTrainsModal.dataSource = self;
+    nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
     
-    self.nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:self.nearbyTrainsModal.frame];
+    nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:nearbyTrainsModal.frame];
     UITapGestureRecognizer *tapAnywhere = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(outsideOfCellTap:)];
-    self.nearbyTrainsModal.backgroundView.gestureRecognizers = @[tapAnywhere];
+    nearbyTrainsModal.backgroundView.gestureRecognizers = @[tapAnywhere];
 
-    self.backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
-    self.backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
-    self.nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
-    self.nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
+    backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
+    nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
+    nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
     loadingIcon = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [self.nearbyTrainBackground addSubview:loadingIcon];
+    [nearbyTrainBackground addSubview:loadingIcon];
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
     [musicPlayer resetToServer];
@@ -111,17 +117,17 @@
 }
 
 -(void)viewDidLayoutSubviews {
-    [self.backgroundOverlay setFrame:self.view.frame];
-    self.backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    [backgroundOverlay setFrame:self.view.frame];
+    backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
     
-    [self.view addSubview:self.backgroundOverlay];
-    [self.view sendSubviewToBack:self.backgroundOverlay];
+    [self.view addSubview:backgroundOverlay];
+    [self.view sendSubviewToBack:backgroundOverlay];
     
-    [self.backgroundImage setFrame:CGRectMake(self.view.frame.origin.x - 10, self.view.frame.origin.y - 10, self.view.frame.size.width + 20, self.view.frame.size.height + 20)];
-    self.backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
+    [backgroundImage setFrame:CGRectMake(self.view.frame.origin.x - 10, self.view.frame.origin.y - 10, self.view.frame.size.width + 20, self.view.frame.size.height + 20)];
+    backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
 
-    [self.view addSubview:self.backgroundImage];
-    [self.view sendSubviewToBack:self.backgroundImage];
+    [self.view addSubview:backgroundImage];
+    [self.view sendSubviewToBack:backgroundImage];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -138,7 +144,7 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
-    [self.nearbyTrainsModal reloadData];
+    [nearbyTrainsModal reloadData];
     [self updatePlayOrPauseImage];
 }
 
@@ -160,11 +166,11 @@
 #pragma mark Browsing Popup
 
 -(IBAction)browseForOthers:(id)sender {
-    self.nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
-    [self.view addSubview:self.nearbyTrainBackground];
-    [self.view addSubview:self.nearbyTrainsModal];
+    nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:nearbyTrainBackground];
+    [self.view addSubview:nearbyTrainsModal];
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
-        [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
 
     } completion:^(BOOL finished) {
         [sessionManager startBrowsingForTrains];
@@ -176,25 +182,25 @@
 {
     [sessionManager stopBrowsingForTrains];
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
-        [self.nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
     } completion:^(BOOL finished) {
-        [self.nearbyTrainsModal reloadData];
+        [nearbyTrainsModal reloadData];
     }];
     
     if (somethingSelected == NO) {
         [self removeLoadingScreen];
     } else {
-        loadingIcon.center = self.nearbyTrainBackground.center;
+        loadingIcon.center = nearbyTrainBackground.center;
         [loadingIcon startAnimating];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     }
-    [self.nearbyTrainsModal removeFromSuperview];
+    [nearbyTrainsModal removeFromSuperview];
 }
 
 -(void)removeLoadingScreen {
     [loadingIcon stopAnimating];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [self.nearbyTrainBackground removeFromSuperview];
+    [nearbyTrainBackground removeFromSuperview];
 }
 
 -(void)skipPressed:(UIButton *)sender {
@@ -222,7 +228,7 @@
     }
     
     self.currentAlbumArtwork.image = image;
-    self.backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+    backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
 }
 
 -(IBAction)editAllTableViews:(id)sender {
@@ -425,13 +431,13 @@
 
 -(void)foundPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
+        [nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
     });
 }
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
+        [nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
     });
 }
 
@@ -517,7 +523,7 @@
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    AnimatedCollectionViewCell *cell = [self.nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
+    AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
 
     cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row] displayName];
     return cell;

@@ -33,12 +33,6 @@
 @property (weak) IBOutlet UIProgressView *progressBar;
 @property (weak) IBOutlet ControlPanelView *controlBar;
 
-@property UIImageView *backgroundImage;
-@property UIImageView *backgroundOverlay;
-
-@property UICollectionView *nearbyTrainsModal;
-@property UIView *nearbyTrainBackground;
-
 -(void)updatePlayOrPauseImage;
 
 @end
