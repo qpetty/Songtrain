@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 #import "MusicPickerViewController.h"
 #import "MarqueeLabel.h"
 #import "ControlPanelView.h"
@@ -14,7 +15,7 @@
 #import "AnimatedCollectionViewCell.h"
 #import "QPSessionManager.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, QPBrowsingManagerDelegate, QPSessionDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate, QPMusicPlayerPlaylistDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, MusicPickerViewControllerDelegate, QPBrowsingManagerDelegate, QPSessionDelegate, ControlPanelDelegate, UICollectionViewDataSource, UICollectionViewDelegate, QPMusicPlayerPlaylistDelegate, SKStoreProductViewControllerDelegate>
 
 @property (weak) IBOutlet UITableView *songTableView;
 @property (weak) IBOutlet UITableView *peerTableView;
@@ -33,7 +34,9 @@
 @property (weak) IBOutlet UIProgressView *progressBar;
 @property (weak) IBOutlet ControlPanelView *controlBar;
 
--(void)updatePlayOrPauseImage;
+@property (weak) IBOutlet UIButton *purchaseButton;
 
+-(void)updatePlayOrPauseImage;
+-(IBAction)openStore:(id)sender;
 @end
 

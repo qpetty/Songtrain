@@ -12,6 +12,9 @@
 #import "PeerTableViewCell.h"
 #import "AnimatedCollectionViewFlowLayout.h"
 
+#define ITUNES_SEARCH_API_AFFILIATE_TOKEN @""
+#define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
+
 @interface ViewController ()
 
 @end
@@ -29,6 +32,8 @@
     
     UICollectionView *nearbyTrainsModal;
     UIView *nearbyTrainBackground;
+    SKStoreProductViewController *storeController;
+    NSString *currentSongID;
 }
 
 - (void)viewDidLoad {
@@ -82,6 +87,9 @@
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     editingTableViews = NO;
+    
+    //Hide the purchase button initally and then only show once search results are loaded
+    self.purchaseButton.hidden = YES;
 }
 
 
@@ -473,6 +481,37 @@
     });
 }
 
+#pragma mark CollectionView for Nearby Trains
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return sessionManager.peerArray.count + 1;
+}
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
+    
+    if (indexPath.row == 0) {
+        cell.peerName.text = sessionManager.pid.displayName;
+    } else {
+        cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - 1] displayName];
+    }
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == 0) {
+        if (![sessionManager.server.displayName isEqualToString:sessionManager.pid.displayName]) {
+            [sessionManager restartSession];
+        }
+        [self finishBrowsingForOthers:NO];
+    } else {
+        [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
+        [self finishBrowsingForOthers:YES];
+    }
+}
+
 -(void)updateCurrentSong {
     if (musicPlayer.currentSong == nil) {
         self.currentSongTitle.text = @" ";
@@ -480,11 +519,66 @@
         [self updateImage:nil];
     }
     else {
+        if ([self.currentSongTitle.text isEqualToString:musicPlayer.currentSong.title] == NO ||
+            [self.currentSongArtist.text isEqualToString:musicPlayer.currentSong.artistName] == NO) {
+            self.purchaseButton.hidden = YES;
+            NSString *searchTerm = [musicPlayer.currentSong.artistName stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+            NSLog(@"iTunes Search API term: %@", [searchTerm stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
+            NSString *urlString = [NSString stringWithFormat:@"https://itunes.apple.com/search?entity=allArtist&attribute=allArtistTerm&limit=1&term=%@", searchTerm];
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [NSURLConnection sendAsynchronousRequest:request
+                                               queue:[NSOperationQueue mainQueue]
+                                   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                                       if (!error) {
+                                           NSError *parseError;
+                                           id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
+                                           //NSLog(@"%@", parse[@"results"][0]);
+   
+                                           if (parseError == nil &&
+                                               [parse objectForKey:@"results"] != nil &&
+                                               [parse[@"results"][0] objectForKey:@"artistId"] != nil) {
+                                               currentSongID = parse[@"results"][0][@"artistId"];
+                                               self.purchaseButton.hidden = NO;
+                                           }
+                                       }
+                                   }];
+        }
+        
         self.currentSongTitle.text = musicPlayer.currentSong.title;
         self.currentSongArtist.text = musicPlayer.currentSong.artistName;
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }
+
+#pragma mark Purchase Button
+
+-(IBAction)openStore:(id)sender {
+    NSDictionary *params = @{SKStoreProductParameterITunesItemIdentifier: currentSongID,
+                             SKStoreProductParameterAffiliateToken: ITUNES_SEARCH_API_AFFILIATE_TOKEN,
+                             SKStoreProductParameterCampaignToken: ITUNES_SEARCH_API_CAMPAIGN_TOKEN};
+    
+    storeController = [[SKStoreProductViewController alloc] init];
+    storeController.delegate = self;
+    
+    [storeController loadProductWithParameters:params completionBlock:^(BOOL result, NSError *error) {
+        if (error) {
+            NSLog(@"Error in storekit: %@", error);
+            [self dismissViewControllerAnimated:YES completion:^{
+                NSLog(@"Dismissed store");
+            }];
+        }
+    }];
+    
+    [self presentViewController:storeController animated:YES completion:nil];
+}
+
+-(void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    storeController = nil;
+}
+
+#pragma mark KVO
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"currentSong"]) {
@@ -514,36 +608,6 @@
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         [self updateImage:musicPlayer.currentSong.albumImage];
-    }
-}
-
-
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return sessionManager.peerArray.count + 1;
-}
-
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
-    
-    if (indexPath.row == 0) {
-        cell.peerName.text = sessionManager.pid.displayName;
-    } else {
-        cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - 1] displayName];
-    }
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row == 0) {
-        if (![sessionManager.server.displayName isEqualToString:sessionManager.pid.displayName]) {
-            [sessionManager restartSession];
-        }
-        [self finishBrowsingForOthers:NO];
-    } else {
-        [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
-        [self finishBrowsingForOthers:YES];
     }
 }
 
