@@ -38,13 +38,11 @@
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
     UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
-    
     nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     [nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     nearbyTrainsModal.delegate = self;
     nearbyTrainsModal.dataSource = self;
     nearbyTrainsModal.backgroundColor = UIColorFromRGBWithAlpha(0x111111, 0.4);
-    
     nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:nearbyTrainsModal.frame];
     UITapGestureRecognizer *tapAnywhere = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(outsideOfCellTap:)];
     nearbyTrainsModal.backgroundView.gestureRecognizers = @[tapAnywhere];
@@ -144,7 +142,6 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
-    [nearbyTrainsModal reloadData];
     [self updatePlayOrPauseImage];
 }
 
@@ -167,15 +164,17 @@
 
 -(IBAction)browseForOthers:(id)sender {
     nearbyTrainsModal.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
     [self.view addSubview:nearbyTrainBackground];
     [self.view addSubview:nearbyTrainsModal];
+    
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
 
     } completion:^(BOOL finished) {
+        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
         [sessionManager startBrowsingForTrains];
     }];
-    
 }
 
 -(void)finishBrowsingForOthers:(BOOL)somethingSelected
@@ -184,8 +183,8 @@
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
     } completion:^(BOOL finished) {
-        [nearbyTrainsModal reloadData];
     }];
+    
     
     if (somethingSelected == NO) {
         [self removeLoadingScreen];
@@ -195,6 +194,7 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     }
     [nearbyTrainsModal removeFromSuperview];
+    [nearbyTrainsModal reloadData];
 }
 
 -(void)removeLoadingScreen {
@@ -431,13 +431,14 @@
 
 -(void)foundPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [nearbyTrainsModal insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[sessionManager.peerArray indexOfObject:peerID] inSection:0]]];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + 1 inSection:0];
+        [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
     });
 }
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx inSection:0]]];
+        [nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx + 1 inSection:0]]];
     });
 }
 
@@ -518,20 +519,32 @@
 
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return sessionManager.peerArray.count;
+    return sessionManager.peerArray.count + 1;
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
-
-    cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row] displayName];
+    
+    if (indexPath.row == 0) {
+        cell.peerName.text = sessionManager.pid.displayName;
+    } else {
+        cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - 1] displayName];
+    }
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row]];
-    [self finishBrowsingForOthers:YES];
+    
+    if (indexPath.row == 0) {
+        if (![sessionManager.server.displayName isEqualToString:sessionManager.pid.displayName]) {
+            [sessionManager restartSession];
+        }
+        [self finishBrowsingForOthers:NO];
+    } else {
+        [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
+        [self finishBrowsingForOthers:YES];
+    }
 }
 
 @end
