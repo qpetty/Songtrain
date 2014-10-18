@@ -305,13 +305,11 @@
 
 - (void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info
 {
-    if ([peerID isEqual:self.server] == NO) {
-        NSLog(@"Found %@", peerID.displayName);
-        [self willChangeValueForKey:@"peerArray"];
-        [_peerArray addObject:peerID];
-        [self didChangeValueForKey:@"peerArray"];
-        [self.browsingDelegate foundPeer:peerID];
-    }
+    NSLog(@"Found %@", peerID.displayName);
+    [self willChangeValueForKey:@"peerArray"];
+    [_peerArray addObject:peerID];
+    [self didChangeValueForKey:@"peerArray"];
+    [self.browsingDelegate foundPeer:peerID];
 }
 
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
