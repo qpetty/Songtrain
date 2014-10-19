@@ -64,7 +64,7 @@
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:[UIImage imageNamed:@"song_inactive"] selectedImage:[UIImage imageNamed:@"song_active"]];
     
     //Soundcloud
-    [SCSoundCloud removeAccess];
+    //[SCSoundCloud removeAccess];
     
     [self setupSoundCloud];
     
@@ -102,7 +102,7 @@
     [allMediaItems removeAllObjects];
 }
 
-- (void)addItem:(MPMediaItem*)item
+- (void)addItem:(id)item
 {
     [allMediaItems addObject:item];
     
@@ -111,7 +111,7 @@
     }
 }
 
-- (void)removeItem:(MPMediaItem*)item
+- (void)removeItem:(id)item
 {
     [allMediaItems removeObject:item];
     if (![allMediaItems count]) {
@@ -121,7 +121,7 @@
     }
 }
 
-- (BOOL)isItemSelected:(MPMediaItem*)item
+- (BOOL)isItemSelected:(id)item
 {
     return [allMediaItems containsObject:item];
 }
@@ -143,8 +143,24 @@
 - (void)done
 {
     if ([allMediaItems count]) {
-        _selectedMediaItems = [NSArray arrayWithArray:allMediaItems];
-        [self.delegate mediaPicker:(MPMediaPickerController*)self didPickMediaItems:[MPMediaItemCollection collectionWithItems:allMediaItems]];
+        NSMutableArray *urlItems = [[NSMutableArray alloc] init];
+        NSMutableArray *mediaItems = [[NSMutableArray alloc] init];
+        
+        for (id oneItem in allMediaItems) {
+            if ([oneItem isMemberOfClass:[NSURL class]]) {
+                [urlItems addObject:oneItem];
+            } else {
+                [mediaItems addObject:oneItem];
+            }
+        }
+        
+        _selectedMediaItems = [NSArray arrayWithArray:mediaItems];
+        MPMediaItemCollection *itemCollection = nil;
+        if (mediaItems.count) {
+            itemCollection = [MPMediaItemCollection collectionWithItems:_selectedMediaItems];
+        }
+        [self.delegate musicPicker:self didPickItems:urlItems andMediaItems:itemCollection];
+
         for (UIBarButtonItem *button in doneButtons) {
             button.title = @"Cancel";
         }
@@ -184,13 +200,9 @@
 }
 
 -(UIViewController*)soundCloudBaseViewController {
-    UIViewController *viewcontroller = [[UIViewController alloc] init];
-    viewcontroller.title = @"SoundCloud";
-    viewcontroller.view.backgroundColor = [UIColor greenColor];
-
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
-    viewcontroller.navigationItem.rightBarButtonItem = item;
-    [self addButton:viewcontroller.navigationItem.rightBarButtonItem];
+    SoundCloudTabViewController *viewcontroller = [[SoundCloudTabViewController alloc] init];
+    viewcontroller.delegate = self;
+    
     return viewcontroller;
 }
 

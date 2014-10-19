@@ -11,6 +11,7 @@
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
 #import "AnimatedCollectionViewFlowLayout.h"
+#import "SoundCloudSong.h"
 
 #define ITUNES_SEARCH_API_AFFILIATE_TOKEN @""
 #define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
@@ -273,14 +274,20 @@
     [self presentViewController:musicPicker animated:YES completion:nil];
 }
 
-- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
-{
+-(void)musicPicker:(MusicPickerViewController *)picker didPickItems:(NSArray *)items andMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+    
     NSMutableArray *newSongs = [[NSMutableArray alloc] init];
     for (MPMediaItem *item in mediaItemCollection.items) {
         LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
         [newSongs addObject:tempSong];
     }
-
+    for (id item in items) {
+        if ([item isMemberOfClass:[NSURL class]]) {
+            SoundCloudSong *tempSong = [[SoundCloudSong alloc] initWithURL:(NSURL*)item];
+            [newSongs addObject:tempSong];
+        }
+    }
+    
     [self dismissViewControllerAnimated:YES completion:^{
         for (Song *song in newSongs) {
             if (sessionManager.currentRole == ClientConnection) {

@@ -14,10 +14,13 @@
 #import "MusicNavigationViewController.h"
 
 #import "CocoaSoundCloudUI/Sources/SoundCloudUI/SCUI.h"
+#import "SoundCloudTabViewController.h"
 
 @class MusicPickerViewController;
 
 @protocol MusicPickerViewControllerDelegate <UITabBarControllerDelegate, MPMediaPickerControllerDelegate>
+
+-(void)musicPicker:(MusicPickerViewController*)picker didPickItems:(NSArray*)items andMediaItems:(MPMediaItemCollection*)mediaItemCollection;
 
 @end
 

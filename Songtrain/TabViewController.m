@@ -9,12 +9,6 @@
 #import "TabViewController.h"
 #import "HeaderSongCellView.h"
 
-@interface TabViewController () {
-    UITableView *wholeTableView;
-}
-
-@end
-
 @implementation TabViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,23 +24,23 @@
 {
     self = [super init];
     if (self) {
-        wholeTableView = [[UITableView alloc] init];
-        wholeTableView.dataSource = self;
-        wholeTableView.delegate = self;
+        _wholeTableView = [[UITableView alloc] init];
+        _wholeTableView.dataSource = self;
+        _wholeTableView.delegate = self;
         
-        wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
-        wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
-        wholeTableView.sectionIndexColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
+        _wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
+        _wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+        _wholeTableView.sectionIndexColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
         
-        wholeTableView.separatorColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
+        _wholeTableView.separatorColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
         
-        wholeTableView.layer.borderWidth = 0.5f;
-        wholeTableView.layer.borderColor = UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor;
+        _wholeTableView.layer.borderWidth = 0.5f;
+        _wholeTableView.layer.borderColor = UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor;
         
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
         self.navigationItem.rightBarButtonItem = item;
         
-        [wholeTableView registerNib:[UINib nibWithNibName:@"HeaderSongCellView" bundle:[NSBundle mainBundle]] forHeaderFooterViewReuseIdentifier:@"HeaderSong"];
+        [_wholeTableView registerNib:[UINib nibWithNibName:@"HeaderSongCellView" bundle:[NSBundle mainBundle]] forHeaderFooterViewReuseIdentifier:@"HeaderSong"];
     }
     return self;
 }
@@ -54,21 +48,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addSubview:wholeTableView];
+    [self.view addSubview:_wholeTableView];
     [self.delegate addButton:self.navigationItem.rightBarButtonItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [wholeTableView reloadData];
+    [_wholeTableView reloadData];
 }
 
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
 
-    wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
+    _wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,
                                       self.view.frame.size.height - 49);
@@ -121,7 +115,7 @@
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    HeaderSongCellView *cell = [wholeTableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
+    HeaderSongCellView *cell = [_wholeTableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
     cell.title.text = [[query.itemSections objectAtIndex:section] title];
     return cell;
 }
