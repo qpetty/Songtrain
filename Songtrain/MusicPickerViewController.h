@@ -13,13 +13,15 @@
 #import "ArtistTabViewController.h"
 #import "MusicNavigationViewController.h"
 
+#import "CocoaSoundCloudUI/Sources/SoundCloudUI/SCUI.h"
+
 @class MusicPickerViewController;
 
 @protocol MusicPickerViewControllerDelegate <UITabBarControllerDelegate, MPMediaPickerControllerDelegate>
 
 @end
 
-@interface MusicPickerViewController : UITabBarController <TabViewControllerDelegate>
+@interface MusicPickerViewController : UITabBarController <TabViewControllerDelegate, SCLoginViewControllerDelegate>
 
 @property (weak, nonatomic) id <MusicPickerViewControllerDelegate> delegate;
 @property (readonly) NSArray *selectedMediaItems;
