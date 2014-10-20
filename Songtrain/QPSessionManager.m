@@ -363,7 +363,7 @@
 - (void)sendDataUnreliablyToAllPeers:(NSData*)data
 {
     if (mainSession.connectedPeers.count == 0) {
-        NSLog(@"No one to send a message to :(");
+        //NSLog(@"No one to send a message to :(");
         return;
     }
     

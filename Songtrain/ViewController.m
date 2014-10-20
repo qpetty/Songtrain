@@ -282,9 +282,9 @@
         [newSongs addObject:tempSong];
     }
     for (id item in items) {
-        if ([item isMemberOfClass:[NSURL class]]) {
-            SoundCloudSong *tempSong = [[SoundCloudSong alloc] initWithURL:(NSURL*)item];
-            [newSongs addObject:tempSong];
+        if ([item isMemberOfClass:[SoundCloudSong class]]) {
+            [((SoundCloudSong*)item) setOutputASBD:*(musicPlayer.audioFormat)];
+            [newSongs addObject:item];
         }
     }
     
@@ -544,6 +544,7 @@
    
                                            if (parseError == nil &&
                                                [parse objectForKey:@"results"] != nil &&
+                                               [parse[@"results"] isMemberOfClass:[NSArray class]] &&
                                                [parse[@"results"][0] objectForKey:@"artistId"] != nil) {
                                                currentSongID = parse[@"results"][0][@"artistId"];
                                                self.purchaseButton.hidden = NO;

@@ -35,7 +35,16 @@
         
         CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[_assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
         const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription (item);
-        
+        /*
+        NSLog(@"ASBD sample rate: %f", asbd->mSampleRate);
+        NSLog(@"ASBD format id: %d", asbd->mFormatID);
+        NSLog(@"ASBD format flags: %d", asbd->mFormatFlags);
+        NSLog(@"ASBD frames per packet: %d", asbd->mFramesPerPacket);
+        NSLog(@"ASBD channels per frame: %d", asbd->mChannelsPerFrame);
+        NSLog(@"ASBD bits per channel: %d", asbd->mBitsPerChannel);
+        NSLog(@"ASBD bytes per packet: %d", asbd->mBytesPerPacket);
+        NSLog(@"ASBD bytes per frame: %d", asbd->mBytesPerFrame);
+        */
         memcpy(_inputASBD, asbd, sizeof(AudioStreamBasicDescription));
     }
     return self;

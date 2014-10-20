@@ -7,6 +7,7 @@
 //
 
 #import "MusicPickerViewController.h"
+#import "Song.h"
 
 @interface MusicPickerViewController (){
     NSMutableArray *allMediaItems, *doneButtons;
@@ -147,7 +148,7 @@
         NSMutableArray *mediaItems = [[NSMutableArray alloc] init];
         
         for (id oneItem in allMediaItems) {
-            if ([oneItem isMemberOfClass:[NSURL class]]) {
+            if ([oneItem isKindOfClass:[Song class]]) {
                 [urlItems addObject:oneItem];
             } else {
                 [mediaItems addObject:oneItem];

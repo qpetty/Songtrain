@@ -83,8 +83,8 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
-    NSURL *newSongURL = [NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]];
-    if ([self.delegate isItemSelected:newSongURL]) {
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]]];
+    if ([self.delegate isItemSelected:newSong]) {
         cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
     }
     
@@ -93,12 +93,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSURL *newSongURL = [NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]];
-    if ([self.delegate isItemSelected:newSongURL]) {
-        [self.delegate removeItem:newSongURL];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row]];
+    if ([self.delegate isItemSelected:newSong]) {
+        [self.delegate removeItem:newSong];
     }
     else {
-        [self.delegate addItem:newSongURL];
+        [self.delegate addItem:newSong];
     }
     [self.wholeTableView reloadData];
 }
