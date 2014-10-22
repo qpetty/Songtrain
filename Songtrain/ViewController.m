@@ -51,10 +51,6 @@
     nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:nearbyTrainsModal.frame];
     UITapGestureRecognizer *cancelBrowsingTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelBrowsingForOthersTap:)];
     nearbyTrainsModal.backgroundView.gestureRecognizers = @[cancelBrowsingTap];
-    UIButton *nearbyTrainsCancel = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 60, 60)];
-    [nearbyTrainsCancel setTitle:@"Cancel" forState:UIControlStateNormal];
-    [nearbyTrainsModal addSubview:nearbyTrainsCancel];
-    nearbyTrainsCancel.gestureRecognizers = @[cancelBrowsingTap];
     
 
     backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -511,7 +507,7 @@
             [sessionManager restartSession];
         }
         [self finishBrowsingForOthers:NO];
-    } else if ([sessionManager.server.displayName isEqualToString:sessionManager.pid.displayName]) {
+    } else if ([sessionManager.server.displayName isEqualToString:((MCPeerID *)[sessionManager.peerArray objectAtIndex:indexPath.row -1]).displayName]) {
         [self finishBrowsingForOthers:NO];
     } else {
         [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
