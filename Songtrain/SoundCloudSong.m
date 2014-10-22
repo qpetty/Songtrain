@@ -68,7 +68,7 @@
 }
 
 -(void)prepareSong {
-    NSLog(@"preparing SoundClousSong");
+    NSLog(@"preparing SoundCloudSong");
     //dispatch_async(dispatch_get_main_queue(), ^{
         [self requestSongData];
     //});

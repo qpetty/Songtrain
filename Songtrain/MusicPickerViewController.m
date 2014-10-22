@@ -80,7 +80,7 @@
     }
     
     soundCloudFrame = [[MusicNavigationViewController alloc] initWithRootViewController:soundCloudRoot];
-    soundCloudFrame.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SoundCloud" image:[UIImage imageNamed:@"artist_inactive"] selectedImage:[UIImage imageNamed:@"artist_active"]];
+    soundCloudFrame.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SoundCloud" image:[UIImage imageNamed:@"soundcloud_icon"] selectedImage:[UIImage imageNamed:@"soundcloud_icon"]];
     
     //Putting everything in the tab bar controller
     

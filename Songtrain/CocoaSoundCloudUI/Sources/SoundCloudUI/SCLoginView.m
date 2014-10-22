@@ -128,7 +128,7 @@
     self.titleLabel.numberOfLines = 2;
     self.titleLabel.textAlignment = UITextAlignmentLeft;
     self.titleLabel.text = [NSString stringWithFormat:SCLocalizedString(@"credential_title", @"Title"),
-                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]];
+                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]];
     self.titleLabel.textColor = [UIColor soundCloudGrey];
     self.titleLabel.font = [UIFont systemFontOfSize:15.0];
     self.titleLabel.backgroundColor = [UIColor clearColor];
