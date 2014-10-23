@@ -270,21 +270,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5A19585719F997F700BA5AB2 /* SoundCloud UI */ = {
-			isa = PBXGroup;
-			children = (
-				5A19585E19F9983300BA5AB2 /* UI */,
-			);
-			name = "SoundCloud UI";
-			sourceTree = "<group>";
-		};
-		5A19585E19F9983300BA5AB2 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = UI;
-			sourceTree = "<group>";
-		};
 		5A40DDF419F332CA0098F37B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -457,7 +442,6 @@
 				5A743C1419CBD9540008C989 /* AppDelegate.m */,
 				5A5B808819CE7772000A4681 /* Network */,
 				5A5B807B19CE771A000A4681 /* Music Player */,
-				5A19585719F997F700BA5AB2 /* SoundCloud UI */,
 				5A5B809719CF8976000A4681 /* MusicPicker */,
 				5A5B80AD19CF98DC000A4681 /* Custom Views */,
 				5A743C1619CBD9540008C989 /* ViewController.h */,
@@ -553,7 +537,7 @@
 				TargetAttributes = {
 					5A743C0B19CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = JX9WQKUYGV;
+						DevelopmentTeam = 8TCDK8463J;
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -881,8 +865,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = (
@@ -897,7 +881,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3947ae21-1da1-4504-af19-fcf9179c5cdd";
+				PROVISIONING_PROFILE = "a17827ff-da9b-4205-8ced-8b9d2305ccf8";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -906,8 +890,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Quinton Petty (E57UZQ63Y2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -926,7 +910,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3947ae21-1da1-4504-af19-fcf9179c5cdd";
+				PROVISIONING_PROFILE = "a17827ff-da9b-4205-8ced-8b9d2305ccf8";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
