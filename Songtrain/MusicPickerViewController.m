@@ -65,7 +65,7 @@
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:[UIImage imageNamed:@"song_inactive"] selectedImage:[UIImage imageNamed:@"song_active"]];
     
     //Soundcloud
-    //[SCSoundCloud removeAccess];
+    [SCSoundCloud removeAccess];
     
     [self setupSoundCloud];
     

@@ -18,7 +18,6 @@
  * 
  */
 
-#import "UIViewController+SoundCloudUI.h"
 #import "UIView+SoundCloudUI.h"
 #import "UIDevice+SoundCloudUI.h"
 
