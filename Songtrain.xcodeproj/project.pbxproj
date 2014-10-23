@@ -12,9 +12,6 @@
 		5A40DE3F19F33F5A0098F37B /* libJSONKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE3C19F33F530098F37B /* libJSONKit.a */; };
 		5A40DE4019F33F5A0098F37B /* libOHAttributedLabel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE3519F33F390098F37B /* libOHAttributedLabel.a */; };
 		5A40DE4B19F344EB0098F37B /* libOAuth2Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE0519F332E30098F37B /* libOAuth2Client.a */; };
-		5A40DE4E19F346BB0098F37B /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE4C19F346BB0098F37B /* AddressBook.framework */; };
-		5A40DE4F19F346BB0098F37B /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE4D19F346BB0098F37B /* AddressBookUI.framework */; };
-		5A40DE5119F346DE0098F37B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A40DE5019F346DE0098F37B /* CoreLocation.framework */; };
 		5A40DE5319F34A350098F37B /* SoundCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A40DE5219F34A350098F37B /* SoundCloud.bundle */; };
 		5A40DE5619F371490098F37B /* SoundCloudTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */; };
 		5A40DE5919F377A30098F37B /* SoundCloudSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A40DE5819F377A30098F37B /* SoundCloudSong.m */; };
@@ -177,9 +174,6 @@
 		5A40DE2419F33E8B0098F37B /* SoundCloudUI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SoundCloudUI.xcodeproj; path = Songtrain/CocoaSoundCloudUI/SoundCloudUI.xcodeproj; sourceTree = "<group>"; };
 		5A40DE3019F33F390098F37B /* OHAttributedLabel.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHAttributedLabel.xcodeproj; path = Songtrain/OHAttributedLabel/OHAttributedLabel.xcodeproj; sourceTree = "<group>"; };
 		5A40DE3619F33F530098F37B /* JSONKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSONKit.xcodeproj; path = Songtrain/JSONKit/JSONKit.xcodeproj; sourceTree = "<group>"; };
-		5A40DE4C19F346BB0098F37B /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		5A40DE4D19F346BB0098F37B /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		5A40DE5019F346DE0098F37B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A40DE5219F34A350098F37B /* SoundCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SoundCloud.bundle; path = CocoaSoundCloudUI/SoundCloud.bundle; sourceTree = "<group>"; };
 		5A40DE5419F371490098F37B /* SoundCloudTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundCloudTabViewController.h; sourceTree = "<group>"; };
 		5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundCloudTabViewController.m; sourceTree = "<group>"; };
@@ -255,9 +249,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A40DE5119F346DE0098F37B /* CoreLocation.framework in Frameworks */,
-				5A40DE4E19F346BB0098F37B /* AddressBook.framework in Frameworks */,
-				5A40DE4F19F346BB0098F37B /* AddressBookUI.framework in Frameworks */,
 				5A40DE2D19F33E910098F37B /* libSoundCloudUI.a in Frameworks */,
 				5A40DE1B19F339520098F37B /* libSoundCloudAPI.a in Frameworks */,
 				5A40DE4B19F344EB0098F37B /* libOAuth2Client.a in Frameworks */,
@@ -279,6 +270,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A19585719F997F700BA5AB2 /* SoundCloud UI */ = {
+			isa = PBXGroup;
+			children = (
+				5A19585E19F9983300BA5AB2 /* UI */,
+			);
+			name = "SoundCloud UI";
+			sourceTree = "<group>";
+		};
+		5A19585E19F9983300BA5AB2 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		5A40DDF419F332CA0098F37B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,9 +397,6 @@
 		5A5B80AC19CF98C1000A4681 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5A40DE5019F346DE0098F37B /* CoreLocation.framework */,
-				5A40DE4C19F346BB0098F37B /* AddressBook.framework */,
-				5A40DE4D19F346BB0098F37B /* AddressBookUI.framework */,
 				5AF4550119EC670F008D97AA /* StoreKit.framework */,
 				5A5B80B319CFABA5000A4681 /* AVFoundation.framework */,
 				5A5B80AA19CF8C2B000A4681 /* MediaPlayer.framework */,
@@ -454,6 +457,7 @@
 				5A743C1419CBD9540008C989 /* AppDelegate.m */,
 				5A5B808819CE7772000A4681 /* Network */,
 				5A5B807B19CE771A000A4681 /* Music Player */,
+				5A19585719F997F700BA5AB2 /* SoundCloud UI */,
 				5A5B809719CF8976000A4681 /* MusicPicker */,
 				5A5B80AD19CF98DC000A4681 /* Custom Views */,
 				5A743C1619CBD9540008C989 /* ViewController.h */,
