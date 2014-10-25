@@ -16,12 +16,31 @@
 
 @implementation SoundCloudTabViewController {
     NSArray *tracks;
+    SCLoginViewController *login;
+}
+
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        //[SCSoundCloud removeAccess];
+        [self setupSoundCloud];
+        
+        if ([SCSoundCloud account] == nil) {
+            [self getAuthViewController];
+        } else {
+            [self getFavorites];
+        }
+    }
+    return self;
+}
+
+- (void)setupSoundCloud {
+    NSLog(@"Setting up SoundCloud");
+    [SCSoundCloud setClientID:@"76afdeecb23413b7ace7f1cf4ef90e9d" secret:@"f561aa48f95d4d2290db923adbb36f04" redirectURL:[NSURL URLWithString:@"songtrain://oauth"]];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"SoundCloud";
-    tracks = nil;
     // Do any additional setup after loading the view.
 }
 
@@ -32,30 +51,66 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    SCRequestResponseHandler handler;
-    handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
-        NSError *jsonError = nil;
-        NSJSONSerialization *jsonResponse = [NSJSONSerialization
-                                             JSONObjectWithData:data
-                                             options:0
-                                             error:&jsonError];
-        if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
-            //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
-            tracks = (NSArray *)jsonResponse;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.wholeTableView reloadData];
-            });
+    [self getFavorites];
+}
+
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    login.view.frame = CGRectMake(self.view.frame.origin.x,
+                                  self.view.frame.origin.y + 32.0,
+                                  self.view.frame.size.width,
+                                  self.view.frame.size.height);
+}
+
+- (void)getFavorites {
+    NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
+    if ([SCSoundCloud account] != nil) {
+        SCRequestResponseHandler handler;
+        handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
+            NSError *jsonError = nil;
+            NSJSONSerialization *jsonResponse = [NSJSONSerialization
+                                                 JSONObjectWithData:data
+                                                 options:0
+                                                 error:&jsonError];
+            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
+                //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
+                tracks = (NSArray *)jsonResponse;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.wholeTableView reloadData];
+                    NSLog(@"Updated favorites");
+                });
+            }
+        };
+        
+        NSString *resourceURL = @"https://api.soundcloud.com/me/favorites.json";
+        [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:resourceURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
+    } else {
+        tracks = nil;
+    }
+}
+
+-(void)getAuthViewController {
+    SCLoginViewControllerCompletionHandler handler = ^(NSError *error) {
+        if (SC_CANCELED(error)) {
+            NSLog(@"Canceled!");
+        } else if (error) {
+            NSLog(@"Error: %@", [error localizedDescription]);
+        } else {
+            NSLog(@"Done!");
+            [login removeFromParentViewController];
+            [login.view removeFromSuperview];
+            [self getFavorites];
         }
     };
     
-    NSString *resourceURL = @"https://api.soundcloud.com/me/favorites.json";
-    [SCRequest performMethod:SCRequestMethodGET
-                  onResource:[NSURL URLWithString:resourceURL]
-             usingParameters:nil
-                 withAccount:[SCSoundCloud account]
-      sendingProgressHandler:nil
-             responseHandler:handler];
+    [SCSoundCloud requestAccessWithPreparedAuthorizationURLHandler:^(NSURL *preparedURL) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            login = [SCLoginViewController loginViewControllerWithPreparedURL:preparedURL completionHandler:handler];
+            [self addChildViewController:login];
+            [self.view addSubview:login.view];
+        });
+    }];
 }
 
 #pragma mark - Table view data source
@@ -74,7 +129,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    STSongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MusicCell"];
+    
+    if (!cell) {
+        cell = [[STSongTableViewCell alloc] init];
+        [cell setRestorationIdentifier:@"MusicCell"];
+    }
+    
     cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;

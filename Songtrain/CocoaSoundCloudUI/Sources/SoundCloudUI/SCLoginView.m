@@ -124,9 +124,10 @@
 
 - (void)layoutTitleLabel
 {
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.numberOfLines = 2;
-    self.titleLabel.textAlignment = UITextAlignmentLeft;
+    self.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.titleLabel.text = [NSString stringWithFormat:SCLocalizedString(@"credential_title", @"Title"),
                             [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]];
     self.titleLabel.textColor = [UIColor soundCloudGrey];
@@ -259,28 +260,30 @@
 
 - (void)layoutSubviews;
 {
-    CGFloat titleLabelX = 18.0;
-    CGFloat titleLabelY = 13.0;
+    CGFloat titleLabelX = 13.0;
+    CGFloat titleLabelY = self.bounds.origin.y + 14.0;
     CGFloat titleLabelHeight = 40.0;
     CGFloat buttonHeight = 43.0;
 
-    self.webView.frame = self.bounds;
+    //self.webView.frame = self.bounds;
 
+    self.webView.frame = CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width, self.frame.size.height);
+    
     self.titleLabel.frame = CGRectMake(titleLabelX,
                                        titleLabelY,
-                                       self.bounds.size.width - self.frame.origin.x,
+                                       self.bounds.size.width - titleLabelX,
                                        titleLabelHeight);
 
-    self.credentialsView.frame = CGRectMake(13.0,
-                                            155.0,
-                                            self.bounds.size.width - 27.0,
-                                            97.0);
-
     self.fbButton.frame = CGRectMake(self.credentialsView.frame.origin.x,
-                                     69.0,
+                                     2.0 * self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height,
                                      self.credentialsView.frame.size.width,
                                      buttonHeight);
 
+    self.credentialsView.frame = CGRectMake(self.titleLabel.frame.origin.x,
+                                            self.fbButton.frame.origin.y + self.fbButton.frame.size.height + 44.0,
+                                            self.bounds.size.width - 27.0,
+                                            97.0);
+    
     self.loginButton.frame = CGRectMake(self.credentialsView.frame.origin.x,
                                         self.credentialsView.frame.origin.y + self.credentialsView.frame.size.height + 21.0,
                                         self.credentialsView.frame.size.width,
@@ -294,7 +297,6 @@
                                      self.loginButton.frame.origin.y + self.loginButton.frame.size.height + 17.0,
                                      CGRectGetWidth(self.bounds) - 20.0,
                                      80.0);
-    [self setNeedsDisplay];
 }
 
 - (void)askForOpeningURL:(NSURL*)URL
@@ -398,7 +400,6 @@
                                                                         green:0.3
                                                                          blue:0.3
                                                                         alpha:1.0];
-                         self.bounds = self.webView.frame;
                          [self bringSubviewToFront:self.activityIndicator];
                      }];
 }

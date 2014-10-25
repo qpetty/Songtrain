@@ -24,23 +24,12 @@
 {
     self = [super init];
     if (self) {
-        _wholeTableView = [[UITableView alloc] init];
+        _wholeTableView = [[STMusicPickerTableView alloc] init];
         _wholeTableView.dataSource = self;
         _wholeTableView.delegate = self;
         
-        _wholeTableView.backgroundColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
-        _wholeTableView.sectionIndexBackgroundColor = [UIColor clearColor];
-        _wholeTableView.sectionIndexColor = UIColorFromRGBWithAlpha(0xFFFFFF, 1.0);
-        
-        _wholeTableView.separatorColor = UIColorFromRGBWithAlpha(0x222222, 1.0);
-        
-        _wholeTableView.layer.borderWidth = 0.5f;
-        _wholeTableView.layer.borderColor = UIColorFromRGBWithAlpha(0x252525, 0.7).CGColor;
-        
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
         self.navigationItem.rightBarButtonItem = item;
-        
-        [_wholeTableView registerNib:[UINib nibWithNibName:@"HeaderSongCellView" bundle:[NSBundle mainBundle]] forHeaderFooterViewReuseIdentifier:@"HeaderSong"];
     }
     return self;
 }
@@ -61,12 +50,10 @@
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-
     _wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,
-                                      self.view.frame.size.height - 49);
-    
+                                      self.view.frame.size.height);
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,46 +64,21 @@
 
 #pragma mark - Table view data source
 
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [[query itemSections] count];
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [[[query itemSections] objectAtIndex:section] range].length;
+    return 0;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MusicCell"];
-    
-    if (!cell) {
-        cell = [[UITableViewCell alloc] init];
-        [cell setRestorationIdentifier:@"MusicCell"];
-    }
-    
-    cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.userInteractionEnabled = YES;
-    cell.accessoryType = UITableViewCellAccessoryNone;
-    return cell;
-}
-
-// Changes header views background color
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    view.tintColor = [UIColor clearColor];
-    [view.layer setBorderWidth:0.5f];
-    [view.layer setBorderColor:[UIColor blackColor].CGColor];
-    view.frame = CGRectMake(view.frame.origin.x - 1, view.frame.origin.y, view.frame.size.width + 2, view.frame.size.height);
-}
-
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    HeaderSongCellView *cell = [_wholeTableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
-    cell.title.text = [[query.itemSections objectAtIndex:section] title];
-    return cell;
+    return nil;
 }
 @end

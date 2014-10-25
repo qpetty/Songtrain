@@ -40,11 +40,10 @@
 -(id)initWithRootViewController:(UIViewController *)rootViewController
 {
     self = [super initWithRootViewController:rootViewController];
-    
-    
-    //self.navigationBar.tintColor = UIColorFromRGB(0xC5D1DE);
-    self.navigationBar.barTintColor = [UIColor darkGrayColor];
-    self.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGBWithAlpha(0xebebeb, 1.0), NSForegroundColorAttributeName, nil];
+    if (self) {
+        self.navigationBar.barTintColor = [UIColor darkGrayColor];
+        self.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGBWithAlpha(0xebebeb, 1.0), NSForegroundColorAttributeName, nil];
+    }
     return self;
 }
 

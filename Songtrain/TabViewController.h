@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "STMusicPickerTableView.h"
 
 @protocol TabViewControllerDelegate <NSObject>
 
@@ -26,6 +27,6 @@
 }
 
 @property (weak, nonatomic) id <TabViewControllerDelegate> delegate;
-@property (atomic, retain, readonly) UITableView *wholeTableView;
+@property (atomic, retain, readonly) STMusicPickerTableView *wholeTableView;
 
 @end

@@ -24,7 +24,7 @@
 
 @end
 
-@interface MusicPickerViewController : UITabBarController <TabViewControllerDelegate, SCLoginViewControllerDelegate>
+@interface MusicPickerViewController : UITabBarController <TabViewControllerDelegate>
 
 @property (weak, nonatomic) id <MusicPickerViewControllerDelegate> delegate;
 @property (readonly) NSArray *selectedMediaItems;

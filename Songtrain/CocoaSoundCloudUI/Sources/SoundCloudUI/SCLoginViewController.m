@@ -54,7 +54,9 @@
 @end
 
 
-@implementation SCLoginViewController
+@implementation SCLoginViewController {
+    SCConnectToSoundCloudTitleView *scTitleView;
+}
 
 
 #pragma mark Class Methods
@@ -120,30 +122,29 @@
 - (void)viewDidLoad;
 {
     [super viewDidLoad];
-    self.loginView = [[[SCLoginView alloc] initWithFrame:self.view.bounds] autorelease];
+    
+    self.loginView = [[[SCLoginView alloc] init] autorelease];
     self.loginView.loginDelegate = self;
     self.loginView.delegate = self;
-    self.loginView.contentSize = CGSizeMake(1.0, CGRectGetHeight(self.loginView.bounds));
+    //self.loginView.contentSize = CGSizeMake(1.0, CGRectGetHeight(self.loginView.bounds));
     [self.loginView removeAllCookies];
     [self.view addSubview:self.loginView];
     
-    // Navigation Bar
+    scTitleView = [[[SCConnectToSoundCloudTitleView alloc] initWithFrame:self.view.frame] autorelease];
+    [self.view addSubview:scTitleView];
+    
     //self.navigationController.navigationBarHidden = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated;
-{
-    [super viewWillAppear:animated];
-    SCConnectToSoundCloudTitleView *scTitleView = [[[SCConnectToSoundCloudTitleView alloc] initWithFrame:CGRectMake(0,
-                                                                                                                    22.0,
-                                                                                                                    CGRectGetWidth(self.view.bounds),
-                                                                                                                    44.0)] autorelease];
-
-    [self.view addSubview:scTitleView];
-    self.loginView.frame = CGRectMake(0,
-                                      scTitleView.frame.size.height,
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.view.bounds) - scTitleView.frame.size.height);
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    //self.loginView.frame = self.view.frame;
+    scTitleView.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, 44.0);
+    
+    self.loginView.frame = CGRectMake(self.view.frame.origin.x,
+                                      self.view.frame.origin.y + scTitleView.frame.size.height,
+                                      self.view.frame.size.width,
+                                      self.view.frame.size.height);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;

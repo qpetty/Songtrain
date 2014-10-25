@@ -15,6 +15,8 @@
 		5A40DE5319F34A350098F37B /* SoundCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A40DE5219F34A350098F37B /* SoundCloud.bundle */; };
 		5A40DE5619F371490098F37B /* SoundCloudTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */; };
 		5A40DE5919F377A30098F37B /* SoundCloudSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A40DE5819F377A30098F37B /* SoundCloudSong.m */; };
+		5A4122A019FADB47007409FA /* STMusicPickerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A41229F19FADB47007409FA /* STMusicPickerTableView.m */; };
+		5A4122A319FAE467007409FA /* STSongTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4122A219FAE467007409FA /* STSongTableViewCell.m */; };
 		5A5B807E19CE772E000A4681 /* QPMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B807D19CE772E000A4681 /* QPMusicPlayerController.m */; };
 		5A5B808519CE7751000A4681 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808019CE7751000A4681 /* Song.m */; };
 		5A5B808619CE7751000A4681 /* LocalSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808219CE7751000A4681 /* LocalSong.m */; };
@@ -179,6 +181,10 @@
 		5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundCloudTabViewController.m; sourceTree = "<group>"; };
 		5A40DE5719F377A30098F37B /* SoundCloudSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundCloudSong.h; sourceTree = "<group>"; };
 		5A40DE5819F377A30098F37B /* SoundCloudSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundCloudSong.m; sourceTree = "<group>"; };
+		5A41229E19FADB47007409FA /* STMusicPickerTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMusicPickerTableView.h; sourceTree = "<group>"; };
+		5A41229F19FADB47007409FA /* STMusicPickerTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMusicPickerTableView.m; sourceTree = "<group>"; };
+		5A4122A119FAE467007409FA /* STSongTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STSongTableViewCell.h; sourceTree = "<group>"; };
+		5A4122A219FAE467007409FA /* STSongTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STSongTableViewCell.m; sourceTree = "<group>"; };
 		5A5B807C19CE772E000A4681 /* QPMusicPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPMusicPlayerController.h; sourceTree = "<group>"; };
 		5A5B807D19CE772E000A4681 /* QPMusicPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPMusicPlayerController.m; sourceTree = "<group>"; };
 		5A5B807F19CE7751000A4681 /* Song.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Song.h; sourceTree = "<group>"; };
@@ -315,6 +321,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5A41229D19FADB0B007409FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5A41229E19FADB47007409FA /* STMusicPickerTableView.h */,
+				5A41229F19FADB47007409FA /* STMusicPickerTableView.m */,
+				5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */,
+				5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */,
+				5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */,
+				5A4122A119FAE467007409FA /* STSongTableViewCell.h */,
+				5A4122A219FAE467007409FA /* STSongTableViewCell.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		5A5B807B19CE771A000A4681 /* Music Player */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,13 +388,11 @@
 				5A5B809F19CF89A7000A4681 /* SongTabViewController.m */,
 				5A5B80A019CF89A7000A4681 /* TabViewController.h */,
 				5A5B80A119CF89A7000A4681 /* TabViewController.m */,
-				5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */,
-				5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */,
-				5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */,
 				5A5B80A219CF89A7000A4681 /* MusicNavigationViewController.h */,
 				5A5B80A319CF89A7000A4681 /* MusicNavigationViewController.m */,
 				5A40DE5419F371490098F37B /* SoundCloudTabViewController.h */,
 				5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */,
+				5A41229D19FADB0B007409FA /* Views */,
 			);
 			name = MusicPicker;
 			sourceTree = "<group>";
@@ -693,8 +711,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A5B809519CE77EF000A4681 /* TPCircularBuffer.c in Sources */,
+				5A4122A319FAE467007409FA /* STSongTableViewCell.m in Sources */,
 				5A5B808619CE7751000A4681 /* LocalSong.m in Sources */,
 				5A5B80B119CF995C000A4681 /* SongTableViewCell.m in Sources */,
+				5A4122A019FADB47007409FA /* STMusicPickerTableView.m in Sources */,
 				5A5B80A519CF89A7000A4681 /* MusicPickerViewController.m in Sources */,
 				5A5B808519CE7751000A4681 /* Song.m in Sources */,
 				5A40DE5919F377A30098F37B /* SoundCloudSong.m in Sources */,

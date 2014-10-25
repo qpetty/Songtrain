@@ -65,26 +65,17 @@
     songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:[UIImage imageNamed:@"song_inactive"] selectedImage:[UIImage imageNamed:@"song_active"]];
     
     //Soundcloud
-    [SCSoundCloud removeAccess];
     
-    [self setupSoundCloud];
+    SoundCloudTabViewController *soundCloudViewController = [[SoundCloudTabViewController alloc] init];
+    soundCloudViewController.title = @"SoundCloud";
+    soundCloudViewController.delegate = self;
     
-    UIViewController *soundCloudRoot;
-    
-    if ([SCSoundCloud account] == nil) {
-        [self getAuthViewController];
-        soundCloudRoot = [[UIViewController alloc] init];
-    } else {
-        //Show tracks otherwise
-        soundCloudRoot = [self soundCloudBaseViewController];
-    }
-    
-    soundCloudFrame = [[MusicNavigationViewController alloc] initWithRootViewController:soundCloudRoot];
-    soundCloudFrame.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SoundCloud" image:[UIImage imageNamed:@"soundcloud_icon"] selectedImage:[UIImage imageNamed:@"soundcloud_icon"]];
+    MusicNavigationViewController *soundCloud = [[MusicNavigationViewController alloc] initWithRootViewController:soundCloudViewController];
+    soundCloud.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SoundCloud" image:[UIImage imageNamed:@"soundcloud_icon"] selectedImage:[UIImage imageNamed:@"soundcloud_icon"]];
     
     //Putting everything in the tab bar controller
     
-    NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, soundCloudFrame, nil];
+    NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, soundCloud, nil];
     
     self.viewControllers = controllers;
     
@@ -169,46 +160,6 @@
     else {
         [self.delegate mediaPickerDidCancel:(MPMediaPickerController*)self];
     }
-}
-
-- (void)setupSoundCloud {
-    NSLog(@"Setting up SoundCloud");
-    [SCSoundCloud setClientID:@"76afdeecb23413b7ace7f1cf4ef90e9d" secret:@"f561aa48f95d4d2290db923adbb36f04" redirectURL:[NSURL URLWithString:@"songtrain://oauth"]];
-}
-
--(void)getAuthViewController {
-    SCLoginViewControllerCompletionHandler handler = ^(NSError *error) {
-        if (SC_CANCELED(error)) {
-            NSLog(@"Canceled!");
-        } else if (error) {
-            NSLog(@"Error: %@", [error localizedDescription]);
-        } else {
-            NSLog(@"Done!");
-            soundCloudFrame.navigationBarHidden = NO;
-            soundCloudFrame.viewControllers = [NSArray arrayWithObject:[self soundCloudBaseViewController]];
-        }
-    };
-    
-    [SCSoundCloud requestAccessWithPreparedAuthorizationURLHandler:^(NSURL *preparedURL) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            SCLoginViewController *login = [SCLoginViewController loginViewControllerWithPreparedURL:preparedURL completionHandler:handler];
-            login.delegate = self;
-            soundCloudFrame.navigationBarHidden = YES;
-            soundCloudFrame.viewControllers = [NSArray arrayWithObject:login];
-        });
-    }];
-}
-
--(UIViewController*)soundCloudBaseViewController {
-    SoundCloudTabViewController *viewcontroller = [[SoundCloudTabViewController alloc] init];
-    viewcontroller.delegate = self;
-    
-    return viewcontroller;
-}
-
-- (void)dismissSCLoginView {
-    NSLog(@"Here");
 }
 
 /*
