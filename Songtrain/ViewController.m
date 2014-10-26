@@ -278,7 +278,7 @@
     
     NSMutableArray *newSongs = [[NSMutableArray alloc] init];
     for (MPMediaItem *item in mediaItemCollection.items) {
-        LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
+        LocalSong *tempSong = [[LocalSong alloc] initWithItem:item andOutputASBD:*(musicPlayer.audioFormat)];
         [newSongs addObject:tempSong];
     }
     for (id item in items) {

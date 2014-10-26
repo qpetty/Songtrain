@@ -21,40 +21,11 @@
     return self;
 }
 
-- (instancetype)initWithMediaItem:(MPMediaItem*)item
-{
+- (instancetype)initWithTitle:(NSString*)title andArtist:(NSString*)artist {
     if(self = [self init])
     {
-        self.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
-        self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
-        self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
-        
-        _assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
-        
-        CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[_assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
-        const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription (item);
-        /*
-        NSLog(@"ASBD sample rate: %f", asbd->mSampleRate);
-        NSLog(@"ASBD format id: %d", asbd->mFormatID);
-        NSLog(@"ASBD format flags: %d", asbd->mFormatFlags);
-        NSLog(@"ASBD frames per packet: %d", asbd->mFramesPerPacket);
-        NSLog(@"ASBD channels per frame: %d", asbd->mChannelsPerFrame);
-        NSLog(@"ASBD bits per channel: %d", asbd->mBitsPerChannel);
-        NSLog(@"ASBD bytes per packet: %d", asbd->mBytesPerPacket);
-        NSLog(@"ASBD bytes per frame: %d", asbd->mBytesPerFrame);
-        */
-        memcpy(_inputASBD, asbd, sizeof(AudioStreamBasicDescription));
-    }
-    return self;
-}
-
-- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
-{
-    if(self = [self initWithMediaItem:item])
-    {
-        memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
+        self.title = title;
+        self.artistName = artist;
     }
     return self;
 }
