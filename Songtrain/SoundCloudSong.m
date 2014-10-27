@@ -9,6 +9,8 @@
 #import "SoundCloudSong.h"
 #import "CocoaSoundCloudUI/Sources/SoundCloudUI/SCUI.h"
 
+#define MUSIC_PACKET_SIZE 65536
+
 @implementation SoundCloudSong {
     NSMutableData *songData, *oneCallbackOfData;
     AudioConverterRef converter;
@@ -49,7 +51,7 @@
     if (self = [self initWithURL:song.url]) {
         
         self.title = song.title;
-        self.artistName = song.title;
+        self.artistName = song.artistName;
         self.songLength = song.songLength;
         self.musicURL = song.musicURL;
         
@@ -60,6 +62,7 @@
 
 -(void)setInputASBDBecauseICantReachItAnotherWay {
     self.inputASDBIsSet = YES;
+    NSLog(@"set inputASBD");
 }
 
 -(void)initConverter {
@@ -203,6 +206,21 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
 
 #pragma mark Music Methods
 
+-(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes {
+    NSUInteger len = MUSIC_PACKET_SIZE - nextByteToRead;
+    if (len > maxBytes) {
+        len = maxBytes;
+    }
+    if (len > songData.length - nextByteToRead) {
+        len = songData.length - nextByteToRead;
+    }
+    
+    NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", nextByteToRead, maxBytes, songData.length);
+    NSRange range = NSMakeRange(nextByteToRead, len);
+    nextByteToRead += len;
+    return len == 0 ? nil : [songData subdataWithRange:range];
+}
+
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
     OSStatus err = -5;
@@ -242,18 +260,6 @@ OSStatus soundCloudConverterInputCallback(AudioConverterRef inAudioConverter, UI
     
     *outDataPacketDescription = song->aspds;
     return 0;
-}
-
-- (BOOL)isEqual:(id)object
-{
-    if ([super isEqual:object] == NO)
-        return false;
-    if (![object isKindOfClass:[SoundCloudSong class]])
-        return false;
-    if (![((SoundCloudSong*)object).url isEqual:self.url])
-        return false;
-    
-    return true;
 }
 
 static char *FormatError(char *str, OSStatus error)

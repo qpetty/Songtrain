@@ -18,6 +18,8 @@
     AudioStreamPacketDescription aspds[256];
     uint8_t *audioData;
     UInt32 timer;
+    
+    NSTimer *packetTimer;
 }
 
 - (instancetype)initWithSong:(Song*)song ofType:(RemoteSongType)type fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
@@ -45,6 +47,7 @@
     image = nil;
     sentRequest = NO;
     cBuffer.buffer = NULL;
+    converter = NULL;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
@@ -54,20 +57,34 @@
     [coder encodeInteger:self.type forKey:@"type"];
 }
 
-- (void)prepareSong{
-    [[QPSessionManager sessionManager] prepareRemoteSong:self];
-    TPCircularBufferInit(&cBuffer, kBufferLength);
-    [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength];
-    
-    timer = -1;
-    audioData = NULL;
-    OSStatus err = AudioConverterNew(self.inputASBD, outputASBD, &converter);
-    isFormatVBR = (self.inputASBD->mBytesPerPacket == 0 || self.inputASBD->mFramesPerPacket == 0);
-    if (err) {
-        NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
+- (void)initConverter {
+    if (self.inputASDBIsSet && converter == NULL) {
+        OSStatus err = AudioConverterNew(self.inputASBD, outputASBD, &converter);
+        NSLog(@"Initing COnverter!!!!!!!!!");
+        isFormatVBR = (self.inputASBD->mBytesPerPacket == 0 || self.inputASBD->mFramesPerPacket == 0);
+        if (err) {
+            NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
+        }
+        [packetTimer invalidate];
+        timer = 0;
     }
 }
 
+- (void)prepareSong{
+    [[QPSessionManager sessionManager] prepareRemoteSong:self];
+    TPCircularBufferInit(&cBuffer, kBufferLength);
+    [self askForPacket];
+    
+    timer = -1;
+    audioData = NULL;
+    packetTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(askForPacket) userInfo:nil repeats:YES];
+    [self initConverter];
+}
+
+- (void)askForPacket {
+    NSLog(@"Asking for more data to get the converter going: %@", self);
+    [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength];
+}
 
 - (void)submitBytes:(NSData*)bytes
 {
@@ -80,8 +97,19 @@
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    OSStatus err = AudioConverterFillComplexBuffer(converter, converterCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
-    //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    /*
+    if (converter == NULL) {
+        [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:128];
+    }
+    [self initConverter];
+     */
+
+    OSStatus err = -5;
+    if (self.inputASDBIsSet == YES) {
+        [self initConverter];
+        err = AudioConverterFillComplexBuffer(converter, converterCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
+        //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    }
     
     return err;
 }
