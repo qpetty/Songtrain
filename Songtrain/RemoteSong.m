@@ -20,13 +20,12 @@
     UInt32 timer;
 }
 
-- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
+- (instancetype)initWithSong:(Song*)song ofType:(RemoteSongType)type fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD
 {
     if (self = [super initWithSong:song andOutputASBD:audioStreamBD]) {
+        self.type = type;
         self.peer = peer;
-        
-        image = nil;
-        sentRequest = NO;
+        [self initHelp];
     }
     return self;
 }
@@ -36,20 +35,27 @@
     self = [super initWithCoder:coder];
     if (self) {
         self.peer = [coder decodeObjectForKey:@"peer"];
-        
-        image = nil;
-        sentRequest = NO;
+        self.type = [coder decodeIntegerForKey:@"type"];
+        [self initHelp];
     }
     return self;
+}
+
+- (void)initHelp {
+    image = nil;
+    sentRequest = NO;
+    cBuffer.buffer = NULL;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [super encodeWithCoder:coder];
     [coder encodeObject:self.peer forKey:@"peer"];
+    [coder encodeInteger:self.type forKey:@"type"];
 }
 
 - (void)prepareSong{
+    [[QPSessionManager sessionManager] prepareRemoteSong:self];
     TPCircularBufferInit(&cBuffer, kBufferLength);
     [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength];
     
@@ -60,7 +66,6 @@
     if (err) {
         NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
     }
-    NSLog(@"SELF = %@\n", self);
 }
 
 
@@ -191,6 +196,13 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
 
 - (void)cleanUpSong{
     stillStreaming = NO;
+}
+
+-(void)dealloc {
+    if (cBuffer.buffer != NULL) {
+        TPCircularBufferCleanup(&cBuffer);
+    }
+    AudioConverterDispose(converter);
 }
 
 @end

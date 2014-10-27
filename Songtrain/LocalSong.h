@@ -14,11 +14,8 @@
 @interface LocalSong : Song <NSStreamDelegate>
 
 @property (strong, nonatomic) AVURLAsset *assetURL;
-@property(nonatomic) BOOL isFinishedSendingSong;
 
 - (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
-
--(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes;
 
 @end

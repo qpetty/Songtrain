@@ -19,7 +19,7 @@
     AudioStreamPacketDescription aspds[256];
     
     MPMediaItem *mediaItem;
-    
+    BOOL readyWithPackets;
 }
 
 
@@ -48,7 +48,7 @@
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
         
-        self.isFinishedSendingSong = NO;
+        self.isFinishedSendingSong = readyWithPackets = NO;
         
         _assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
         
@@ -65,6 +65,7 @@
          NSLog(@"ASBD bytes per frame: %d", asbd->mBytesPerFrame);
          */
         memcpy(self.inputASBD, asbd, sizeof(AudioStreamBasicDescription));
+        self.inputASDBIsSet = YES;
     }
     return self;
 }
@@ -81,6 +82,7 @@
         
         self.isFinishedSendingSong = NO;
         
+        /*
         NSError *assetError;
         assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
         
@@ -92,8 +94,24 @@
         [assetReader startReading];
         
         AudioConverterNew(self.inputASBD, outputASBD, &converter);
+         */
     }
     return self;
+}
+
+-(void)prepareSong {
+    NSError *assetError;
+    assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
+    
+    assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:self.assetURL.tracks[0] outputSettings:nil];
+    if (![assetReader canAddOutput:assetOutput])
+    {NSLog(@"Asset Reader instansiation error");}
+    
+    [assetReader addOutput:assetOutput];
+    [assetReader startReading];
+    
+    AudioConverterNew(self.inputASBD, outputASBD, &converter);
+    readyWithPackets = YES;
 }
 
 - (void)cleanUpSong{
@@ -103,8 +121,11 @@
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    OSStatus err = AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
-    //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
+    OSStatus err = -5;
+    if (readyWithPackets == YES) {
+        err = AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
+    }
+    
     return err;
 }
 

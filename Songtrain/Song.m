@@ -17,6 +17,8 @@
          outputASBD = malloc(sizeof(AudioStreamBasicDescription));
          _inputASBD = malloc(sizeof(AudioStreamBasicDescription));
          image = nil;
+         self.inputASDBIsSet = NO;
+         self.isFinishedSendingSong = NO;
      }
     return self;
 }
@@ -38,7 +40,9 @@
         self.artistName = song.artistName;
         self.persistantID = song.persistantID;
         self.url = song.url;
+        self.musicURL = song.musicURL;
         self.songLength = song.songLength;
+        self.inputASDBIsSet = song.inputASDBIsSet;
         
         memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
         memcpy(_inputASBD, song.inputASBD, sizeof(AudioStreamBasicDescription));
@@ -52,10 +56,11 @@
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
-        //self.albumImage = [aDecoder decodeObjectForKey:@"image"];
         self.persistantID = [aDecoder decodeObjectForKey:@"id"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
+        self.musicURL = [aDecoder decodeObjectForKey:@"musicURL"];
         
+        self.inputASDBIsSet = [aDecoder decodeBoolForKey:@"inputASBDset"];
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
         
         NSUInteger size;
@@ -72,10 +77,11 @@
 {
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
-    //[aCoder encodeObject:self.albumImage forKey:@"image"];
     [aCoder encodeObject:self.persistantID forKey:@"id"];
     [aCoder encodeObject:self.url forKey:@"url"];
+    [aCoder encodeObject:self.musicURL forKey:@"musicURL"];
     
+    [aCoder encodeBool:self.inputASDBIsSet forKey:@"inputASBDset"];
     [aCoder encodeInt:_songLength forKey:@"songLength"];
     
     [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"out"];
@@ -85,6 +91,10 @@
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
     return -1;
+}
+
+-(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes {
+    return nil;
 }
 
 - (BOOL)isEqual:(id)object

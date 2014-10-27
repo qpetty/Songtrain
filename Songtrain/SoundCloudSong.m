@@ -15,7 +15,7 @@
     AudioFileStreamID filestream;
     AudioStreamPacketDescription aspds[256];
     
-    BOOL setOutputASBD, setInputASBD, readyWithPackets;
+    BOOL setOutputASBD, readyWithPackets;
     
     NSInputStream *musicStream;
     
@@ -26,7 +26,7 @@
     if (self = [super init]) {
         self.url = url;
         songData = nil;
-        setInputASBD = setOutputASBD = readyWithPackets = NO;
+        setOutputASBD = readyWithPackets = NO;
         nextByteToRead = 0;
     }
     return self;
@@ -38,22 +38,32 @@
         self.title = dic[@"title"];
         self.artistName = dic[@"user"][@"username"];
         self.songLength = [dic[@"duration"] floatValue] / 1000.0;
-        _streamURL = dic[@"stream_url"];
+        self.musicURL = [NSURL URLWithString:dic[@"stream_url"]];
 
         NSLog(@"Creating SoundCloudSong from: %@", dic);
-        
-        OSStatus error = AudioFileStreamOpen((__bridge void*)self, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP3Type, &filestream);
-        if (error) {
-            char errorString[7];
-            FormatError(errorString, error);
-            NSLog(@"Error opening file stream: %s\n", errorString);
-        }
     }
     return self;
 }
 
+-(instancetype)initWithSong:(Song*)song {
+    if (self = [self initWithURL:song.url]) {
+        
+        self.title = song.title;
+        self.artistName = song.title;
+        self.songLength = song.songLength;
+        self.musicURL = song.musicURL;
+        
+        NSLog(@"Creating SoundCloudSong from: %@", song);
+    }
+    return self;
+}
+
+-(void)setInputASBDBecauseICantReachItAnotherWay {
+    self.inputASDBIsSet = YES;
+}
+
 -(void)initConverter {
-    if (setOutputASBD == NO || setInputASBD == NO) {
+    if (setOutputASBD == NO || self.inputASDBIsSet == NO) {
         NSLog(@"all ASBDs not set yet");
         return;
     }
@@ -69,6 +79,14 @@
 
 -(void)prepareSong {
     NSLog(@"preparing SoundCloudSong");
+    
+    OSStatus error = AudioFileStreamOpen((__bridge void*)self, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP3Type, &filestream);
+    if (error) {
+        char errorString[7];
+        FormatError(errorString, error);
+        NSLog(@"Error opening file stream: %s\n", errorString);
+    }
+    
     //dispatch_async(dispatch_get_main_queue(), ^{
         [self requestSongData];
     //});
@@ -76,11 +94,12 @@
 
 - (void)requestSongData {
  
-    NSString *songURL = [NSString stringWithFormat:@"%@?oauth_token=%@", self.streamURL, [SCSoundCloud account].oauthToken];
+    NSString *songURL = [NSString stringWithFormat:@"%@?oauth_token=%@", self.musicURL.absoluteString, [SCSoundCloud account].oauthToken];
+    self.musicURL = [NSURL URLWithString:songURL];
     NSLog(@"Trying to get %@", songURL);
     
     songData = [[NSMutableData alloc] init];
-    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:songURL]] delegate:self];
+    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:self.musicURL] delegate:self];
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -108,7 +127,7 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
         propertySize = sizeof(AudioStreamBasicDescription);
         AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &propertySize, song.inputASBD);
         if (propertySize == sizeof(AudioStreamBasicDescription)) {
-            song->setInputASBD = YES;
+            [song setInputASBDBecauseICantReachItAnotherWay];
             NSLog(@"Entire AudioStreamBasicDescription found\n");
         }
     }

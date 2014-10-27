@@ -12,10 +12,10 @@
 
 -(instancetype)initWithURL:(NSURL*)url;
 -(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic;
+-(instancetype)initWithSong:(Song*)song;
 
 -(void)setOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 @property (strong, nonatomic) NSURL *url;
-@property (readonly) NSString *streamURL;
 
 @end

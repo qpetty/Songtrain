@@ -66,6 +66,7 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 - (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y;
 - (void)requestAlbumArtwork:(RemoteSong*)song;
 
+- (void)prepareRemoteSong:(RemoteSong*)song;
 - (void)requestMusicDataForSong:(RemoteSong*)song withAvailableBytes:(NSInteger)bytes;
 
 - (void)bootPeer:(MCPeerID*)peer;

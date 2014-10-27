@@ -22,7 +22,10 @@
 @property (strong, nonatomic, getter=getAlbumImage) UIImage *albumImage;
 @property (strong, nonatomic) NSNumber *persistantID;
 @property (strong, nonatomic) NSURL *url;
+@property (strong, nonatomic) NSURL *musicURL;
 
+@property (nonatomic) BOOL isFinishedSendingSong;
+@property (nonatomic) BOOL inputASDBIsSet;
 @property (nonatomic) AudioStreamBasicDescription *inputASBD;
 @property (nonatomic) int songLength;
 
@@ -30,6 +33,8 @@
 - (instancetype)initWithSong:(Song*)song andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;
+- (NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes;
+
 - (void)prepareSong;
 - (void)cleanUpSong;
 @end

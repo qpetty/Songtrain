@@ -12,6 +12,11 @@
 
 static const int kBufferLength = 32768 * 32;
 
+typedef enum RemoteSongType : NSInteger {
+    MusicPlayerSong,
+    SoundCloud
+} RemoteSongType;
+
 @class RemoteSong;
 
 @protocol RemoteSongProtocol <NSObject>
@@ -22,9 +27,10 @@ static const int kBufferLength = 32768 * 32;
 
 @interface RemoteSong : Song <NSStreamDelegate>
 
+@property RemoteSongType type;
 @property (strong, nonatomic) MCPeerID *peer;
 
-- (instancetype)initWithSong:(Song*)song fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
+- (instancetype)initWithSong:(Song*)song ofType:(RemoteSongType)type fromPeer:(MCPeerID*)peer andOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
 - (void)submitBytes:(NSData*)bytes;
 
 @end
