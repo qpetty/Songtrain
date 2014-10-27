@@ -43,6 +43,7 @@
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
 
     UICollectionViewFlowLayout *layout = [[AnimatedCollectionViewFlowLayout alloc] init];
+    [layout setItemSize:CGSizeMake(self.view.frame.size.width, 50)];
     nearbyTrainsModal = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     [nearbyTrainsModal registerNib:[UINib nibWithNibName:@"AnimatedCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"AnimatedPeerCell"];
     nearbyTrainsModal.delegate = self;
@@ -176,11 +177,12 @@
     
     [self.view addSubview:nearbyTrainBackground];
     [self.view addSubview:nearbyTrainsModal];
-    
-    [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
-        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
 
-    } completion:^(BOOL finished) {
+    [UIView animateWithDuration:.13 delay:0 options:UIViewAnimationOptionTransitionNone
+        animations:^{
+            [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+        }
+    completion:^(BOOL finished) {
         [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
         [sessionManager startBrowsingForTrains];
     }];
@@ -189,6 +191,7 @@
 -(void)finishBrowsingForOthers:(BOOL)somethingSelected
 {
     [sessionManager stopBrowsingForTrains];
+
     [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
     } completion:^(BOOL finished) {
@@ -441,7 +444,9 @@
 -(void)foundPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + 1 inSection:0];
-        [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
+        [UIView animateWithDuration:0.18f animations:^(void) {
+            [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
+        }];
     });
 }
 
@@ -497,6 +502,10 @@
     } else {
         cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - 1] displayName];
     }
+    
+    if ([cell.peerName.text isEqualToString:sessionManager.server.displayName]) {
+        cell.trainImage.image = [UIImage imageNamed:@"train"];
+    }
     return cell;
 }
 
@@ -507,7 +516,7 @@
             [sessionManager restartSession];
         }
         [self finishBrowsingForOthers:NO];
-    } else if ([sessionManager.server.displayName isEqualToString:((MCPeerID *)[sessionManager.peerArray objectAtIndex:indexPath.row -1]).displayName]) {
+    } else if ([sessionManager.server.displayName isEqualToString:((MCPeerID *)[sessionManager.peerArray objectAtIndex:indexPath.row - 1]).displayName]) {
         [self finishBrowsingForOthers:NO];
     } else {
         [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];

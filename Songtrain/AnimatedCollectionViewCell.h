@@ -11,4 +11,5 @@
 @interface AnimatedCollectionViewCell : UICollectionViewCell
 
 @property IBOutlet UILabel *peerName;
+@property IBOutlet UIImageView *trainImage;
 @end

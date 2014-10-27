@@ -14,8 +14,8 @@
 {
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
 
-    attributes.frame = CGRectMake(0, self.collectionView.frame.origin.y - (self.itemSize.height * itemIndexPath.row), self.itemSize.width, self.itemSize.height);
-    
+    attributes.frame = CGRectMake(0, (self.itemSize.height * (itemIndexPath.row - 1)) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
+    attributes.alpha = 0.0;
     return attributes;
 }
 
@@ -24,6 +24,7 @@
     UICollectionViewLayoutAttributes *itemAttributes =
     [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     itemAttributes.frame = [self getCellFrameAtIndex:indexPath];
+    itemAttributes.alpha = 1.0;
     return itemAttributes;
 }
 
@@ -52,6 +53,6 @@
 }
 
 - (CGRect)getCellFrameAtIndex:(NSIndexPath *)indexPath {
-    return CGRectMake(0, ((self.itemSize.height + 10) * indexPath.row) + self.itemSize.height, 600, self.itemSize.height);
+    return CGRectMake(0, (self.itemSize.height * indexPath.row) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
 }
 @end
