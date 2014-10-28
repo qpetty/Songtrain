@@ -17,18 +17,20 @@
     AudioFileStreamID filestream;
     AudioStreamPacketDescription aspds[256];
     
-    BOOL setOutputASBD, readyWithPackets, finishedLoading;
+    BOOL setOutputASBD, readyWithPackets, startedArtworkDownLoad, finishedLoading;
     
     NSInputStream *musicStream;
     
     NSUInteger nextByteToRead;
+    NSURLConnection *artworkConnection;
+    NSMutableData *imageData;
 }
 
 - (instancetype)initWithURL:(NSURL *)url {
     if (self = [super init]) {
         self.url = url;
         songData = nil;
-        setOutputASBD = readyWithPackets = finishedLoading = NO;
+        setOutputASBD = readyWithPackets = startedArtworkDownLoad = finishedLoading = NO;
         nextByteToRead = 0;
     }
     return self;
@@ -41,7 +43,9 @@
         self.artistName = dic[@"user"][@"username"];
         self.songLength = [dic[@"duration"] floatValue] / 1000.0;
         self.musicURL = [NSURL URLWithString:dic[@"stream_url"]];
-
+        NSString *artwork = [((NSString*)dic[@"artwork_url"]) stringByReplacingOccurrencesOfString:@"large" withString:@"t500x500"];
+        self.artworkURL = [NSURL URLWithString:artwork];
+        
         NSLog(@"Creating SoundCloudSong from: %@", dic);
     }
     return self;
@@ -108,6 +112,11 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     //NSLog(@"Recived some data: %lu", (unsigned long)data.length);
 
+    if (connection == artworkConnection) {
+        [imageData appendData:data];
+        return;
+    }
+    
     OSStatus error = AudioFileStreamParseBytes(filestream, (UInt32)data.length, data.bytes, 0);
     
     if (error) {
@@ -115,9 +124,23 @@
         FormatError(errorString, error);
         NSLog(@"Error in stream parsing bytes: %s\n", errorString);
     }
+    
+    if (startedArtworkDownLoad == NO) {
+        imageData = [[NSMutableData alloc] init];
+        artworkConnection = [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:self.artworkURL] delegate:self];
+        startedArtworkDownLoad = YES;
+    }
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    if (connection == artworkConnection) {
+        [self willChangeValueForKey:@"albumImage"];
+        image = [UIImage imageWithData:imageData];
+        [self didChangeValueForKey:@"albumImage"];
+        imageData = nil;
+        return;
+    }
+    
     finishedLoading = YES;
 }
 
@@ -285,6 +308,11 @@ static char *FormatError(char *str, OSStatus error)
         // no, format it as an integer
         sprintf(str, "%d", (int)error);
     return str;
+}
+
+- (UIImage*)getAlbumImage
+{
+    return image;
 }
 
 @end

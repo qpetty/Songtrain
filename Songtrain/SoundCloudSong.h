@@ -16,6 +16,6 @@
 
 -(void)setOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
-@property (strong, nonatomic) NSURL *url;
+@property (strong, nonatomic) NSURL *artworkURL;
 
 @end
