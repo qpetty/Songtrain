@@ -207,17 +207,21 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
 #pragma mark Music Methods
 
 -(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes {
-    NSUInteger len = MUSIC_PACKET_SIZE - nextByteToRead;
+    NSUInteger len = MUSIC_PACKET_SIZE;
+    NSLog(@"len = %lu", len);
     if (len > maxBytes) {
         len = maxBytes;
+        NSLog(@"len(maxBytes) = %lu", len);
     }
     if (len > songData.length - nextByteToRead) {
         len = songData.length - nextByteToRead;
+        NSLog(@"len(songData.length) = %lu", len);
     }
     
     NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", nextByteToRead, maxBytes, songData.length);
     NSRange range = NSMakeRange(nextByteToRead, len);
     nextByteToRead += len;
+    NSLog(@"Sent %lu bytes", len);
     return len == 0 ? nil : [songData subdataWithRange:range];
 }
 

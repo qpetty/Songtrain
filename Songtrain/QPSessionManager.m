@@ -226,11 +226,14 @@
                 do {
                     data = [streamSong getNextPacketofMaxBytes:mess.firstIndex];
                     NSLog(@"Getting next packet for bytes request: %ld\n", (long)mess.firstIndex);
-                    if (data) {
-                        NSLog(@"Got some data to send\n");
-                        [self sendMusicData:streamSong withData:data to:peerID];
-                        mess.firstIndex -= data.length;
+                    if (data.length == 0) {
+                        NSLog(@"Empty but still sending");
+                    } else {
+                        NSLog(@"Got some data to send");
                     }
+                    
+                    [self sendMusicData:streamSong withData:data to:peerID];
+                    mess.firstIndex -= data.length;
                 } while (data != nil && mess.firstIndex >= 0);
                 
                 if (streamSong.isFinishedSendingSong) {
@@ -242,8 +245,8 @@
         else if (mess.message == MusicPacket) {
             Song *streamSong = [self findSong:mess.song];
             
-            NSLog(@"streamSong is set %@", streamSong.inputASDBIsSet ? @"YES" : @"NO");
-            NSLog(@"mess.song is set %@", mess.song.inputASDBIsSet ? @"YES" : @"NO");
+            //NSLog(@"streamSong is set %@", streamSong.inputASDBIsSet ? @"YES" : @"NO");
+            //NSLog(@"mess.song is set %@", mess.song.inputASDBIsSet ? @"YES" : @"NO");
             
             if (streamSong.inputASDBIsSet == NO && mess.song.inputASDBIsSet == YES) {
                 NSLog(@"Just set %@'s inputASBD", streamSong.title);
@@ -252,7 +255,7 @@
             }
             
             if (streamSong && [streamSong isMemberOfClass:[RemoteSong class]]) {
-                NSLog(@"Got %lu music bytes in a packet\n", (unsigned long)mess.data.length);
+                //NSLog(@"Got %lu music bytes in a packet\n", (unsigned long)mess.data.length);
                 [((RemoteSong*)streamSong) submitBytes:mess.data];
             }
         }
@@ -558,7 +561,9 @@
         }
     }];
     
-    [[QPMusicPlayerController sharedMusicPlayer] removeSongIndexesFromPlaylist:songsToRemove];
+    if (songsToRemove.count) {
+        [[QPMusicPlayerController sharedMusicPlayer] removeSongIndexesFromPlaylist:songsToRemove];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

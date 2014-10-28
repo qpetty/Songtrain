@@ -238,6 +238,14 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         offset += aspd[i].mDataByteSize;
     }
     
+    /*
+    NSData *bufferData = nil;
+    
+    if (offset > 0) {
+        bufferData = [NSData dataWithBytesNoCopy:totalBuffer length:offset freeWhenDone:YES];
+    }
+    */
+    
     NSData *bufferData = [NSData dataWithBytesNoCopy:totalBuffer length:offset freeWhenDone:YES];
     
     CFRelease(blockBuffer);

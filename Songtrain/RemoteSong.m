@@ -9,15 +9,13 @@
 #import "RemoteSong.h"
 
 @implementation RemoteSong {
-    BOOL sentRequest;
-    
+    BOOL sentRequest, musicRequestSent;
     BOOL stillStreaming, isFormatVBR;
     
     TPCircularBuffer cBuffer;
     AudioConverterRef converter;
     AudioStreamPacketDescription aspds[256];
     uint8_t *audioData;
-    UInt32 timer;
     
     NSTimer *packetTimer;
 }
@@ -45,9 +43,10 @@
 
 - (void)initHelp {
     image = nil;
-    sentRequest = NO;
+    sentRequest = musicRequestSent = NO;
     cBuffer.buffer = NULL;
     converter = NULL;
+    packetTimer = nil;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
@@ -65,48 +64,65 @@
         if (err) {
             NSLog(@"found status '%c%c%c%c'\n", (char)(err>>24)&255, (char)(err>>16)&255, (char)(err>>8)&255, (char)err&255);
         }
-        [packetTimer invalidate];
-        timer = 0;
     }
 }
 
 - (void)prepareSong{
     [[QPSessionManager sessionManager] prepareRemoteSong:self];
     TPCircularBufferInit(&cBuffer, kBufferLength);
-    [self askForPacket];
     
-    timer = -1;
     audioData = NULL;
-    packetTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(askForPacket) userInfo:nil repeats:YES];
+    [self askForPacket];
     [self initConverter];
 }
 
+- (void)timerIsFinished {
+    [packetTimer invalidate];
+    packetTimer = nil;
+    [self askForPacket];
+}
+
 - (void)askForPacket {
-    NSLog(@"Asking for more data to get the converter going: %@", self);
-    [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+    NSLog(@"Asking for more data to get the converter going for: %@", self.title);
+    
+    if (musicRequestSent == NO && cBuffer.fillCount < 3 * kBufferLength / 4 && packetTimer == nil) {
+        musicRequestSent = YES;
+        
+        NSLog(@"sending");
+        [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength - cBuffer.fillCount];
+        
+        //Might use to allow sometime between packet requests
+        //packetTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerIsFinished) userInfo:nil repeats:YES];
+    }
+        
+    });
 }
 
 - (void)submitBytes:(NSData*)bytes
 {
-    TPCircularBufferProduceBytes(&(cBuffer), bytes.bytes, (uint32_t)bytes.length);
-    
-    if (cBuffer.fillCount > kBufferLength / 2) {
-        timer = 0;
+    NSLog(@"Got %lu bytes here in remote song: %@", bytes.length, self.title);
+    if (bytes.length == 0) {
+        musicRequestSent = NO;
+        [self askForPacket];
+    } else {
+        [self timerIsFinished];
+        TPCircularBufferProduceBytes(&(cBuffer), bytes.bytes, (uint32_t)bytes.length);
     }
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
-    /*
-    if (converter == NULL) {
-        [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:128];
-    }
-    [self initConverter];
-     */
-
     OSStatus err = -5;
     if (self.inputASDBIsSet == YES) {
         [self initConverter];
+        
+        if (cBuffer.fillCount < kBufferLength / 4) {
+            //Send music request and start timer;
+            [self askForPacket];
+        }
+        
         err = AudioConverterFillComplexBuffer(converter, converterCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
         //NSLog(@"Number of out Packets: %u\n", *numOfPackets);
     }
@@ -128,27 +144,6 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
     for (int i = 0; i < *ioNumberDataPackets; i++) {
         buffer = TPCircularBufferTail(&myInfo->cBuffer, &availableBytes);
         
-        if (availableBytes <= kBufferLength / 4) {
-            if (myInfo->timer) {
-                myInfo->timer--;
-                if (myInfo->timer == -250) {
-                    myInfo->timer = 0;
-                }
-                printf("timer %d\n", (unsigned int)myInfo->timer);
-            }
-            else {
-                myInfo->timer = -1;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"requesting %d more bytes\n", kBufferLength - kBufferLength / 4);
-                    NSLog(@"Converter SELF = %@\n", myInfo);
-                    [[QPSessionManager sessionManager] requestMusicDataForSong:myInfo withAvailableBytes:kBufferLength - kBufferLength / 4];
-                });
-            }
-            
-        }
-        if (availableBytes == 0) {
-            return -1;
-        }
         //printf("Space in the buffer: %d at %d\n", spaceAvailableInBuffer, buffer);
         //printf("Space larger than AudioStreamPacketDescription: %lu\n", sizeof(AudioStreamPacketDescription) + ((AudioStreamPacketDescription*)buffer)->mDataByteSize);
         
