@@ -17,7 +17,7 @@
     AudioFileStreamID filestream;
     AudioStreamPacketDescription aspds[256];
     
-    BOOL setOutputASBD, readyWithPackets;
+    BOOL setOutputASBD, readyWithPackets, finishedLoading;
     
     NSInputStream *musicStream;
     
@@ -28,7 +28,7 @@
     if (self = [super init]) {
         self.url = url;
         songData = nil;
-        setOutputASBD = readyWithPackets = NO;
+        setOutputASBD = readyWithPackets = finishedLoading = NO;
         nextByteToRead = 0;
     }
     return self;
@@ -115,6 +115,10 @@
         FormatError(errorString, error);
         NSLog(@"Error in stream parsing bytes: %s\n", errorString);
     }
+}
+
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    finishedLoading = YES;
 }
 
 #pragma mark Audio File Stream Services Methods
@@ -222,6 +226,10 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
     NSRange range = NSMakeRange(nextByteToRead, len);
     nextByteToRead += len;
     NSLog(@"Sent %lu bytes", len);
+    
+    if (finishedLoading == YES && nextByteToRead == songData.length) {
+        self.isFinishedSendingSong = YES;
+    }
     return len == 0 ? nil : [songData subdataWithRange:range];
 }
 

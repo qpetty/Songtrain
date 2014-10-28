@@ -87,7 +87,7 @@
         
     NSLog(@"Asking for more data to get the converter going for: %@", self.title);
     
-    if (musicRequestSent == NO && cBuffer.fillCount < 3 * kBufferLength / 4 && packetTimer == nil) {
+    if (musicRequestSent == NO && cBuffer.fillCount < 3 * kBufferLength / 4 && self.isFinishedSendingSong == NO && packetTimer == nil) {
         musicRequestSent = YES;
         
         NSLog(@"sending");
@@ -117,6 +117,10 @@
     OSStatus err = -5;
     if (self.inputASDBIsSet == YES) {
         [self initConverter];
+        
+        if (cBuffer.fillCount == 0 && self.isFinishedSendingSong) {
+            return -2;
+        }
         
         if (cBuffer.fillCount < kBufferLength / 4) {
             //Send music request and start timer;

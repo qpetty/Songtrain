@@ -261,7 +261,7 @@
         }
         else if (mess.message == FinishedStreaming) {
             NSLog(@"Finished streaming from %@\n", peerID.displayName);
-            [[QPMusicPlayerController sharedMusicPlayer] skip];
+            [self findSong:mess.song].isFinishedSendingSong = YES;
         }
         else if (mess.message == CurrentTime) {
             NSLog(@"Got current time, %ld, from %@\n", (long)mess.firstIndex, peerID.displayName);
