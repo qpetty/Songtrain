@@ -651,6 +651,10 @@
             [self.songTableView reloadData];
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
+        NSLog(@"Updating Image!!!!!!!!!!!!!");
+        if ([musicPlayer.currentSong isKindOfClass:[SoundCloudSong class]]) {
+            [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
+        }
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }

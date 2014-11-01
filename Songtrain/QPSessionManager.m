@@ -248,7 +248,7 @@
             //NSLog(@"streamSong is set %@", streamSong.inputASDBIsSet ? @"YES" : @"NO");
             //NSLog(@"mess.song is set %@", mess.song.inputASDBIsSet ? @"YES" : @"NO");
             
-            if (streamSong.inputASDBIsSet == NO && mess.song.inputASDBIsSet == YES) {
+            if (streamSong && streamSong.inputASDBIsSet == NO && mess.song.inputASDBIsSet == YES) {
                 NSLog(@"Just set %@'s inputASBD", streamSong.title);
                 memcpy(streamSong.inputASBD, mess.song.inputASBD, sizeof(AudioStreamBasicDescription));
                 streamSong.inputASDBIsSet = YES;
@@ -296,6 +296,7 @@
         } else if (((RemoteSong*)song).type == SoundCloud) {
             NSLog(@"make soundcloud song");
             newSong = [[SoundCloudSong alloc] initWithSong:song];
+            newSong.artworkURL = song.artworkURL;
             [((SoundCloudSong*)newSong) setOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
         } else {
             NSLog(@"didnt make any song");
@@ -501,6 +502,21 @@
     message.data = [NSKeyedArchiver archivedDataWithRootObject:song.albumImage];
     
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:peer];
+}
+
+- (void)sendAlbumArtworkToEveryone:(Song*)song
+{
+    if (song.albumImage == nil){
+        NSLog(@"No Album Image to send\n");
+        return;
+    }
+    
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = AlbumImage;
+    message.song = song;
+    message.data = [NSKeyedArchiver archivedDataWithRootObject:song.albumImage];
+    
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
 - (void)prepareRemoteSong:(RemoteSong*)song

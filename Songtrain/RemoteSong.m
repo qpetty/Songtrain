@@ -94,7 +94,7 @@
         [[QPSessionManager sessionManager] requestMusicDataForSong:self withAvailableBytes:kBufferLength - cBuffer.fillCount];
         
         //Might use to allow sometime between packet requests
-        //packetTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerIsFinished) userInfo:nil repeats:YES];
+        packetTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerIsFinished) userInfo:nil repeats:YES];
     }
         
     });

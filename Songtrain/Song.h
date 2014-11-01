@@ -23,6 +23,7 @@
 @property (strong, nonatomic) NSNumber *persistantID;
 @property (strong, nonatomic) NSURL *url;
 @property (strong, nonatomic) NSURL *musicURL;
+@property (strong, nonatomic) NSURL *artworkURL;
 
 @property (nonatomic) BOOL isFinishedSendingSong;
 @property (nonatomic) BOOL inputASDBIsSet;

@@ -41,6 +41,8 @@
         self.persistantID = song.persistantID;
         self.url = song.url;
         self.musicURL = song.musicURL;
+        self.artworkURL = song.artworkURL;
+        
         self.songLength = song.songLength;
         self.inputASDBIsSet = song.inputASDBIsSet;
         
@@ -59,6 +61,7 @@
         self.persistantID = [aDecoder decodeObjectForKey:@"id"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
         self.musicURL = [aDecoder decodeObjectForKey:@"musicURL"];
+        self.artworkURL = [aDecoder decodeObjectForKey:@"artworkURL"];
         
         self.inputASDBIsSet = [aDecoder decodeBoolForKey:@"inputASBDset"];
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
@@ -80,6 +83,7 @@
     [aCoder encodeObject:self.persistantID forKey:@"id"];
     [aCoder encodeObject:self.url forKey:@"url"];
     [aCoder encodeObject:self.musicURL forKey:@"musicURL"];
+    [aCoder encodeObject:self.artworkURL forKey:@"artworkURL"];
     
     [aCoder encodeBool:self.inputASDBIsSet forKey:@"inputASBDset"];
     [aCoder encodeInt:_songLength forKey:@"songLength"];
