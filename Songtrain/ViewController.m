@@ -238,6 +238,7 @@
     
     self.currentAlbumArtwork.image = image;
     backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+    [musicPlayer updateNowPlaying];
 }
 
 -(IBAction)editAllTableViews:(id)sender {
@@ -445,10 +446,10 @@
 #pragma mark QPBrowsingManagerDelegate methods
 
 -(void)foundPeer:(MCPeerID *)peerID {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    //dispatch_async(dispatch_get_main_queue(), ^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + 1 inSection:0];
         [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
-    });
+    //});
 }
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
@@ -653,6 +654,7 @@
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         NSLog(@"Updating Image!!!!!!!!!!!!!");
         if ([musicPlayer.currentSong isKindOfClass:[SoundCloudSong class]]) {
+            NSLog(@"Sending artwork to everyone");
             [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
         }
         [self updateImage:musicPlayer.currentSong.albumImage];
