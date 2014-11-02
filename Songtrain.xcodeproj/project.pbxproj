@@ -37,6 +37,7 @@
 		5A5B80B419CFABA5000A4681 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5B80B319CFABA5000A4681 /* AVFoundation.framework */; };
 		5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A60069E19D53F240062865A /* PeerTableViewCell.m */; };
 		5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A60069F19D53F240062865A /* PeerTableViewCell.xib */; };
+		5A6CC8851A05D9E900875596 /* SoundCloudSongViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6CC8841A05D9E900875596 /* SoundCloudSongViewController.m */; };
 		5A743C1219CBD9540008C989 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1119CBD9540008C989 /* main.m */; };
 		5A743C1519CBD9540008C989 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1419CBD9540008C989 /* AppDelegate.m */; };
 		5A743C1819CBD9540008C989 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A743C1719CBD9540008C989 /* ViewController.m */; };
@@ -222,6 +223,8 @@
 		5A60069D19D53F240062865A /* PeerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerTableViewCell.h; sourceTree = "<group>"; };
 		5A60069E19D53F240062865A /* PeerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerTableViewCell.m; sourceTree = "<group>"; };
 		5A60069F19D53F240062865A /* PeerTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PeerTableViewCell.xib; sourceTree = "<group>"; };
+		5A6CC8831A05D9E900875596 /* SoundCloudSongViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundCloudSongViewController.h; sourceTree = "<group>"; };
+		5A6CC8841A05D9E900875596 /* SoundCloudSongViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundCloudSongViewController.m; sourceTree = "<group>"; };
 		5A743C0C19CBD9540008C989 /* Songtrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Songtrain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A743C1019CBD9540008C989 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A743C1119CBD9540008C989 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -392,6 +395,8 @@
 				5A5B80A319CF89A7000A4681 /* MusicNavigationViewController.m */,
 				5A40DE5419F371490098F37B /* SoundCloudTabViewController.h */,
 				5A40DE5519F371490098F37B /* SoundCloudTabViewController.m */,
+				5A6CC8831A05D9E900875596 /* SoundCloudSongViewController.h */,
+				5A6CC8841A05D9E900875596 /* SoundCloudSongViewController.m */,
 				5A41229D19FADB0B007409FA /* Views */,
 			);
 			name = MusicPicker;
@@ -729,6 +734,7 @@
 				5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */,
 				5A5B80A619CF89A7000A4681 /* PlaylistTabViewController.m in Sources */,
 				5A9F951919E35AE0009A6D30 /* AnimatedCollectionViewCell.m in Sources */,
+				5A6CC8851A05D9E900875596 /* SoundCloudSongViewController.m in Sources */,
 				5A743C1819CBD9540008C989 /* ViewController.m in Sources */,
 				5A5B80A719CF89A7000A4681 /* SongTabViewController.m in Sources */,
 				5A5B809419CE77EF000A4681 /* MarqueeLabel.m in Sources */,

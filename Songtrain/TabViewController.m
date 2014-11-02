@@ -47,9 +47,9 @@
     [_wholeTableView reloadData];
 }
 
--(void)viewWillLayoutSubviews
+-(void)viewDidLayoutSubviews
 {
-    [super viewWillLayoutSubviews];
+    [super viewDidLayoutSubviews];
     _wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,

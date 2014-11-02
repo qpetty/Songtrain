@@ -9,14 +9,18 @@
 #import "SoundCloudTabViewController.h"
 #import "CocoaSoundCloudUI/Sources/SoundCloudUI/SCUI.h"
 #import "SoundCloudSong.h"
+#import "SoundCloudSongViewController.h"
 
 @interface SoundCloudTabViewController ()
 
 @end
 
 @implementation SoundCloudTabViewController {
-    NSArray *tracks;
+    NSArray *tracks, *playlists;
     SCLoginViewController *login;
+    UISegmentedControl *segmented;
+    
+    UITableView *playlistTable;
 }
 
 -(instancetype)init {
@@ -29,7 +33,21 @@
             [self getAuthViewController];
         } else {
             [self getFavorites];
+            [self getPlaylists];
         }
+        
+        segmented = [[UISegmentedControl alloc] initWithItems:@[@"Likes", @"Playlists"]];
+        segmented.backgroundColor = [UIColor darkGrayColor];
+        segmented.selectedSegmentIndex = 0;
+        segmented.tintColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
+        [segmented addTarget:self action:@selector(segementedControlChanged:) forControlEvents: UIControlEventValueChanged];
+        //[self.view addSubview:segmented];
+        
+        playlistTable = [[STMusicPickerTableView alloc] init];
+        playlistTable.delegate = self;
+        playlistTable.dataSource = self;
+        playlistTable.hidden = YES;
+        //[self.view addSubview:playlistTable];
     }
     return self;
 }
@@ -41,6 +59,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view addSubview:segmented];
+    [self.view addSubview:playlistTable];
+    NSLog(@"self delegate: %@", self.delegate);
     // Do any additional setup after loading the view.
 }
 
@@ -52,16 +73,39 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self getFavorites];
+    [self getPlaylists];
 }
 
--(void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    segmented.frame = CGRectMake(self.view.frame.origin.x,
+                                 self.view.frame.origin.y + 64.0,
+                                 self.view.frame.size.width,
+                                 28.0);
+    
+    self.wholeTableView.frame = CGRectMake(self.wholeTableView.frame.origin.x,
+                                           self.wholeTableView.frame.origin.y + segmented.frame.size.height,
+                                           self.wholeTableView.frame.size.width,
+                                           self.wholeTableView.frame.size.height);
+    
+    playlistTable.frame = CGRectMake(self.wholeTableView.frame.origin.x,
+                                     self.wholeTableView.frame.origin.y + segmented.frame.origin.y,
+                                     self.wholeTableView.frame.size.width,
+                                     self.wholeTableView.frame.size.height);
+    
     login.view.frame = CGRectMake(self.view.frame.origin.x,
                                   self.view.frame.origin.y + 32.0,
                                   self.view.frame.size.width,
                                   self.view.frame.size.height);
 }
 
+/*
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    playlistTable.frame = self.wholeTableView.frame;
+}
+*/
 - (void)getFavorites {
     NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
     if ([SCSoundCloud account] != nil) {
@@ -89,6 +133,33 @@
     }
 }
 
+- (void)getPlaylists {
+    NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
+    if ([SCSoundCloud account] != nil) {
+        SCRequestResponseHandler handler;
+        handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
+            NSError *jsonError = nil;
+            NSJSONSerialization *jsonResponse = [NSJSONSerialization
+                                                 JSONObjectWithData:data
+                                                 options:0
+                                                 error:&jsonError];
+            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
+                //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
+                playlists = (NSArray *)jsonResponse;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [playlistTable reloadData];
+                    NSLog(@"Updated playlists");
+                });
+            }
+        };
+        
+        NSString *resourceURL = @"https://api.soundcloud.com/me/playlists.json";
+        [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:resourceURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
+    } else {
+        playlists = nil;
+    }
+}
+
 -(void)getAuthViewController {
     SCLoginViewControllerCompletionHandler handler = ^(NSError *error) {
         if (SC_CANCELED(error)) {
@@ -100,6 +171,7 @@
             [login removeFromParentViewController];
             [login.view removeFromSuperview];
             [self getFavorites];
+            [self getPlaylists];
         }
     };
     
@@ -113,6 +185,16 @@
     }];
 }
 
+-(IBAction)segementedControlChanged:(id)sender {
+    if ([segmented selectedSegmentIndex] == 0) {
+        self.wholeTableView.hidden = NO;
+        playlistTable.hidden = YES;
+    } else {
+        self.wholeTableView.hidden = YES;
+        playlistTable.hidden = NO;
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -124,6 +206,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
+    if (tableView == playlistTable) {
+        return playlists.count;
+    }
+    
     return tracks.count;
 }
 
@@ -140,13 +226,17 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     
-    cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]]];
-    if ([self.delegate isItemSelected:newSong]) {
-        cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
+    if (tableView == playlistTable) {
+        cell.textLabel.text = [playlists objectAtIndex:indexPath.row][@"title"];
+    } else {
+        cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
+        SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]]];
+        if ([self.delegate isItemSelected:newSong]) {
+            cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
+        }
     }
     
     return cell;
@@ -154,6 +244,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (tableView == playlistTable) {
+        SoundCloudSongViewController *songsView = [[SoundCloudSongViewController alloc] initWithTracks:[playlists objectAtIndex:indexPath.row][@"tracks"]];
+        songsView.title = [playlists objectAtIndex:indexPath.row][@"title"];
+        songsView.delegate = self.delegate;
+        [self.navigationController pushViewController:songsView animated:YES];
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        return;
+    }
+    
     SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row]];
     if ([self.delegate isItemSelected:newSong]) {
         [self.delegate removeItem:newSong];
