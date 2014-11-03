@@ -455,7 +455,7 @@
         [UIView animateWithDuration:0.18f animations:^(void) {
             [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
         }];
-    });
+    //});
 }
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
