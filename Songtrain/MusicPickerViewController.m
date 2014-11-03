@@ -7,10 +7,13 @@
 //
 
 #import "MusicPickerViewController.h"
+#import "Song.h"
 
 @interface MusicPickerViewController (){
     NSMutableArray *allMediaItems, *doneButtons;
     UIBarButtonItem *doneButton1, *doneButton2, *doneButton3;
+    
+    MusicNavigationViewController *soundCloudFrame;
 }
 
 @end
@@ -34,38 +37,47 @@
     
     doneButtons = [[NSMutableArray alloc] init];
     
+    //Playlists Tab
+    
     PlaylistTabViewController *playListViewController = [[PlaylistTabViewController alloc] init];
     playListViewController.title = @"Playlists";
     playListViewController.delegate = self;
     
     MusicNavigationViewController *playlists = [[MusicNavigationViewController alloc] initWithRootViewController:playListViewController];
-    playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:nil selectedImage:nil];
-    [playlists.tabBarItem setImage: [UIImage imageNamed:@"playlist_inactive"]];
-    [playlists.tabBarItem setSelectedImage:[UIImage imageNamed:@"playlist_active"]];
+    playlists.tabBarItem = [[UITabBarItem alloc] initWithTitle:playListViewController.title image:[UIImage imageNamed:@"playlist_inactive"] selectedImage:[UIImage imageNamed:@"playlist_active"]];
+    
+    //Artists Tab
     
     ArtistTabViewController *artistViewController = [[ArtistTabViewController alloc] init];
     artistViewController.title = @"Artists";
     artistViewController.delegate = self;
     
     MusicNavigationViewController *artists = [[MusicNavigationViewController alloc] initWithRootViewController:artistViewController];
-    artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:nil selectedImage:nil];
-
-    [artists.tabBarItem setImage: [UIImage imageNamed:@"artist_inactive"]];
-    [artists.tabBarItem setSelectedImage:[UIImage imageNamed:@"artist_active"]];
+    artists.tabBarItem = [[UITabBarItem alloc] initWithTitle:artistViewController.title image:[UIImage imageNamed:@"artist_inactive"] selectedImage:[UIImage imageNamed:@"artist_active"]];
+    
+    //Songs Tab
     
     SongTabViewController *songViewController = [[SongTabViewController alloc] initWithQuery:[MPMediaQuery songsQuery]];
     songViewController.title = @"Songs";
     songViewController.delegate = self;
     
     MusicNavigationViewController *songs = [[MusicNavigationViewController alloc] initWithRootViewController:songViewController];
-    songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:nil selectedImage:nil];
-    [songs.tabBarItem setImage: [UIImage imageNamed:@"song_inactive"]];
-    [songs.tabBarItem setSelectedImage:[UIImage imageNamed:@"song_active"]];
+    songs.tabBarItem = [[UITabBarItem alloc] initWithTitle:songViewController.title image:[UIImage imageNamed:@"song_inactive"] selectedImage:[UIImage imageNamed:@"song_active"]];
     
-    NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, nil];
+    //Soundcloud
+    
+    SoundCloudTabViewController *soundCloudViewController = [[SoundCloudTabViewController alloc] init];
+    soundCloudViewController.title = @"SoundCloud";
+    soundCloudViewController.delegate = self;
+    
+    MusicNavigationViewController *soundCloud = [[MusicNavigationViewController alloc] initWithRootViewController:soundCloudViewController];
+    soundCloud.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SoundCloud" image:[UIImage imageNamed:@"soundcloud_icon"] selectedImage:[UIImage imageNamed:@"soundcloud_icon"]];
+    
+    //Putting everything in the tab bar controller
+    
+    NSArray *controllers = [NSArray arrayWithObjects:playlists, artists, songs, soundCloud, nil];
     
     self.viewControllers = controllers;
-    
     
     self.tabBar.tintColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
     self.tabBar.barTintColor = [UIColor darkGrayColor];
@@ -82,16 +94,16 @@
     [allMediaItems removeAllObjects];
 }
 
-- (void)addItem:(MPMediaItem*)item
+- (void)addItem:(id)item
 {
     [allMediaItems addObject:item];
-    
+    NSLog(@"adding item %lu", doneButtons.count);
     for (UIBarButtonItem *button in doneButtons) {
         button.title = @"Done";
     }
 }
 
-- (void)removeItem:(MPMediaItem*)item
+- (void)removeItem:(id)item
 {
     [allMediaItems removeObject:item];
     if (![allMediaItems count]) {
@@ -101,7 +113,7 @@
     }
 }
 
-- (BOOL)isItemSelected:(MPMediaItem*)item
+- (BOOL)isItemSelected:(id)item
 {
     return [allMediaItems containsObject:item];
 }
@@ -123,8 +135,24 @@
 - (void)done
 {
     if ([allMediaItems count]) {
-        _selectedMediaItems = [NSArray arrayWithArray:allMediaItems];
-        [self.delegate mediaPicker:(MPMediaPickerController*)self didPickMediaItems:[MPMediaItemCollection collectionWithItems:allMediaItems]];
+        NSMutableArray *urlItems = [[NSMutableArray alloc] init];
+        NSMutableArray *mediaItems = [[NSMutableArray alloc] init];
+        
+        for (id oneItem in allMediaItems) {
+            if ([oneItem isKindOfClass:[Song class]]) {
+                [urlItems addObject:oneItem];
+            } else {
+                [mediaItems addObject:oneItem];
+            }
+        }
+        
+        _selectedMediaItems = [NSArray arrayWithArray:mediaItems];
+        MPMediaItemCollection *itemCollection = nil;
+        if (mediaItems.count) {
+            itemCollection = [MPMediaItemCollection collectionWithItems:_selectedMediaItems];
+        }
+        [self.delegate musicPicker:self didPickItems:urlItems andMediaItems:itemCollection];
+
         for (UIBarButtonItem *button in doneButtons) {
             button.title = @"Cancel";
         }

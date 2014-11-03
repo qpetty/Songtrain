@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "STMusicPickerTableView.h"
 
 @protocol TabViewControllerDelegate <NSObject>
 
-- (void)addItem:(MPMediaItem*)item;
-- (void)removeItem:(MPMediaItem*)item;
-- (BOOL)isItemSelected:(MPMediaItem*)item;
+- (void)addItem:(id)item;
+- (void)removeItem:(id)item;
+- (BOOL)isItemSelected:(id)item;
 - (void)addButton:(UIBarButtonItem*)button;
 - (void)removeButton:(UIBarButtonItem*)button;
 - (void)done;
@@ -26,5 +27,6 @@
 }
 
 @property (weak, nonatomic) id <TabViewControllerDelegate> delegate;
+@property (atomic, retain, readonly) STMusicPickerTableView *wholeTableView;
 
 @end

@@ -70,13 +70,13 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [super numberOfSectionsInTableView:tableView];
+    return [[query itemSections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [super tableView:tableView numberOfRowsInSection:section];
+    return [[[query itemSections] objectAtIndex:section] range].length;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -96,7 +96,14 @@
 
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
-     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+     STSongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MusicCell"];
+     
+     if (!cell) {
+         cell = [[STSongTableViewCell alloc] init];
+         [cell setRestorationIdentifier:@"MusicCell"];
+     }
+     
+     
      cell.backgroundColor = UIColorFromRGBWithAlpha(0x4E5257, 0.3);
      cell.selectionStyle = UITableViewCellSelectionStyleNone;
      cell.accessoryType = UITableViewCellAccessoryNone;
@@ -137,6 +144,12 @@
         [self.delegate addItem:[displayItems objectAtIndex:ndx]];
     }
     [tableView reloadData];
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    HeaderSongCellView *cell = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
+    cell.title.text = [[query.itemSections objectAtIndex:section] title];
+    return cell;
 }
 
 /*

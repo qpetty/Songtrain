@@ -17,35 +17,17 @@
          outputASBD = malloc(sizeof(AudioStreamBasicDescription));
          _inputASBD = malloc(sizeof(AudioStreamBasicDescription));
          image = nil;
+         self.inputASDBIsSet = NO;
+         self.isFinishedSendingSong = NO;
      }
     return self;
 }
 
-- (instancetype)initWithMediaItem:(MPMediaItem*)item
-{
+- (instancetype)initWithTitle:(NSString*)title andArtist:(NSString*)artist {
     if(self = [self init])
     {
-        self.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
-        self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
-        self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
-        
-        _assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
-        
-        CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[_assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
-        const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription (item);
-        
-        memcpy(_inputASBD, asbd, sizeof(AudioStreamBasicDescription));
-    }
-    return self;
-}
-
-- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
-{
-    if(self = [self initWithMediaItem:item])
-    {
-        memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
+        self.title = title;
+        self.artistName = artist;
     }
     return self;
 }
@@ -58,7 +40,11 @@
         self.artistName = song.artistName;
         self.persistantID = song.persistantID;
         self.url = song.url;
+        self.musicURL = song.musicURL;
+        self.artworkURL = song.artworkURL;
+        
         self.songLength = song.songLength;
+        self.inputASDBIsSet = song.inputASDBIsSet;
         
         memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
         memcpy(_inputASBD, song.inputASBD, sizeof(AudioStreamBasicDescription));
@@ -72,10 +58,12 @@
     {
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.artistName = [aDecoder decodeObjectForKey:@"name"];
-        //self.albumImage = [aDecoder decodeObjectForKey:@"image"];
         self.persistantID = [aDecoder decodeObjectForKey:@"id"];
         self.url = [aDecoder decodeObjectForKey:@"url"];
+        self.musicURL = [aDecoder decodeObjectForKey:@"musicURL"];
+        self.artworkURL = [aDecoder decodeObjectForKey:@"artworkURL"];
         
+        self.inputASDBIsSet = [aDecoder decodeBoolForKey:@"inputASBDset"];
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
         
         NSUInteger size;
@@ -92,10 +80,12 @@
 {
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.artistName forKey:@"name"];
-    //[aCoder encodeObject:self.albumImage forKey:@"image"];
     [aCoder encodeObject:self.persistantID forKey:@"id"];
     [aCoder encodeObject:self.url forKey:@"url"];
+    [aCoder encodeObject:self.musicURL forKey:@"musicURL"];
+    [aCoder encodeObject:self.artworkURL forKey:@"artworkURL"];
     
+    [aCoder encodeBool:self.inputASDBIsSet forKey:@"inputASBDset"];
     [aCoder encodeInt:_songLength forKey:@"songLength"];
     
     [aCoder encodeBytes:(const uint8_t*)outputASBD length:sizeof(AudioStreamBasicDescription) forKey:@"out"];
@@ -105,6 +95,10 @@
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
     return -1;
+}
+
+-(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes {
+    return nil;
 }
 
 - (BOOL)isEqual:(id)object

@@ -17,6 +17,7 @@ enum MessageTypes : NSInteger {
     SkipVote,
     AlbumRequest,
     AlbumImage,
+    PrepareSong,
     MusicPacketRequest,
     MusicPacket,
     FinishedStreaming,

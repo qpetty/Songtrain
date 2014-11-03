@@ -11,8 +11,9 @@
 #import "SongTableViewCell.h"
 #import "PeerTableViewCell.h"
 #import "AnimatedCollectionViewFlowLayout.h"
+#import "SoundCloudSong.h"
 
-#define ITUNES_SEARCH_API_AFFILIATE_TOKEN @""
+#define ITUNES_SEARCH_API_AFFILIATE_TOKEN @"11lMLF"
 #define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
 
 @interface ViewController ()
@@ -241,6 +242,7 @@
     
     self.currentAlbumArtwork.image = image;
     backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+    [musicPlayer updateNowPlaying];
 }
 
 -(IBAction)editAllTableViews:(id)sender {
@@ -277,14 +279,20 @@
     [self presentViewController:musicPicker animated:YES completion:nil];
 }
 
-- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection
-{
+-(void)musicPicker:(MusicPickerViewController *)picker didPickItems:(NSArray *)items andMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+    
     NSMutableArray *newSongs = [[NSMutableArray alloc] init];
     for (MPMediaItem *item in mediaItemCollection.items) {
-        LocalSong *tempSong = [[LocalSong alloc] initWithOutputASBD:*(musicPlayer.audioFormat) andItem:item];
+        LocalSong *tempSong = [[LocalSong alloc] initWithItem:item andOutputASBD:*(musicPlayer.audioFormat)];
         [newSongs addObject:tempSong];
     }
-
+    for (id item in items) {
+        if ([item isMemberOfClass:[SoundCloudSong class]]) {
+            [((SoundCloudSong*)item) setOutputASBD:*(musicPlayer.audioFormat)];
+            [newSongs addObject:item];
+        }
+    }
+    
     [self dismissViewControllerAnimated:YES completion:^{
         for (Song *song in newSongs) {
             if (sessionManager.currentRole == ClientConnection) {
@@ -442,7 +450,7 @@
 #pragma mark QPBrowsingManagerDelegate methods
 
 -(void)foundPeer:(MCPeerID *)peerID {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    //dispatch_async(dispatch_get_main_queue(), ^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + 1 inSection:0];
         [UIView animateWithDuration:0.18f animations:^(void) {
             [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
@@ -534,33 +542,70 @@
         if ([self.currentSongTitle.text isEqualToString:musicPlayer.currentSong.title] == NO ||
             [self.currentSongArtist.text isEqualToString:musicPlayer.currentSong.artistName] == NO) {
             self.purchaseButton.hidden = YES;
-            NSString *searchTerm = [musicPlayer.currentSong.artistName stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-            NSLog(@"iTunes Search API term: %@", [searchTerm stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
-            NSString *urlString = [NSString stringWithFormat:@"https://itunes.apple.com/search?entity=allArtist&attribute=allArtistTerm&limit=1&term=%@", searchTerm];
-            NSURL *url = [NSURL URLWithString:urlString];
-            NSURLRequest *request = [NSURLRequest requestWithURL:url];
-            [NSURLConnection sendAsynchronousRequest:request
-                                               queue:[NSOperationQueue mainQueue]
-                                   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                       if (!error) {
-                                           NSError *parseError;
-                                           id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
-                                           //NSLog(@"%@", parse[@"results"][0]);
-   
-                                           if (parseError == nil &&
-                                               [parse objectForKey:@"results"] != nil &&
-                                               [parse[@"results"][0] objectForKey:@"artistId"] != nil) {
-                                               currentSongID = parse[@"results"][0][@"artistId"];
-                                               self.purchaseButton.hidden = NO;
-                                           }
-                                       }
-                                   }];
+            
+            [self searchiTunesForSong:musicPlayer.currentSong.title];
         }
         
         self.currentSongTitle.text = musicPlayer.currentSong.title;
         self.currentSongArtist.text = musicPlayer.currentSong.artistName;
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
+}
+
+-(void)searchiTunesForSong:(NSString*)song {
+    NSString *searchTerm = [song stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    NSLog(@"iTunes Search API term: %@", [searchTerm stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
+    NSString *urlString = [NSString stringWithFormat:@"https://itunes.apple.com/search?entity=song&attribute=songTerm&limit=1&term=%@", searchTerm];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (!error) {
+                                   NSError *parseError;
+                                   id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
+                                   
+                                   if (parseError == nil &&
+                                       [parse objectForKey:@"results"] != nil &&
+                                       [parse[@"results"] isKindOfClass:[NSArray class]] &&
+                                       [parse[@"results"] count] > 0 &&
+                                       [parse[@"results"][0] objectForKey:@"trackId"] != nil) {
+                                       
+                                       NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.title);
+                                       currentSongID = parse[@"results"][0][@"trackId"];
+                                       self.purchaseButton.hidden = NO;
+                                   } else {
+                                       [self searchiTunesForArtist:musicPlayer.currentSong.artistName];
+                                   }
+                               }
+                           }];
+}
+
+-(void)searchiTunesForArtist:(NSString*)artist {
+    NSString *searchTerm = [artist stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    NSLog(@"iTunes Search API term: %@", [searchTerm stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
+    NSString *urlString = [NSString stringWithFormat:@"https://itunes.apple.com/search?entity=musicArtist&attribute=artistTerm&limit=1&term=%@", searchTerm];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (!error) {
+                                   NSError *parseError;
+                                   id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
+                                   
+                                   if (parseError == nil &&
+                                       [parse objectForKey:@"results"] != nil &&
+                                       [parse[@"results"] isKindOfClass:[NSArray class]] &&
+                                       [parse[@"results"] count] > 0 &&
+                                       [parse[@"results"][0] objectForKey:@"artistId"] != nil) {
+                                       
+                                       NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.artistName);
+                                       currentSongID = parse[@"results"][0][@"artistId"];
+                                       self.purchaseButton.hidden = NO;
+                                   }
+                               }
+                           }];
 }
 
 #pragma mark Purchase Button
@@ -619,6 +664,11 @@
             [self.songTableView reloadData];
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
+        NSLog(@"Updating Image!!!!!!!!!!!!!");
+        if ([musicPlayer.currentSong isKindOfClass:[SoundCloudSong class]]) {
+            NSLog(@"Sending artwork to everyone");
+            [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
+        }
         [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }

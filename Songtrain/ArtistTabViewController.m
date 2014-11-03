@@ -79,7 +79,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    STSongTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MusicCell"];
+    
+    if (!cell) {
+        cell = [[STSongTableViewCell alloc] init];
+        [cell setRestorationIdentifier:@"MusicCell"];
+    }
+    
     
     NSUInteger ndx = [[[query collectionSections] objectAtIndex:indexPath.section] range].location + indexPath.row;
     
@@ -126,6 +132,12 @@
     [self.navigationController pushViewController:songsView animated:YES];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    HeaderSongCellView *cell = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"HeaderSong"];
+    cell.title.text = [[query.itemSections objectAtIndex:section] title];
+    return cell;
 }
 
 /*
