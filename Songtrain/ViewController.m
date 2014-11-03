@@ -15,6 +15,7 @@
 
 #define ITUNES_SEARCH_API_AFFILIATE_TOKEN @"11lMLF"
 #define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
+#define STATIC_NEARBY_TRAIN_CELLS 2
 
 @interface ViewController ()
 
@@ -185,6 +186,7 @@
         }
     completion:^(BOOL finished) {
         [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
+        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]];
         [sessionManager startBrowsingForTrains];
     }];
 }
@@ -451,7 +453,7 @@
 
 -(void)foundPeer:(MCPeerID *)peerID {
     //dispatch_async(dispatch_get_main_queue(), ^{
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + 1 inSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + STATIC_NEARBY_TRAIN_CELLS inSection:0];
         [UIView animateWithDuration:0.18f animations:^(void) {
             [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
         }];
@@ -460,7 +462,7 @@
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx + 1 inSection:0]]];
+        [nearbyTrainsModal deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:ndx + STATIC_NEARBY_TRAIN_CELLS inSection:0]]];
     });
 }
 
@@ -498,7 +500,7 @@
 #pragma mark CollectionView for Nearby Trains
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return sessionManager.peerArray.count + 1;
+    return sessionManager.peerArray.count + STATIC_NEARBY_TRAIN_CELLS;
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -506,9 +508,11 @@
     AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
     
     if (indexPath.row == 0) {
+        cell.peerName.text = @"Settings";
+    } else if (indexPath.row == 1) {
         cell.peerName.text = sessionManager.pid.displayName;
     } else {
-        cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - 1] displayName];
+        cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - STATIC_NEARBY_TRAIN_CELLS] displayName];
     }
     
     if ([cell.peerName.text isEqualToString:sessionManager.server.displayName]) {
@@ -520,16 +524,18 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == 0) {
+        
+    } else if (indexPath.row == 1) {
         if (![sessionManager.server isEqual:sessionManager.pid]) {
             NSLog(@"restarting my session");
             [sessionManager restartSession];
         }
         [self finishBrowsingForOthers:NO];
-    } else if ([sessionManager.server isEqual:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]]) {
+    } else if ([sessionManager.server isEqual:[sessionManager.peerArray objectAtIndex:indexPath.row - STATIC_NEARBY_TRAIN_CELLS]]) {
         [self finishBrowsingForOthers:NO];
     } else {
         NSLog(@"connecting to another");
-        [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
+        [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - STATIC_NEARBY_TRAIN_CELLS]];
         [self finishBrowsingForOthers:YES];
     }
     
