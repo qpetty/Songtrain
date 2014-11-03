@@ -70,6 +70,7 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     
     isServer = YES;
+    _currentlyPlaying = YES;
     
     MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
@@ -82,6 +83,7 @@
     [self reset];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    _currentlyPlaying = NO;
     AUGraphStart(graph);
 }
 
@@ -412,7 +414,7 @@ static OSStatus audioOutputCallback(void *inRefCon,
         //NSLog(@"address %d\n", &numPacketsNeeded);
         
         err = [audioPlayback.currentSong getMusicPackets:&numPacketsNeeded forBuffer:ioData];
-        
+
         if (err == -2) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [audioPlayback skip];

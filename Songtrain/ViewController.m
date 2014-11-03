@@ -520,16 +520,19 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == 0) {
-        if (![sessionManager.server.displayName isEqualToString:sessionManager.pid.displayName]) {
+        if (![sessionManager.server isEqual:sessionManager.pid]) {
+            NSLog(@"restarting my session");
             [sessionManager restartSession];
         }
         [self finishBrowsingForOthers:NO];
-    } else if ([sessionManager.server.displayName isEqualToString:((MCPeerID *)[sessionManager.peerArray objectAtIndex:indexPath.row - 1]).displayName]) {
+    } else if ([sessionManager.server isEqual:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]]) {
         [self finishBrowsingForOthers:NO];
     } else {
+        NSLog(@"connecting to another");
         [sessionManager connectToPeer:[sessionManager.peerArray objectAtIndex:indexPath.row - 1]];
         [self finishBrowsingForOthers:YES];
     }
+    
 }
 
 -(void)updateCurrentSong {
@@ -651,6 +654,7 @@
     else if ([keyPath isEqualToString:@"server"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.mainTitle.text = sessionManager.server.displayName;
+            self.purchaseButton.hidden = YES;
             [self updatePlayOrPauseImage];
 
             if (sessionManager.currentRole == ClientConnection) {
