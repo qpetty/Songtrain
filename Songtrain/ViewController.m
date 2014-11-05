@@ -195,11 +195,15 @@
 {
     [sessionManager stopBrowsingForTrains];
 
-    [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
-        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    [UIView animateWithDuration:.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+        [nearbyTrainsModal setAlpha:0.0];
+
     } completion:^(BOOL finished) {
+        [nearbyTrainsModal setAlpha:1.0];
+        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+        [nearbyTrainsModal removeFromSuperview];
+        [nearbyTrainsModal reloadData];
     }];
-    
     
     if (somethingSelected == NO) {
         [self removeLoadingScreen];
@@ -208,8 +212,7 @@
         [loadingIcon startAnimating];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     }
-    [nearbyTrainsModal removeFromSuperview];
-    [nearbyTrainsModal reloadData];
+
 }
 
 -(void)removeLoadingScreen {

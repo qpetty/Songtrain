@@ -10,10 +10,19 @@
 
 @implementation AnimatedCollectionViewFlowLayout
 
-- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
 
+    attributes.frame = CGRectMake(0, (self.itemSize.height * (itemIndexPath.row - 1)) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
+    attributes.alpha = 0.0;
+    return attributes;
+}
+
+- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+{
+    UICollectionViewLayoutAttributes *attributes = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+    
     attributes.frame = CGRectMake(0, (self.itemSize.height * (itemIndexPath.row - 1)) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
     attributes.alpha = 0.0;
     return attributes;
