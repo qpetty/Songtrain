@@ -25,9 +25,9 @@
 
 @interface QPMusicPlayerController : NSObject
 
-@property (weak, nonatomic) id <QPMusicPlayerPlaylistDelegate> delegate;
+@property (weak) id <QPMusicPlayerPlaylistDelegate> delegate;
 
-@property (nonatomic, retain, readonly) Song *currentSong;
+@property (readonly) Song *currentSong;
 @property (atomic, assign, readonly) NSRange currentSongTime;
 @property (atomic, assign, readonly) BOOL currentlyPlaying;
 

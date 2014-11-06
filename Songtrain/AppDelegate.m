@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "QPSessionManager.h"
 #import "QPMusicPlayerController.h"
 
 @interface AppDelegate ()
@@ -52,11 +53,10 @@
     if (event.type == UIEventTypeRemoteControl) {
         switch (event.subtype) {
             case UIEventSubtypeRemoteControlPlay:
-                [[QPMusicPlayerController sharedMusicPlayer] play];
-                break;
-                
             case UIEventSubtypeRemoteControlPause:
-                [[QPMusicPlayerController sharedMusicPlayer] play];
+                if ([[QPSessionManager sessionManager] currentRole] == ServerConnection) {
+                    [[QPMusicPlayerController sharedMusicPlayer] play];
+                }
                 break;
                 
             case UIEventSubtypeRemoteControlPreviousTrack:

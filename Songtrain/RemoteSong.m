@@ -164,6 +164,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
             //TODO: Memory leak?
             if (myInfo->audioData) {
                 free(myInfo->audioData);
+                myInfo->audioData = NULL;
             }
             myInfo->audioData = malloc(ioData->mBuffers[0].mDataByteSize);
             
@@ -230,6 +231,15 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
         TPCircularBufferCleanup(&cBuffer);
     }
     AudioConverterDispose(converter);
+    if (audioData) {
+        free(audioData);
+        audioData = NULL;
+    }
+    
+    if (packetTimer) {
+        [packetTimer invalidate];
+        packetTimer = nil;
+    }
 }
 
 @end

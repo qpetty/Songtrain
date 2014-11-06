@@ -122,8 +122,9 @@
 - (UIImage*)cropAlbumImage:(UIImage*)image withScreenRect:(CGRect)screenSize
 {
     CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake((image.size.width - screenSize.size.width) / 2, 0, screenSize.size.width, screenSize.size.height));
-    
-    return [UIImage imageWithCGImage:imageRef];
+    UIImage *imageToRet = [UIImage imageWithCGImage:imageRef];
+    CFRelease(imageRef);
+    return imageToRet;
 }
 
 -(void)viewDidLayoutSubviews {

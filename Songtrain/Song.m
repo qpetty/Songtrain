@@ -136,6 +136,7 @@
         free(_inputASBD);
         _inputASBD = NULL;
     }
+    image = nil;
 }
 
 @end

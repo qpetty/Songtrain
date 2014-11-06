@@ -138,6 +138,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     }
     if (song->blockBuffer) {
         CFRelease(song->blockBuffer);
+        song->blockBuffer = NULL;
     }
     
     song->sampleBuffer = [song->assetOutput copyNextSampleBuffer];
@@ -225,6 +226,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     if (buffSize > maxBytes) {
         CFRelease(blockBuffer);
+        blockBuffer = NULL;
         return nil;
     }
     
@@ -251,6 +253,7 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     CFRelease(blockBuffer);
     CFRelease(sampleBuffer);
     sampleBuffer = NULL;
+    blockBuffer = NULL;
     
     return bufferData;
 }
@@ -269,6 +272,20 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     else {
         NSLog(@"No Current Image\n");
         return nil;
+    }
+}
+
+-(void)dealloc {
+    assetReader = nil;
+    assetOutput = nil;
+    mediaItem = nil;
+    AudioConverterDispose(converter);
+    
+    if (sampleBuffer) {
+        CFRelease(sampleBuffer);
+    }
+    if (blockBuffer) {
+        CFRelease(blockBuffer);
     }
 }
 

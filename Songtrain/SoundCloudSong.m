@@ -32,6 +32,8 @@
         songData = nil;
         setOutputASBD = readyWithPackets = startedArtworkDownLoad = finishedLoading = NO;
         nextByteToRead = 0;
+        converter = NULL;
+        filestream = NULL;
     }
     return self;
 }
@@ -313,6 +315,23 @@ static char *FormatError(char *str, OSStatus error)
 - (UIImage*)getAlbumImage
 {
     return image;
+}
+
+-(void)dealloc {
+    NSLog(@"dealloc soundcloud song");
+    songData = nil;
+    oneCallbackOfData = nil;
+    musicStream = nil;
+    artworkConnection = nil;
+    imageData = nil;
+    
+    if (converter) {
+        AudioConverterDispose(converter);
+    }
+    
+    if (filestream) {
+        AudioFileStreamClose(filestream);
+    }
 }
 
 @end

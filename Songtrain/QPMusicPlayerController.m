@@ -46,6 +46,7 @@
 -(void)reset
 {
     AUGraphStop(graph);
+    _currentlyPlaying = NO;
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
     isServer = NO;
     
@@ -70,7 +71,6 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     
     isServer = YES;
-    _currentlyPlaying = YES;
     
     MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
@@ -83,7 +83,6 @@
     [self reset];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    _currentlyPlaying = NO;
     AUGraphStart(graph);
 }
 

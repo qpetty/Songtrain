@@ -97,7 +97,6 @@
 - (void)addItem:(id)item
 {
     [allMediaItems addObject:item];
-    NSLog(@"adding item %lu", doneButtons.count);
     for (UIBarButtonItem *button in doneButtons) {
         button.title = @"Done";
     }
