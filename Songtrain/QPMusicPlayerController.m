@@ -50,15 +50,6 @@
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
     isServer = NO;
     
-    [self willChangeValueForKey:@"currentSong"];
-    _currentSong = nil;
-    [self didChangeValueForKey:@"currentSong"];
-    
-    [self willChangeValueForKey:@"currentSongTime"];
-    _currentSongTime.location = 0;
-    _currentSongTime.length = 0;
-    [self didChangeValueForKey:@"currentSongTime"];
-    
     [self willChangeValueForKey:@"playlist"];
     [_playlist removeAllObjects];
     [self didChangeValueForKey:@"playlist"];
@@ -67,21 +58,27 @@
 - (void)resetToServer
 {
     [self reset];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    
-    isServer = YES;
     
     MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
         [self updateCurrentSong:[[LocalSong alloc] initWithItem:currentItem andOutputASBD:*(self.audioFormat)]];
         [self.currentSong prepareSong];
+    } else {
+        [self updateCurrentSong:nil];
     }
+    
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    
+    isServer = YES;
 }
 
 - (void)resetToClient
 {
     [self reset];
+    
+    [self updateCurrentSong:nil];
+    
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     AUGraphStart(graph);
@@ -200,7 +197,7 @@
     
     [self willChangeValueForKey:@"currentSongTime"];
     _currentSongTime.location = 0;
-    _currentSongTime.length = _currentSong.songLength;
+    _currentSongTime.length = song == nil ? 0 : _currentSong.songLength;
     [self didChangeValueForKey:@"currentSongTime"];
     
     

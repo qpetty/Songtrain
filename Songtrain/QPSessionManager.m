@@ -70,15 +70,16 @@
 - (void)createServer
 {
     _currentRole = ServerConnection;
-    [self willChangeValueForKey:@"server"];
-    _server = _pid;
-    [self didChangeValueForKey:@"server"];
     [self willChangeValueForKey:@"connectedPeerArray"];
     [_connectedPeerArray removeAllObjects];
     [self didChangeValueForKey:@"connectedPeerArray"];
     NSLog(@"AVERTISING PEER");
     [advert startAdvertisingPeer];
     [[QPMusicPlayerController sharedMusicPlayer] resetToServer];
+    [self willChangeValueForKey:@"server"];
+    _server = _pid;
+    [self didChangeValueForKey:@"server"];
+    
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
 }
@@ -146,13 +147,13 @@
         NSLog(@"Disconnected from %@", peerID.displayName);
         NSUInteger ndx = [_connectedPeerArray indexOfObject:peerID];
         if (ndx != NSNotFound) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            //dispatch_async(dispatch_get_main_queue(), ^{
                 [self removeSongsFromPeer:peerID];
                 [self willChangeValueForKey:@"connectedPeerArray"];
                 [_connectedPeerArray removeObjectIdenticalTo:peerID];
                 [self didChangeValueForKey:@"connectedPeerArray"];
                 [self.sessionDelegate disconnectedFromPeer:peerID atIndex:ndx];
-            });
+            //});
         }
         
         if (self.currentRole == ClientConnection && [peerID isEqual:self.server]) {

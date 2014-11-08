@@ -116,6 +116,7 @@
     [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
     [gaussianBlurFilter setValue:[NSNumber numberWithFloat: 1] forKey: @"inputRadius"];
     CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+    
     return [[UIImage alloc] initWithCIImage:resultImage];
 }
 
@@ -151,7 +152,7 @@
     self.mainTitle.text = sessionManager.server.displayName;
     [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
     [sessionManager addObserver:self forKeyPath:@"peerArray" options:NSKeyValueObservingOptionNew context:nil];
-    [sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
+    //[sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
@@ -161,12 +162,13 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self updateCurrentSong];
+    [self updateImage:musicPlayer.currentSong.albumImage];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"server"];
-    [sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
+    //[sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
     [sessionManager removeObserver:self forKeyPath:@"peerArray"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
@@ -245,9 +247,8 @@
     if (image == nil) {
         image = [UIImage imageNamed:@"albumart_default"];
     }
-    
     self.currentAlbumArtwork.image = image;
-    backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
+
     [musicPlayer updateNowPlaying];
 }
 
@@ -456,12 +457,10 @@
 #pragma mark QPBrowsingManagerDelegate methods
 
 -(void)foundPeer:(MCPeerID *)peerID {
-    //dispatch_async(dispatch_get_main_queue(), ^{
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + STATIC_NEARBY_TRAIN_CELLS inSection:0];
-        [UIView animateWithDuration:0.18f animations:^(void) {
-            [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
-        }];
-    //});
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[sessionManager.peerArray indexOfObject:peerID] + STATIC_NEARBY_TRAIN_CELLS inSection:0];
+    [UIView animateWithDuration:0.18f animations:^(void) {
+        [nearbyTrainsModal insertItemsAtIndexPaths:@[indexPath]];
+    }];
 }
 
 -(void)lostPeer:(MCPeerID *)peerID atIndex:(NSUInteger)ndx {
@@ -549,7 +548,6 @@
     if (musicPlayer.currentSong == nil) {
         self.currentSongTitle.text = @" ";
         self.currentSongArtist.text = @" ";
-        [self updateImage:nil];
     }
     else {
         if ([self.currentSongTitle.text isEqualToString:musicPlayer.currentSong.title] == NO ||
@@ -561,7 +559,6 @@
         
         self.currentSongTitle.text = musicPlayer.currentSong.title;
         self.currentSongArtist.text = musicPlayer.currentSong.artistName;
-        [self updateImage:musicPlayer.currentSong.albumImage];
     }
 }
 
@@ -676,6 +673,7 @@
                 [self.controlBar switchControlPanel:ControlPanelConductor];
             }
             [self.songTableView reloadData];
+            //[self.songTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         NSLog(@"Updating Image!!!!!!!!!!!!!");
@@ -683,7 +681,9 @@
             NSLog(@"Sending artwork to everyone");
             [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
         }
-        [self updateImage:musicPlayer.currentSong.albumImage];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateImage:musicPlayer.currentSong.albumImage];
+        });
     }
 }
 
