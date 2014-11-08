@@ -82,19 +82,6 @@
         
         self.isFinishedSendingSong = NO;
         
-        /*
-        NSError *assetError;
-        assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
-        
-        assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:self.assetURL.tracks[0] outputSettings:nil];
-        if (![assetReader canAddOutput:assetOutput])
-        {NSLog(@"Asset Reader instansiation error");}
-        
-        [assetReader addOutput:assetOutput];
-        [assetReader startReading];
-        
-        AudioConverterNew(self.inputASBD, outputASBD, &converter);
-         */
     }
     return self;
 }
@@ -116,7 +103,6 @@
 
 - (void)cleanUpSong{
     //NSLog(@"Cleaning up the song, trying to stop sending packets\n");
-
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
@@ -143,11 +129,9 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     song->sampleBuffer = [song->assetOutput copyNextSampleBuffer];
     
-    if (song->sampleBuffer == NULL || CMSampleBufferGetNumSamples(song->sampleBuffer) == 0) {
-        if (song->sampleBuffer)
-            CFRelease(song->sampleBuffer);
-        song->sampleBuffer = NULL;
-        song->blockBuffer = NULL;
+    if (song->sampleBuffer == NULL) {
+        NSLog(@"sample buffer is null after copyNextSampleBuffer");
+        NSLog(@"error: %@", song->assetReader.error);
         return -2;
     }
     
@@ -158,8 +142,6 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
     
     CMSampleBufferGetAudioStreamPacketDescriptionsPtr(song->sampleBuffer, NULL, &packetDescriptionSize);
     *ioNumberDataPackets = (UInt32)packetDescriptionSize / sizeof(AudioStreamPacketDescription);
-    
-    //printf("number: %d\n", *ioNumberDataPackets);
     
     if (err) {
         CFRelease(song->sampleBuffer);
@@ -239,14 +221,6 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
         memcpy(totalBuffer + offset, audioBufferList.mBuffers[0].mData + aspd[i].mStartOffset, aspd[i].mDataByteSize);
         offset += aspd[i].mDataByteSize;
     }
-    
-    /*
-    NSData *bufferData = nil;
-    
-    if (offset > 0) {
-        bufferData = [NSData dataWithBytesNoCopy:totalBuffer length:offset freeWhenDone:YES];
-    }
-    */
     
     NSData *bufferData = [NSData dataWithBytesNoCopy:totalBuffer length:offset freeWhenDone:YES];
     
