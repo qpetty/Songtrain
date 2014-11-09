@@ -138,15 +138,6 @@
                                     <action selector="browseForOthers:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Q7D-5x-vkQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Err-9j-ENM">
-                                <rect key="frame" x="118" y="104" width="46" height="30"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="openStore:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qFc-id-yOk"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -164,14 +155,12 @@
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="Fol-Ic-dpt"/>
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="Fpo-iL-Qb8"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="top" secondItem="5mu-8i-uAv" secondAttribute="bottom" constant="12" id="FyM-fM-ccL"/>
-                            <constraint firstItem="Err-9j-ENM" firstAttribute="leading" secondItem="UGe-gO-CiS" secondAttribute="trailing" constant="17" id="GUa-5s-Aqe"/>
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="OnN-vS-rLS" secondAttribute="bottom" id="HHu-hD-ExO"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="trailing" secondItem="5mu-8i-uAv" secondAttribute="trailing" id="L69-DK-uvS"/>
                             <constraint firstItem="UEy-Lb-6G7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Lg4-E1-7cg"/>
                             <constraint firstAttribute="trailing" secondItem="OnN-vS-rLS" secondAttribute="trailing" id="M5o-jC-dIO"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="top" secondItem="1qp-hg-bK3" secondAttribute="bottom" constant="24" id="MiU-W6-0u1"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="leading" secondItem="5mu-8i-uAv" secondAttribute="leading" id="Miu-NI-9wT"/>
-                            <constraint firstItem="wco-2X-hgb" firstAttribute="top" secondItem="Err-9j-ENM" secondAttribute="bottom" constant="8" id="OQZ-bV-Fbi"/>
                             <constraint firstAttribute="trailing" secondItem="UEy-Lb-6G7" secondAttribute="trailing" id="PJL-F7-3fH"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="PpL-uw-VN1">
                                 <variation key="widthClass=compact" constant="8"/>
@@ -229,7 +218,6 @@
                         <outlet property="mainTitle" destination="awa-AC-RSY" id="xPQ-HG-nQV"/>
                         <outlet property="peerTableView" destination="OnN-vS-rLS" id="fgi-Za-4Du"/>
                         <outlet property="progressBar" destination="wmX-yx-Jqm" id="dyP-wq-LaD"/>
-                        <outlet property="purchaseButton" destination="Err-9j-ENM" id="xCS-mE-Kee"/>
                         <outlet property="songTableView" destination="UEy-Lb-6G7" id="sNa-Vk-9op"/>
                         <outlet property="tracksAndPassengers" destination="FM8-D0-d6n" id="HYH-yV-JB5"/>
                     </connections>

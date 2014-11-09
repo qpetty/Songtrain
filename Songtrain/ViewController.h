@@ -34,8 +34,6 @@
 @property (weak) IBOutlet UIProgressView *progressBar;
 @property (weak) IBOutlet ControlPanelView *controlBar;
 
-@property (weak) IBOutlet UIButton *purchaseButton;
-
 -(void)updatePlayOrPauseImage;
 -(IBAction)openStore:(id)sender;
 @end

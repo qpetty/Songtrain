@@ -51,6 +51,22 @@
 		5A9F951B19E35AE0009A6D30 /* AnimatedCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A9F951619E35AE0009A6D30 /* AnimatedCollectionViewFlowLayout.m */; };
 		5AC5ECF719DDD7C800EAD9A3 /* ControlPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC5ECF619DDD7C800EAD9A3 /* ControlPanelView.xib */; };
 		5AC5ECFA19DDD99E00EAD9A3 /* ControlPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC5ECF919DDD99E00EAD9A3 /* ControlPanelView.m */; };
+		5AD947EC1A0F352F00C48796 /* CGPointAdditions.c in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947D41A0F352F00C48796 /* CGPointAdditions.c */; };
+		5AD947ED1A0F352F00C48796 /* BackFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947D71A0F352F00C48796 /* BackFragmentShader.glsl */; };
+		5AD947EE1A0F352F00C48796 /* BackPageGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947D81A0F352F00C48796 /* BackPageGradient.png */; };
+		5AD947EF1A0F352F00C48796 /* BackVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947D91A0F352F00C48796 /* BackVertexShader.glsl */; };
+		5AD947F01A0F352F00C48796 /* FrontFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DA1A0F352F00C48796 /* FrontFragmentShader.glsl */; };
+		5AD947F11A0F352F00C48796 /* FrontVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DB1A0F352F00C48796 /* FrontVertexShader.glsl */; };
+		5AD947F21A0F352F00C48796 /* NextPageFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DC1A0F352F00C48796 /* NextPageFragmentShader.glsl */; };
+		5AD947F31A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DD1A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl */; };
+		5AD947F41A0F352F00C48796 /* NextPageNoTextureVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DE1A0F352F00C48796 /* NextPageNoTextureVertexShader.glsl */; };
+		5AD947F51A0F352F00C48796 /* NextPageVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 5AD947DF1A0F352F00C48796 /* NextPageVertexShader.glsl */; };
+		5AD947F61A0F352F00C48796 /* XBAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E11A0F352F00C48796 /* XBAnimation.m */; };
+		5AD947F71A0F352F00C48796 /* XBAnimationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E31A0F352F00C48796 /* XBAnimationManager.m */; };
+		5AD947F81A0F352F00C48796 /* XBCurlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E51A0F352F00C48796 /* XBCurlView.m */; };
+		5AD947F91A0F352F00C48796 /* XBPageCurlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E71A0F352F00C48796 /* XBPageCurlView.m */; };
+		5AD947FA1A0F352F00C48796 /* XBPageDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E91A0F352F00C48796 /* XBPageDragView.m */; };
+		5AD947FB1A0F352F00C48796 /* XBSnappingPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */; };
 		5AF4550219EC670F008D97AA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF4550119EC670F008D97AA /* StoreKit.framework */; };
 		5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */; };
 		5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */; };
@@ -247,6 +263,29 @@
 		5AC5ECF619DDD7C800EAD9A3 /* ControlPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ControlPanelView.xib; sourceTree = "<group>"; };
 		5AC5ECF819DDD99E00EAD9A3 /* ControlPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanelView.h; sourceTree = "<group>"; };
 		5AC5ECF919DDD99E00EAD9A3 /* ControlPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlPanelView.m; sourceTree = "<group>"; };
+		5AD947D41A0F352F00C48796 /* CGPointAdditions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CGPointAdditions.c; sourceTree = "<group>"; };
+		5AD947D51A0F352F00C48796 /* CGPointAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPointAdditions.h; sourceTree = "<group>"; };
+		5AD947D71A0F352F00C48796 /* BackFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackFragmentShader.glsl; sourceTree = "<group>"; };
+		5AD947D81A0F352F00C48796 /* BackPageGradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BackPageGradient.png; sourceTree = "<group>"; };
+		5AD947D91A0F352F00C48796 /* BackVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BackVertexShader.glsl; sourceTree = "<group>"; };
+		5AD947DA1A0F352F00C48796 /* FrontFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FrontFragmentShader.glsl; sourceTree = "<group>"; };
+		5AD947DB1A0F352F00C48796 /* FrontVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FrontVertexShader.glsl; sourceTree = "<group>"; };
+		5AD947DC1A0F352F00C48796 /* NextPageFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NextPageFragmentShader.glsl; sourceTree = "<group>"; };
+		5AD947DD1A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NextPageNoTextureFragmentShader.glsl; sourceTree = "<group>"; };
+		5AD947DE1A0F352F00C48796 /* NextPageNoTextureVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NextPageNoTextureVertexShader.glsl; sourceTree = "<group>"; };
+		5AD947DF1A0F352F00C48796 /* NextPageVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NextPageVertexShader.glsl; sourceTree = "<group>"; };
+		5AD947E01A0F352F00C48796 /* XBAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAnimation.h; sourceTree = "<group>"; };
+		5AD947E11A0F352F00C48796 /* XBAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBAnimation.m; sourceTree = "<group>"; };
+		5AD947E21A0F352F00C48796 /* XBAnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAnimationManager.h; sourceTree = "<group>"; };
+		5AD947E31A0F352F00C48796 /* XBAnimationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBAnimationManager.m; sourceTree = "<group>"; };
+		5AD947E41A0F352F00C48796 /* XBCurlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBCurlView.h; sourceTree = "<group>"; };
+		5AD947E51A0F352F00C48796 /* XBCurlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBCurlView.m; sourceTree = "<group>"; };
+		5AD947E61A0F352F00C48796 /* XBPageCurlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBPageCurlView.h; sourceTree = "<group>"; };
+		5AD947E71A0F352F00C48796 /* XBPageCurlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBPageCurlView.m; sourceTree = "<group>"; };
+		5AD947E81A0F352F00C48796 /* XBPageDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBPageDragView.h; sourceTree = "<group>"; };
+		5AD947E91A0F352F00C48796 /* XBPageDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBPageDragView.m; sourceTree = "<group>"; };
+		5AD947EA1A0F352F00C48796 /* XBSnappingPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBSnappingPoint.h; sourceTree = "<group>"; };
+		5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBSnappingPoint.m; sourceTree = "<group>"; };
 		5AF4550119EC670F008D97AA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderSongCellView.xib; sourceTree = "<group>"; };
 		5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSongCellView.h; sourceTree = "<group>"; };
@@ -373,6 +412,7 @@
 				5A5B809119CE77EF000A4681 /* MarqueeLabel.m */,
 				5A5B809219CE77EF000A4681 /* TPCircularBuffer.h */,
 				5A5B809319CE77EF000A4681 /* TPCircularBuffer.c */,
+				5AD947D31A0F352F00C48796 /* XBPageCurl */,
 				5A40DE5219F34A350098F37B /* SoundCloud.bundle */,
 			);
 			name = "External Libraries";
@@ -506,6 +546,44 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		5AD947D31A0F352F00C48796 /* XBPageCurl */ = {
+			isa = PBXGroup;
+			children = (
+				5AD947D41A0F352F00C48796 /* CGPointAdditions.c */,
+				5AD947D51A0F352F00C48796 /* CGPointAdditions.h */,
+				5AD947D61A0F352F00C48796 /* Resources */,
+				5AD947E01A0F352F00C48796 /* XBAnimation.h */,
+				5AD947E11A0F352F00C48796 /* XBAnimation.m */,
+				5AD947E21A0F352F00C48796 /* XBAnimationManager.h */,
+				5AD947E31A0F352F00C48796 /* XBAnimationManager.m */,
+				5AD947E41A0F352F00C48796 /* XBCurlView.h */,
+				5AD947E51A0F352F00C48796 /* XBCurlView.m */,
+				5AD947E61A0F352F00C48796 /* XBPageCurlView.h */,
+				5AD947E71A0F352F00C48796 /* XBPageCurlView.m */,
+				5AD947E81A0F352F00C48796 /* XBPageDragView.h */,
+				5AD947E91A0F352F00C48796 /* XBPageDragView.m */,
+				5AD947EA1A0F352F00C48796 /* XBSnappingPoint.h */,
+				5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */,
+			);
+			path = XBPageCurl;
+			sourceTree = "<group>";
+		};
+		5AD947D61A0F352F00C48796 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5AD947D71A0F352F00C48796 /* BackFragmentShader.glsl */,
+				5AD947D81A0F352F00C48796 /* BackPageGradient.png */,
+				5AD947D91A0F352F00C48796 /* BackVertexShader.glsl */,
+				5AD947DA1A0F352F00C48796 /* FrontFragmentShader.glsl */,
+				5AD947DB1A0F352F00C48796 /* FrontVertexShader.glsl */,
+				5AD947DC1A0F352F00C48796 /* NextPageFragmentShader.glsl */,
+				5AD947DD1A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl */,
+				5AD947DE1A0F352F00C48796 /* NextPageNoTextureVertexShader.glsl */,
+				5AD947DF1A0F352F00C48796 /* NextPageVertexShader.glsl */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -569,7 +647,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */;
+			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -688,16 +766,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD947F01A0F352F00C48796 /* FrontFragmentShader.glsl in Resources */,
+				5AD947F11A0F352F00C48796 /* FrontVertexShader.glsl in Resources */,
+				5AD947F21A0F352F00C48796 /* NextPageFragmentShader.glsl in Resources */,
 				5AC5ECF719DDD7C800EAD9A3 /* ControlPanelView.xib in Resources */,
 				5A5B80B219CF995C000A4681 /* SongTableViewCell.xib in Resources */,
 				5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */,
+				5AD947EE1A0F352F00C48796 /* BackPageGradient.png in Resources */,
+				5AD947F41A0F352F00C48796 /* NextPageNoTextureVertexShader.glsl in Resources */,
+				5AD947EF1A0F352F00C48796 /* BackVertexShader.glsl in Resources */,
 				5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */,
+				5AD947F51A0F352F00C48796 /* NextPageVertexShader.glsl in Resources */,
+				5AD947F31A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl in Resources */,
 				5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
 				5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */,
 				5A743C1D19CBD9540008C989 /* Images.xcassets in Resources */,
 				5A9F951A19E35AE0009A6D30 /* AnimatedCollectionViewCell.xib in Resources */,
 				5A40DE5319F34A350098F37B /* SoundCloud.bundle in Resources */,
+				5AD947ED1A0F352F00C48796 /* BackFragmentShader.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,7 +804,10 @@
 			files = (
 				5A5B809519CE77EF000A4681 /* TPCircularBuffer.c in Sources */,
 				5A4122A319FAE467007409FA /* STSongTableViewCell.m in Sources */,
+				5AD947FB1A0F352F00C48796 /* XBSnappingPoint.m in Sources */,
+				5AD947EC1A0F352F00C48796 /* CGPointAdditions.c in Sources */,
 				5A5B808619CE7751000A4681 /* LocalSong.m in Sources */,
+				5AD947F71A0F352F00C48796 /* XBAnimationManager.m in Sources */,
 				5A5B80B119CF995C000A4681 /* SongTableViewCell.m in Sources */,
 				5A4122A019FADB47007409FA /* STMusicPickerTableView.m in Sources */,
 				5A5B80A519CF89A7000A4681 /* MusicPickerViewController.m in Sources */,
@@ -725,13 +815,16 @@
 				5A40DE5919F377A30098F37B /* SoundCloudSong.m in Sources */,
 				5AC5ECFA19DDD99E00EAD9A3 /* ControlPanelView.m in Sources */,
 				5A40DE5619F371490098F37B /* SoundCloudTabViewController.m in Sources */,
+				5AD947F91A0F352F00C48796 /* XBPageCurlView.m in Sources */,
 				5A5B80A819CF89A7000A4681 /* TabViewController.m in Sources */,
 				5A5B80A919CF89A7000A4681 /* MusicNavigationViewController.m in Sources */,
 				5A5B808719CE7751000A4681 /* RemoteSong.m in Sources */,
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
 				5A9F951B19E35AE0009A6D30 /* AnimatedCollectionViewFlowLayout.m in Sources */,
 				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
+				5AD947F81A0F352F00C48796 /* XBCurlView.m in Sources */,
 				5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */,
+				5AD947F61A0F352F00C48796 /* XBAnimation.m in Sources */,
 				5A5B80A619CF89A7000A4681 /* PlaylistTabViewController.m in Sources */,
 				5A9F951919E35AE0009A6D30 /* AnimatedCollectionViewCell.m in Sources */,
 				5A6CC8851A05D9E900875596 /* SoundCloudSongViewController.m in Sources */,
@@ -743,6 +836,7 @@
 				5A5B80A419CF89A7000A4681 /* ArtistTabViewController.m in Sources */,
 				5A743C1219CBD9540008C989 /* main.m in Sources */,
 				5A5B807E19CE772E000A4681 /* QPMusicPlayerController.m in Sources */,
+				5AD947FA1A0F352F00C48796 /* XBPageDragView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,7 +1072,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */ = {
+		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5A743C2D19CBD9540008C989 /* Debug */,

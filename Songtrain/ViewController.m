@@ -13,6 +13,8 @@
 #import "AnimatedCollectionViewFlowLayout.h"
 #import "SoundCloudSong.h"
 
+#import "XBCurlView.h"
+
 #define ITUNES_SEARCH_API_AFFILIATE_TOKEN @"11lMLF"
 #define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
 #define STATIC_NEARBY_TRAIN_CELLS 2
@@ -36,6 +38,9 @@
     UIView *nearbyTrainBackground;
     SKStoreProductViewController *storeController;
     NSString *currentSongID;
+    
+    XBCurlView *curlView;
+    UIView *transparent;
 }
 
 - (void)viewDidLoad {
@@ -91,9 +96,6 @@
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     editingTableViews = NO;
-    
-    //Hide the purchase button initally and then only show once search results are loaded
-    self.purchaseButton.hidden = YES;
 }
 
 
@@ -152,7 +154,6 @@
     self.mainTitle.text = sessionManager.server.displayName;
     [sessionManager addObserver:self forKeyPath:@"server" options:NSKeyValueObservingOptionNew context:nil];
     [sessionManager addObserver:self forKeyPath:@"peerArray" options:NSKeyValueObservingOptionNew context:nil];
-    //[sessionManager addObserver:self forKeyPath:@"connectedPeerArray" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
@@ -168,7 +169,6 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [sessionManager removeObserver:self forKeyPath:@"server"];
-    //[sessionManager removeObserver:self forKeyPath:@"connectedPeerArray"];
     [sessionManager removeObserver:self forKeyPath:@"peerArray"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
@@ -248,7 +248,7 @@
         image = [UIImage imageNamed:@"albumart_default"];
     }
     self.currentAlbumArtwork.image = image;
-
+    
     [musicPlayer updateNowPlaying];
 }
 
@@ -552,7 +552,7 @@
     else {
         if ([self.currentSongTitle.text isEqualToString:musicPlayer.currentSong.title] == NO ||
             [self.currentSongArtist.text isEqualToString:musicPlayer.currentSong.artistName] == NO) {
-            self.purchaseButton.hidden = YES;
+            [self hidePurchaseButton];
             
             [self searchiTunesForSong:musicPlayer.currentSong.title];
         }
@@ -583,7 +583,7 @@
                                        
                                        NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.title);
                                        currentSongID = parse[@"results"][0][@"trackId"];
-                                       self.purchaseButton.hidden = NO;
+                                       [self showPurchaseButton];
                                    } else {
                                        [self searchiTunesForArtist:musicPlayer.currentSong.artistName];
                                    }
@@ -612,13 +612,39 @@
                                        
                                        NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.artistName);
                                        currentSongID = parse[@"results"][0][@"artistId"];
-                                       self.purchaseButton.hidden = NO;
+                                       [self showPurchaseButton];
                                    }
                                }
                            }];
 }
 
 #pragma mark Purchase Button
+
+-(void)showPurchaseButton {
+    //self.purchaseButton.hidden = NO;
+    CGRect r = self.currentAlbumArtwork.frame;
+    curlView = [[XBCurlView alloc] initWithFrame:r horizontalResolution:250 verticalResolution:250 antialiasing:NO];
+    
+    curlView.opaque = NO; //Transparency on the next page (so that the view behind curlView will appear)
+    curlView.pageOpaque = YES; //The page to be curled has no transparency
+    
+    [curlView curlView:self.currentAlbumArtwork cylinderPosition:CGPointMake(self.currentAlbumArtwork.frame.size.width * 3.0 / 4.0, self.currentAlbumArtwork.frame.size.height / 4.0) cylinderAngle:M_PI_4 cylinderRadius:5 animatedWithDuration:0.3];
+    
+    transparent = [[UIView alloc] initWithFrame:r];
+    [self.view addSubview:transparent];
+    UITapGestureRecognizer *purchase = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openStore:)];
+    purchase.numberOfTapsRequired = 1;
+    [transparent addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openStore:)]];
+}
+
+-(void)hidePurchaseButton {
+    //self.purchaseButton.hidden = YES;
+    [curlView uncurlAnimatedWithDuration:0.2];
+    curlView = nil;
+    
+    [transparent removeFromSuperview];
+    transparent = nil;
+}
 
 -(IBAction)openStore:(id)sender {
     NSDictionary *params = @{SKStoreProductParameterITunesItemIdentifier: currentSongID,
@@ -661,7 +687,7 @@
     else if ([keyPath isEqualToString:@"server"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.mainTitle.text = sessionManager.server.displayName;
-            self.purchaseButton.hidden = YES;
+            [self hidePurchaseButton];
             [self updatePlayOrPauseImage];
 
             if (sessionManager.currentRole == ClientConnection) {
