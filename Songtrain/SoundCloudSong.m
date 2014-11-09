@@ -278,18 +278,24 @@ OSStatus soundCloudConverterInputCallback(AudioConverterRef inAudioConverter, UI
     if (song->songData == nil) {
         return -5;
     }
-    if (song->nextByteToRead >= song->songData.length) {
+    //if (song->nextByteToRead >= song->songData.length && song->nextByteToRead > song->estimatedSize) {
+    if (song->finishedLoading == YES && song->nextByteToRead == song->songData.length) {
         return -2;
     }
     
     song->oneCallbackOfData.length = 0;
     
     for (int i = 0; i < *ioNumberDataPackets; i++) {
-        memcpy(&song->aspds[i], song->songData.bytes + song->nextByteToRead, sizeof(AudioStreamPacketDescription));
-        song->aspds[i].mStartOffset = song->oneCallbackOfData.length;
-        song->nextByteToRead += sizeof(AudioStreamPacketDescription);
-        [song->oneCallbackOfData appendBytes:song->songData.bytes + song->nextByteToRead length:song->aspds[i].mDataByteSize];
-        song->nextByteToRead += song->aspds[i].mDataByteSize;
+        
+        if (song->songData.length - song->nextByteToRead > sizeof(AudioStreamPacketDescription) &&
+            ((AudioStreamPacketDescription*)(song->songData.bytes + song->nextByteToRead))->mDataByteSize <= song->songData.length - song->nextByteToRead - sizeof(AudioStreamPacketDescription)) {
+            
+            memcpy(&song->aspds[i], song->songData.bytes + song->nextByteToRead, sizeof(AudioStreamPacketDescription));
+            song->aspds[i].mStartOffset = song->oneCallbackOfData.length;
+            song->nextByteToRead += sizeof(AudioStreamPacketDescription);
+            [song->oneCallbackOfData appendBytes:song->songData.bytes + song->nextByteToRead length:song->aspds[i].mDataByteSize];
+            song->nextByteToRead += song->aspds[i].mDataByteSize;
+        }
     }
     
     ioData->mBuffers[0].mData = (void*)song->oneCallbackOfData.bytes;
