@@ -34,7 +34,9 @@
 @property (weak) IBOutlet UIProgressView *progressBar;
 @property (weak) IBOutlet ControlPanelView *controlBar;
 
+@property BOOL onScreen;
+
 -(void)updatePlayOrPauseImage;
--(IBAction)openStore:(id)sender;
+-(void)showPurchaseButton;
 @end
 

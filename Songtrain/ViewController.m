@@ -41,10 +41,13 @@
     
     XBCurlView *curlView;
     UIView *transparent;
+    BOOL shouldShowPurchaseButton, curled;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    shouldShowPurchaseButton = curled = NO;
+    
     [self.songTableView registerNib:[UINib nibWithNibName:@"SongTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"SongCell"];
     [self.songTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
     [self.peerTableView registerNib:[UINib nibWithNibName:@"PeerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PeerCell"];
@@ -162,8 +165,16 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    self.onScreen = YES;
     [self updateCurrentSong];
     [self updateImage:musicPlayer.currentSong.albumImage];
+
+    [self showPurchaseButton];
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.onScreen = NO;
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -598,6 +609,7 @@
                                        
                                        NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.title);
                                        currentSongID = parse[@"results"][0][@"trackId"];
+                                       shouldShowPurchaseButton = YES;
                                        [self showPurchaseButton];
                                    } else {
                                        [self searchiTunesForArtist:musicPlayer.currentSong.artistName];
@@ -627,6 +639,7 @@
                                        
                                        NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.artistName);
                                        currentSongID = parse[@"results"][0][@"artistId"];
+                                       shouldShowPurchaseButton = YES;
                                        [self showPurchaseButton];
                                    }
                                }
@@ -636,7 +649,10 @@
 #pragma mark Purchase Button
 
 -(void)showPurchaseButton {
-    //self.purchaseButton.hidden = NO;
+    if (self.onScreen == NO || curled == YES || shouldShowPurchaseButton == NO) {
+        return;
+    }
+    
     CGRect r = self.currentAlbumArtwork.frame;
     curlView = [[XBCurlView alloc] initWithFrame:r horizontalResolution:250 verticalResolution:250 antialiasing:NO];
     
@@ -644,18 +660,23 @@
     curlView.pageOpaque = YES; //The page to be curled has no transparency
     
     [curlView curlView:self.currentAlbumArtwork cylinderPosition:CGPointMake(self.currentAlbumArtwork.frame.size.width * 3.0 / 4.0, self.currentAlbumArtwork.frame.size.height / 4.0) cylinderAngle:M_PI_4 cylinderRadius:5 animatedWithDuration:0.3];
+    curled = YES;
     
     transparent = [[UIView alloc] initWithFrame:r];
     [self.view addSubview:transparent];
-    UITapGestureRecognizer *purchase = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openStore:)];
-    purchase.numberOfTapsRequired = 1;
     [transparent addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openStore:)]];
 }
 
 -(void)hidePurchaseButton {
-    //self.purchaseButton.hidden = YES;
+    shouldShowPurchaseButton = NO;
+    
+    if (self.onScreen == NO) {
+        return;
+    }
+    
     [curlView uncurlAnimatedWithDuration:0.2];
     curlView = nil;
+    curled = NO;
     
     [transparent removeFromSuperview];
     transparent = nil;
