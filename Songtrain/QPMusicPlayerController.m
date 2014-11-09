@@ -13,9 +13,10 @@
     AudioUnit outputUnit;
     
     MPNowPlayingInfoCenter *nowPlayingCenter;
-    NSTimer *timer;
     
     BOOL isServer;
+    
+    NSUInteger playingTime;
 }
 
 + (instancetype)sharedMusicPlayer {
@@ -35,7 +36,6 @@
         
         _playlist = [[NSMutableArray alloc] init];
         nowPlayingCenter = [MPNowPlayingInfoCenter defaultCenter];
-        timer = nil;
         
         _currentlyPlaying = NO;
         isServer = YES;
@@ -140,9 +140,7 @@
             [self skip];
         }
         OSErr err = AUGraphStart(graph);
-        
-        timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(addOneToTime) userInfo:nil repeats:YES];
-        
+
         if (err != noErr) {
             NSAssert(err == noErr, @"Error starting graph.");
         }
@@ -153,11 +151,6 @@
     }
     else {
         AUGraphStop(graph);
-        
-        if (timer) {
-            [timer invalidate];
-            timer = nil;
-        }
         
         [self willChangeValueForKey:@"currentlyPlaying"];
         _currentlyPlaying = NO;
@@ -179,7 +172,7 @@
 - (void)nextSong
 {
     if ([_playlist count]) {
-        
+        playingTime = 0;
         [_currentSong cleanUpSong];
         
         [self willChangeValueForKey:@"playlist"];
@@ -240,7 +233,9 @@
 
 - (void)addOneToTime
 {
-    [self currentTime:_currentSongTime.location + 1];
+    playingTime += 1;
+    
+    [self currentTime:playingTime / (self.audioFormat->mSampleRate / 1000.0)];
 }
 
 - (void)currentTime:(NSUInteger)time
@@ -434,6 +429,8 @@ static OSStatus audioOutputCallback(void *inRefCon,
         for (int i = 0; i < ioData->mBuffers[0].mDataByteSize; i++) {
             *((uint8_t*)(ioData->mBuffers[0].mData + i)) = 0;
         }
+    } else {
+        [audioPlayback addOneToTime];
     }
 	//dodgy return :)
 	return err;
