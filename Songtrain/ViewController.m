@@ -72,7 +72,6 @@
     [nearbyTrainBackground addSubview:loadingIcon];
     
     musicPlayer = [QPMusicPlayerController sharedMusicPlayer];
-    [musicPlayer resetToServer];
     musicPlayer.delegate = self;
     
     sessionManager = [QPSessionManager sessionManager];
@@ -260,7 +259,7 @@
     }
     self.currentAlbumArtwork.image = image;
     
-    if (curlView) {
+    if (curlView && self.onScreen) {
         [curlView drawImageOnFrontOfPage:[self imageWithImage:image scaledToSize:curlView.frame.size]];
     }
     
@@ -316,7 +315,7 @@
     
     NSMutableArray *newSongs = [[NSMutableArray alloc] init];
     for (MPMediaItem *item in mediaItemCollection.items) {
-        LocalSong *tempSong = [[LocalSong alloc] initWithItem:item andOutputASBD:*(musicPlayer.audioFormat)];
+        LocalSong *tempSong = [[LocalSong alloc] initWithItem:item andOutputASBD:*(musicPlayer.audioFormat) andPeer:[[QPSessionManager sessionManager] pid]];
         [newSongs addObject:tempSong];
     }
     for (id item in items) {
@@ -650,9 +649,13 @@
 
 -(void)showPurchaseButton {
     if (self.onScreen == NO || curled == YES || shouldShowPurchaseButton == NO) {
+        if (self.onScreen == YES) {
+            [curlView drawImageOnFrontOfPage:[self imageWithImage:self.currentAlbumArtwork.image scaledToSize:curlView.frame.size]];
+        }
         return;
     }
     
+    NSLog(@"showpurchase button");
     CGRect r = self.currentAlbumArtwork.frame;
     curlView = [[XBCurlView alloc] initWithFrame:r horizontalResolution:250 verticalResolution:250 antialiasing:NO];
     

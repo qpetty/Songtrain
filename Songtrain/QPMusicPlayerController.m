@@ -61,7 +61,7 @@
     
     MPMediaItem *currentItem = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItem];
     if (currentItem && [currentItem valueForProperty:MPMediaItemPropertyAssetURL]){
-        [self updateCurrentSong:[[LocalSong alloc] initWithItem:currentItem andOutputASBD:*(self.audioFormat)]];
+        [self updateCurrentSong:[[LocalSong alloc] initWithItem:currentItem andOutputASBD:*(self.audioFormat) andPeer:nil]];
         [self.currentSong prepareSong];
     } else {
         [self updateCurrentSong:nil];
@@ -240,6 +240,9 @@
 
 - (void)currentTime:(NSUInteger)time
 {
+    if (time == _currentSongTime.location) {
+        return;
+    }
     [self willChangeValueForKey:@"currentSongTime"];
     _currentSongTime.location = time;
     if(_currentSongTime.location > _currentSongTime.length)

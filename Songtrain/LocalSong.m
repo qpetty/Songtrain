@@ -8,7 +8,7 @@
 
 #import "LocalSong.h"
 
-@implementation LocalSong{
+@implementation LocalSong {
     AudioConverterRef converter;
     
     AVAssetReader *assetReader;
@@ -18,39 +18,22 @@
     CMBlockBufferRef blockBuffer;
     AudioStreamPacketDescription aspds[256];
     
-    MPMediaItem *mediaItem;
     BOOL readyWithPackets;
+    MPMediaItem *mediaItem;
 }
 
-
-- (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD
+- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription andPeer:(MCPeerID*)peer
 {
-    MPMediaQuery *query = [MPMediaQuery songsQuery];
-    [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:song.persistantID forProperty:MPMediaItemPropertyPersistentID]];
-    NSArray *displayItems = [query items];
-    
-    mediaItem = [displayItems firstObject];
-    
-    return [self initWithItem:mediaItem andOutputASBD:audioStreamBD];
-}
-
-- (instancetype)initWithMediaItem:(MPMediaItem*)item
-{
-    if(self = [self init])
+    if(self = [self initWithTitle:[item valueForProperty:MPMediaItemPropertyTitle] andArtist:[item valueForProperty:MPMediaItemPropertyArtist] andPeer:peer])
     {
-        if (item == nil) {
-            return self;
-        }
-        
-        self.title = [item valueForProperty:MPMediaItemPropertyTitle];
-        self.artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        mediaItem = item;
         self.url = [item valueForProperty:MPMediaItemPropertyAssetURL];
         self.songLength = [[item valueForProperty:MPMediaItemPropertyPlaybackDuration] intValue];
         self.persistantID = [item valueForProperty:MPMediaItemPropertyPersistentID];
         
         self.isFinishedSendingSong = readyWithPackets = NO;
         
-        _assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
+        self.assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
         
         CMAudioFormatDescriptionRef item = (__bridge CMAudioFormatDescriptionRef)[[[_assetURL.tracks objectAtIndex:0] formatDescriptions] objectAtIndex:0];
         const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription (item);
@@ -66,28 +49,48 @@
          */
         memcpy(self.inputASBD, asbd, sizeof(AudioStreamBasicDescription));
         self.inputASDBIsSet = YES;
-    }
-    return self;
-}
-
-- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
-{
-    if(self = [self initWithMediaItem:item])
-    {
-        mediaItem = item;
+        
         memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
         
         sampleBuffer = NULL;
         blockBuffer = NULL;
         
         self.isFinishedSendingSong = NO;
-        
     }
     return self;
 }
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        self.persistantID = [aDecoder decodeObjectForKey:@"id"];
+        MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:self.persistantID forProperty:MPMediaItemPropertyPersistentID];
+        MPMediaQuery *songQuery = [[MPMediaQuery alloc] init];
+        [songQuery addFilterPredicate:predicate];
+        if (songQuery.items.count != 0) {
+            mediaItem = songQuery.items[0];
+        }
+    }
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeObject:self.persistantID forKey:@"id"];
+}
+
 -(void)prepareSong {
+    if (self.remoteSong) {
+        [super prepareSong];
+        return;
+    }
+    
     NSError *assetError;
+    if (self.assetURL == nil) {
+        self.assetURL = [AVURLAsset URLAssetWithURL:self.url options:nil];
+    }
     assetReader = [AVAssetReader assetReaderWithAsset:self.assetURL error:&assetError];
     
     assetOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:self.assetURL.tracks[0] outputSettings:nil];
@@ -102,11 +105,19 @@
 }
 
 - (void)cleanUpSong{
+    if (self.remoteSong) {
+        [super cleanUpSong];
+        return;
+    }
     //NSLog(@"Cleaning up the song, trying to stop sending packets\n");
 }
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
+    if (self.remoteSong) {
+        return [super getMusicPackets:numOfPackets forBuffer:ioData];
+    }
+    
     OSStatus err = -5;
     if (readyWithPackets == YES) {
         err = AudioConverterFillComplexBuffer(converter, converterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
@@ -235,6 +246,11 @@ OSStatus converterInputCallback(AudioConverterRef inAudioConverter, UInt32 *ioNu
 
 - (UIImage*)getAlbumImage
 {
+    //NSLog(@"updating picture, remoteSong: %@", self.remoteSong ? @"YES" : @"NO");
+    if (self.remoteSong) {
+        return [super getAlbumImage];
+    }
+    
     if (image)
         return image;
     

@@ -10,7 +10,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "LocalSong.h"
-#import "RemoteSong.h"
 #import "SoundCloudSong.h"
 
 @protocol QPMusicPlayerPlaylistDelegate <NSObject>

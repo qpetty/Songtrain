@@ -14,8 +14,8 @@
 @interface LocalSong : Song <NSStreamDelegate>
 
 @property (strong, nonatomic) AVURLAsset *assetURL;
+@property (strong, nonatomic) NSNumber *persistantID;
 
-- (instancetype)initLocalSongFromSong:(Song*)song WithOutputASBD:(AudioStreamBasicDescription)audioStreamBD;
-- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
+- (instancetype)initWithItem:(MPMediaItem*)item andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription andPeer:(MCPeerID*)peer;
 
 @end

@@ -12,6 +12,8 @@
 #import <CoreAudio/CoreAudioTypes.h>
 #import <AVFoundation/AVFoundation.h>
 
+static const int kBufferLength = 32768 * 32;
+
 @interface Song : NSObject <NSCoding>{
     AudioStreamBasicDescription *outputASBD;
     UIImage *image;
@@ -19,22 +21,26 @@
 
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *artistName;
-@property (strong, nonatomic, getter=getAlbumImage) UIImage *albumImage;
-@property (strong, nonatomic) NSNumber *persistantID;
+@property (strong, nonatomic, getter=getAlbumImage, setter=setAlbumImage:) UIImage *albumImage;
+@property MCPeerID *peer;
+@property (readonly, getter=isRemoteSong) BOOL remoteSong;
+
 @property (strong, nonatomic) NSURL *url;
 @property (strong, nonatomic) NSURL *musicURL;
 @property (strong, nonatomic) NSURL *artworkURL;
+
 
 @property (nonatomic) BOOL isFinishedSendingSong;
 @property (nonatomic) BOOL inputASDBIsSet;
 @property (nonatomic) AudioStreamBasicDescription *inputASBD;
 @property (nonatomic) int songLength;
 
-- (instancetype)initWithTitle:(NSString*)title andArtist:(NSString*)artist;
+- (instancetype)initWithTitle:(NSString*)title andArtist:(NSString*)artist andPeer:(MCPeerID*)peer;
 - (instancetype)initWithSong:(Song*)song andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;
 - (NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes;
+- (void)submitBytes:(NSData*)bytes;
 
 - (void)prepareSong;
 - (void)cleanUpSong;

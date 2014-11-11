@@ -80,6 +80,7 @@
     _server = _pid;
     [self didChangeValueForKey:@"server"];
     
+    [[QPMusicPlayerController sharedMusicPlayer] currentSong].peer = self.pid;
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [[QPMusicPlayerController sharedMusicPlayer] addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
 }
@@ -193,14 +194,12 @@
         }
         else if (mess.message == AddSong && _currentRole == ServerConnection) {
             NSLog(@"Requesting to add %@ to playlist from %@", mess.song.title, peerID.displayName);
-            //RemoteSong *newSong = [[RemoteSong alloc] initWithSong:mess.song ofType:MusicPlayerSong fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-            Song *newSong = [self makeSongFromReceivedSong:mess.song fromPeer:peerID];
-            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:newSong];
-            [self addSongToAllPeers:newSong];
+            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:mess.song];
+            [self addSongToAllPeers:mess.song];
         }
         else if (mess.message == AddSong && _currentRole == ClientConnection) {
             NSLog(@"Adding %@ to playlist", mess.song.title);
-            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
+            [[QPMusicPlayerController sharedMusicPlayer] addSongToPlaylist:mess.song];
         }
         else if (mess.message == SkipSong && _currentRole == ClientConnection) {
             NSLog(@"Skip song");
@@ -221,7 +220,7 @@
             Song *streamSong = [self findSong:mess.song];
             NSLog(@"Got packet request: %@", streamSong);
             
-            if (streamSong && [streamSong isMemberOfClass:[RemoteSong class]] == NO) {
+            if (streamSong) {
                 NSData *data;
                 
                 do {
@@ -255,9 +254,9 @@
                 streamSong.inputASDBIsSet = YES;
             }
             
-            if (streamSong && [streamSong isMemberOfClass:[RemoteSong class]]) {
+            if (streamSong) {
                 //NSLog(@"Got %lu music bytes in a packet\n", (unsigned long)mess.data.length);
-                [((RemoteSong*)streamSong) submitBytes:mess.data];
+                [streamSong submitBytes:mess.data];
             }
         }
         else if (mess.message == FinishedStreaming) {
@@ -270,7 +269,7 @@
         }
         else if (mess.message == CurrentSong) {
             NSLog(@"Got current song from %@\n", peerID.displayName);
-            [[QPMusicPlayerController sharedMusicPlayer] updateCurrentSong:[self makeSongFromReceivedSong:mess.song fromPeer:peerID]];
+            [[QPMusicPlayerController sharedMusicPlayer] updateCurrentSong:mess.song];
         }
         else if (mess.message == Booted) {
             NSLog(@"%@:I just got booted :(", self.pid.displayName);
@@ -280,45 +279,6 @@
             NSLog(@"Got some unknown data from %@\n", peerID.displayName);
         }
     });
-}
-
-- (Song*)makeSongFromReceivedSong:(Song*)song fromPeer:(MCPeerID*)peerID {
-    Song *newSong;
-    
-    if (song == nil) {
-        return nil;
-    }
-    
-    if ([song isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)song).peer isEqual:self.pid]) {
-        NSLog(@"Class: %@", [song class]);
-        if (((RemoteSong*)song).type == MusicPlayerSong) {
-            NSLog(@"make regular song");
-            newSong = [[LocalSong alloc] initLocalSongFromSong:song WithOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-        } else if (((RemoteSong*)song).type == SoundCloud) {
-            NSLog(@"make soundcloud song");
-            newSong = [[SoundCloudSong alloc] initWithSong:song];
-            newSong.artworkURL = song.artworkURL;
-            [((SoundCloudSong*)newSong) setOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-        } else {
-            NSLog(@"didnt make any song");
-        }
-
-    }
-    else if ([song isMemberOfClass:[RemoteSong class]] == NO) {
-        RemoteSongType songType;
-        if ([song isMemberOfClass:[LocalSong class]]) {
-            songType = MusicPlayerSong;
-        } else if ([song isMemberOfClass:[SoundCloudSong class]]) {
-            songType = SoundCloud;
-        }
-        
-        newSong = [[RemoteSong alloc] initWithSong:song ofType:songType fromPeer:peerID andOutputASBD:*([QPMusicPlayerController sharedMusicPlayer].audioFormat)];
-    }
-    else {
-        newSong = song;
-    }
-    
-    return newSong;
 }
 
 - (Song*)findSong:(Song*)song
@@ -481,7 +441,7 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
-- (void)requestAlbumArtwork:(RemoteSong*)song
+- (void)requestAlbumArtwork:(Song*)song
 {
     NSLog(@"I'd like some artwork for %@ from %@", song.title, song.peer.displayName);
     SingleMessage *message = [[SingleMessage alloc] init];
@@ -520,7 +480,7 @@
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
 
-- (void)prepareRemoteSong:(RemoteSong*)song
+- (void)prepareRemoteSong:(Song*)song
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = PrepareSong;
@@ -528,7 +488,7 @@
     [self sendData:[NSKeyedArchiver archivedDataWithRootObject:message] ToPeer:song.peer];
 }
 
-- (void)requestMusicDataForSong:(RemoteSong*)song withAvailableBytes:(NSInteger)bytes
+- (void)requestMusicDataForSong:(Song*)song withAvailableBytes:(NSInteger)bytes
 {
     SingleMessage *message = [[SingleMessage alloc] init];
     message.message = MusicPacketRequest;
@@ -575,7 +535,7 @@
     NSMutableIndexSet *songsToRemove = [[NSMutableIndexSet alloc] init];
     
     [[QPMusicPlayerController sharedMusicPlayer].playlist enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isMemberOfClass:[RemoteSong class]] && [((RemoteSong*)obj).peer isEqual:peer]) {
+        if ([((Song*)obj).peer isEqual:peer]) {
             [songsToRemove addIndex:idx];
         }
     }];

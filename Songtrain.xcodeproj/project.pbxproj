@@ -20,7 +20,6 @@
 		5A5B807E19CE772E000A4681 /* QPMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B807D19CE772E000A4681 /* QPMusicPlayerController.m */; };
 		5A5B808519CE7751000A4681 /* Song.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808019CE7751000A4681 /* Song.m */; };
 		5A5B808619CE7751000A4681 /* LocalSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808219CE7751000A4681 /* LocalSong.m */; };
-		5A5B808719CE7751000A4681 /* RemoteSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808419CE7751000A4681 /* RemoteSong.m */; };
 		5A5B808B19CE7780000A4681 /* QPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808A19CE7780000A4681 /* QPSessionManager.m */; };
 		5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B808D19CE77A4000A4681 /* SingleMessage.m */; };
 		5A5B809419CE77EF000A4681 /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5B809119CE77EF000A4681 /* MarqueeLabel.m */; };
@@ -208,8 +207,6 @@
 		5A5B808019CE7751000A4681 /* Song.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Song.m; sourceTree = "<group>"; };
 		5A5B808119CE7751000A4681 /* LocalSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSong.h; sourceTree = "<group>"; };
 		5A5B808219CE7751000A4681 /* LocalSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSong.m; sourceTree = "<group>"; };
-		5A5B808319CE7751000A4681 /* RemoteSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoteSong.h; sourceTree = "<group>"; };
-		5A5B808419CE7751000A4681 /* RemoteSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemoteSong.m; sourceTree = "<group>"; };
 		5A5B808919CE7780000A4681 /* QPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPSessionManager.h; sourceTree = "<group>"; };
 		5A5B808A19CE7780000A4681 /* QPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPSessionManager.m; sourceTree = "<group>"; };
 		5A5B808C19CE77A4000A4681 /* SingleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMessage.h; sourceTree = "<group>"; };
@@ -386,8 +383,6 @@
 				5A5B808019CE7751000A4681 /* Song.m */,
 				5A5B808119CE7751000A4681 /* LocalSong.h */,
 				5A5B808219CE7751000A4681 /* LocalSong.m */,
-				5A5B808319CE7751000A4681 /* RemoteSong.h */,
-				5A5B808419CE7751000A4681 /* RemoteSong.m */,
 				5A40DE5719F377A30098F37B /* SoundCloudSong.h */,
 				5A40DE5819F377A30098F37B /* SoundCloudSong.m */,
 			);
@@ -818,7 +813,6 @@
 				5AD947F91A0F352F00C48796 /* XBPageCurlView.m in Sources */,
 				5A5B80A819CF89A7000A4681 /* TabViewController.m in Sources */,
 				5A5B80A919CF89A7000A4681 /* MusicNavigationViewController.m in Sources */,
-				5A5B808719CE7751000A4681 /* RemoteSong.m in Sources */,
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
 				5A9F951B19E35AE0009A6D30 /* AnimatedCollectionViewFlowLayout.m in Sources */,
 				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
