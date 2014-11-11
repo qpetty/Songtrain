@@ -79,6 +79,13 @@
                                     <rect key="frame" x="185" y="33" width="33" height="21"/>
                                 </variation>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart" translatesAutoresizingMaskIntoConstraints="NO" id="8jM-4t-gFb">
+                                <rect key="frame" x="79" y="94" width="22" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="CrY-is-dLJ"/>
+                                    <constraint firstAttribute="width" secondItem="8jM-4t-gFb" secondAttribute="height" multiplier="1:1" id="sxm-rJ-f4I"/>
+                                </constraints>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="albumart_default" translatesAutoresizingMaskIntoConstraints="NO" id="UGe-gO-CiS">
                                 <rect key="frame" x="16" y="94" width="85" height="85"/>
                                 <constraints>
@@ -152,10 +159,12 @@
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="UEy-Lb-6G7" secondAttribute="bottom" id="BhC-07-PYa"/>
                             <constraint firstAttribute="trailing" secondItem="dkq-BQ-Od4" secondAttribute="trailing" constant="8" id="Chk-cd-SW7"/>
                             <constraint firstItem="dkq-BQ-Od4" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="CrS-TK-YaC"/>
+                            <constraint firstItem="UGe-gO-CiS" firstAttribute="top" secondItem="8jM-4t-gFb" secondAttribute="top" id="ELL-4K-qic"/>
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="14" id="Fol-Ic-dpt"/>
                             <constraint firstItem="1qp-hg-bK3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="8" id="Fpo-iL-Qb8"/>
                             <constraint firstItem="FM8-D0-d6n" firstAttribute="top" secondItem="5mu-8i-uAv" secondAttribute="bottom" constant="12" id="FyM-fM-ccL"/>
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="top" secondItem="OnN-vS-rLS" secondAttribute="bottom" id="HHu-hD-ExO"/>
+                            <constraint firstItem="UGe-gO-CiS" firstAttribute="trailing" secondItem="8jM-4t-gFb" secondAttribute="trailing" id="I0U-lF-4VB"/>
                             <constraint firstItem="wco-2X-hgb" firstAttribute="trailing" secondItem="5mu-8i-uAv" secondAttribute="trailing" id="L69-DK-uvS"/>
                             <constraint firstItem="UEy-Lb-6G7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Lg4-E1-7cg"/>
                             <constraint firstAttribute="trailing" secondItem="OnN-vS-rLS" secondAttribute="trailing" id="M5o-jC-dIO"/>
@@ -224,11 +233,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="57.75" y="165.75"/>
+            <point key="canvasLocation" x="57" y="165"/>
         </scene>
     </scenes>
     <resources>
         <image name="albumart_default" width="320" height="320"/>
+        <image name="cart" width="25" height="25"/>
         <image name="dj" width="88" height="88"/>
         <image name="train" width="88" height="88"/>
     </resources>
