@@ -233,7 +233,7 @@
         cell.textLabel.text = [playlists objectAtIndex:indexPath.row][@"title"];
     } else {
         cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
-        SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]]];
+        SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]] andPeer:[[QPSessionManager sessionManager] pid]];
         if ([self.delegate isItemSelected:newSong]) {
             cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
         }
@@ -254,7 +254,7 @@
         return;
     }
     
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row]];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row] andPeer:[[QPSessionManager sessionManager] pid]];
     if ([self.delegate isItemSelected:newSong]) {
         [self.delegate removeItem:newSong];
     }

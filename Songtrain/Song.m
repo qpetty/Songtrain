@@ -49,31 +49,6 @@
     return self;
 }
 
-- (instancetype)initWithSong:(Song*)song andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription
-{
-    if(self = [self init])
-    {
-        self.title = song.title;
-        self.artistName = song.artistName;
-        self.peer = song.peer;
-        
-        self.url = song.url;
-        self.musicURL = song.musicURL;
-        self.artworkURL = song.artworkURL;
-        
-        self.songLength = song.songLength;
-        self.inputASDBIsSet = song.inputASDBIsSet;
-        
-        memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
-        memcpy(_inputASBD, song.inputASBD, sizeof(AudioStreamBasicDescription));
-        
-        if (self.remoteSong) {
-            [self initHelp];
-        }
-    }
-    return self;
-}
-
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
     if(self = [self init])
@@ -83,10 +58,9 @@
         self.peer = [aDecoder decodeObjectForKey:@"peer"];
         
         self.url = [aDecoder decodeObjectForKey:@"url"];
-        self.musicURL = [aDecoder decodeObjectForKey:@"musicURL"];
-        self.artworkURL = [aDecoder decodeObjectForKey:@"artworkURL"];
         
         self.inputASDBIsSet = [aDecoder decodeBoolForKey:@"inputASBDset"];
+        
         _songLength = [aDecoder decodeIntForKey:@"songLength"];
         
         NSUInteger size;
@@ -106,8 +80,6 @@
     [aCoder encodeObject:self.peer forKey:@"peer"];
     
     [aCoder encodeObject:self.url forKey:@"url"];
-    [aCoder encodeObject:self.musicURL forKey:@"musicURL"];
-    [aCoder encodeObject:self.artworkURL forKey:@"artworkURL"];
     
     [aCoder encodeBool:self.inputASDBIsSet forKey:@"inputASBDset"];
     [aCoder encodeInt:_songLength forKey:@"songLength"];
@@ -304,7 +276,6 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
 
 - (void)setAlbumImage:(UIImage *)albumImage
 {
-
     image = albumImage;
 }
 

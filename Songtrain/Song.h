@@ -26,9 +26,6 @@ static const int kBufferLength = 32768 * 32;
 @property (readonly, getter=isRemoteSong) BOOL remoteSong;
 
 @property (strong, nonatomic) NSURL *url;
-@property (strong, nonatomic) NSURL *musicURL;
-@property (strong, nonatomic) NSURL *artworkURL;
-
 
 @property (nonatomic) BOOL isFinishedSendingSong;
 @property (nonatomic) BOOL inputASDBIsSet;
@@ -36,7 +33,6 @@ static const int kBufferLength = 32768 * 32;
 @property (nonatomic) int songLength;
 
 - (instancetype)initWithTitle:(NSString*)title andArtist:(NSString*)artist andPeer:(MCPeerID*)peer;
-- (instancetype)initWithSong:(Song*)song andOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData;
 - (NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes;

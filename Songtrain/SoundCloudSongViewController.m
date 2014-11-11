@@ -67,7 +67,7 @@
     cell.userInteractionEnabled = YES;
     
     cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]]];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]] andPeer:[[QPSessionManager sessionManager] pid]];
     if ([self.delegate isItemSelected:newSong]) {
         cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
     }
@@ -77,7 +77,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row]];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row] andPeer:[[QPSessionManager sessionManager] pid]];
     if ([self.delegate isItemSelected:newSong]) {
         [self.delegate removeItem:newSong];
     }

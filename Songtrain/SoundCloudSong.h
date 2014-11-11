@@ -10,9 +10,11 @@
 
 @interface SoundCloudSong : Song <NSURLConnectionDataDelegate, NSStreamDelegate>
 
--(instancetype)initWithURL:(NSURL*)url;
--(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic;
--(instancetype)initWithSong:(Song*)song;
+@property (strong, nonatomic) NSURL *musicURL;
+@property (strong, nonatomic) NSURL *artworkURL;
+
+-(instancetype)initWithURL:(NSURL *)url andPeer:(MCPeerID*)peer;
+-(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic andPeer:(MCPeerID*)peer;
 
 -(void)setOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription;
 

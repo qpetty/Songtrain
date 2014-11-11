@@ -245,8 +245,8 @@
         else if (mess.message == MusicPacket) {
             Song *streamSong = [self findSong:mess.song];
             
-            //NSLog(@"streamSong is set %@", streamSong.inputASDBIsSet ? @"YES" : @"NO");
-            //NSLog(@"mess.song is set %@", mess.song.inputASDBIsSet ? @"YES" : @"NO");
+            NSLog(@"streamSong is set %@", streamSong.inputASDBIsSet ? @"YES" : @"NO");
+            NSLog(@"mess.song is set %@", mess.song.inputASDBIsSet ? @"YES" : @"NO");
             
             if (streamSong && streamSong.inputASDBIsSet == NO && mess.song.inputASDBIsSet == YES) {
                 NSLog(@"Just set %@'s inputASBD", streamSong.title);

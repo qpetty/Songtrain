@@ -7,6 +7,7 @@
 //
 
 #import "TabViewController.h"
+#import "QPSessionManager.h"
 
 @interface SoundCloudSongViewController : TabViewController
 

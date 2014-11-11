@@ -742,10 +742,12 @@
         });
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         NSLog(@"Updating Image!!!!!!!!!!!!!");
-        if ([musicPlayer.currentSong isKindOfClass:[SoundCloudSong class]]) {
+        
+        if ([musicPlayer.currentSong isKindOfClass:[LocalSong class]] == NO && [musicPlayer.currentSong.peer isEqual:sessionManager.pid]) {
             NSLog(@"Sending artwork to everyone");
             [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
         }
+         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateImage:musicPlayer.currentSong.albumImage];
         });

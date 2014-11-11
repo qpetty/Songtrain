@@ -26,9 +26,10 @@
     NSMutableData *imageData;
 }
 
-- (instancetype)initWithURL:(NSURL *)url {
+- (instancetype)initWithURL:(NSURL *)url andPeer:(MCPeerID*)peer {
     if (self = [super init]) {
         self.url = url;
+        self.peer = peer;
         songData = nil;
         setOutputASBD = readyWithPackets = startedArtworkDownLoad = finishedLoading = NO;
         nextByteToRead = 0;
@@ -38,8 +39,8 @@
     return self;
 }
 
--(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic {
-    if (self = [self initWithURL:[NSURL URLWithString:dic[@"uri"]]]) {
+-(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic andPeer:(MCPeerID*)peer {
+    if (self = [self initWithURL:[NSURL URLWithString:dic[@"uri"]] andPeer:peer]) {
         
         self.title = dic[@"title"];
         self.artistName = dic[@"user"][@"username"];
@@ -53,17 +54,23 @@
     return self;
 }
 
--(instancetype)initWithSong:(Song*)song {
-    if (self = [self initWithURL:song.url]) {
-        
-        self.title = song.title;
-        self.artistName = song.artistName;
-        self.songLength = song.songLength;
-        self.musicURL = song.musicURL;
-        
-        NSLog(@"Creating SoundCloudSong from: %@", song);
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        setOutputASBD = [aDecoder decodeBoolForKey:@"setOASBD"];
+        self.musicURL = [aDecoder decodeObjectForKey:@"musicURL"];
+        self.artworkURL = [aDecoder decodeObjectForKey:@"artworkURL"];
     }
     return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeObject:self.musicURL forKey:@"musicURL"];
+    [aCoder encodeObject:self.artworkURL forKey:@"artworkURL"];
+    [aCoder encodeBool:setOutputASBD forKey:@"setOASBD"];
 }
 
 -(void)setInputASBDBecauseICantReachItAnotherWay {
@@ -71,7 +78,7 @@
     NSLog(@"set inputASBD");
 }
 
--(void)initConverter {
+-(void)initSoundCloudConverter {
     if (setOutputASBD == NO || self.inputASDBIsSet == NO) {
         NSLog(@"all ASBDs not set yet");
         return;
@@ -83,10 +90,16 @@
 -(void)setOutputASBD:(AudioStreamBasicDescription)audioStreanBasicDescription {
     memcpy(outputASBD, &audioStreanBasicDescription, sizeof(AudioStreamBasicDescription));
     setOutputASBD = YES;
-    [self initConverter];
+    [self initSoundCloudConverter];
 }
 
 -(void)prepareSong {
+    NSLog(@"Is remote song: %@, peer is %@", self.remoteSong ? @"YES" : @"NO", self.peer);
+    if (self.remoteSong) {
+        [super prepareSong];
+        return;
+    }
+    
     NSLog(@"preparing SoundCloudSong");
     
     OSStatus error = AudioFileStreamOpen((__bridge void*)self, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP3Type, &filestream);
@@ -96,9 +109,7 @@
         NSLog(@"Error opening file stream: %s\n", errorString);
     }
     
-    //dispatch_async(dispatch_get_main_queue(), ^{
-        [self requestSongData];
-    //});
+    [self requestSongData];
 }
 
 - (void)requestSongData {
@@ -164,7 +175,7 @@ void fileStreamPropertyCallback(void *inClientData, AudioFileStreamID inAudioFil
         }
     }
     else if (inPropertyID == kAudioFileStreamProperty_ReadyToProducePackets) {
-        [song initConverter];
+        [song initSoundCloudConverter];
         song->readyWithPackets = YES;
     }
     else if (inPropertyID == kAudioFileStreamProperty_FileFormat){
@@ -260,6 +271,10 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
 
 - (int)getMusicPackets:(UInt32*)numOfPackets forBuffer:(AudioBufferList*)ioData
 {
+    if (self.remoteSong) {
+        return [super getMusicPackets:numOfPackets forBuffer:ioData];
+    }
+    
     OSStatus err = -5;
     if (readyWithPackets == YES) {
         err = AudioConverterFillComplexBuffer(converter, soundCloudConverterInputCallback, (__bridge void*)self, numOfPackets, ioData, NULL);
@@ -322,11 +337,13 @@ static char *FormatError(char *str, OSStatus error)
 
 - (UIImage*)getAlbumImage
 {
+    if (self.remoteSong) {
+        return [super getAlbumImage];
+    }
     return image;
 }
 
 -(void)dealloc {
-    NSLog(@"dealloc soundcloud song");
     songData = nil;
     oneCallbackOfData = nil;
     musicStream = nil;
