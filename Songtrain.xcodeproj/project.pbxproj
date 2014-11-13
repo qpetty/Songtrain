@@ -66,6 +66,8 @@
 		5AD947F91A0F352F00C48796 /* XBPageCurlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E71A0F352F00C48796 /* XBPageCurlView.m */; };
 		5AD947FA1A0F352F00C48796 /* XBPageDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947E91A0F352F00C48796 /* XBPageDragView.m */; };
 		5AD947FB1A0F352F00C48796 /* XBSnappingPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */; };
+		5AE7F79F1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE7F79C1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m */; };
+		5AE7F7A01A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE7F79E1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m */; };
 		5AF4550219EC670F008D97AA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF4550119EC670F008D97AA /* StoreKit.framework */; };
 		5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */; };
 		5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */; };
@@ -283,6 +285,11 @@
 		5AD947E91A0F352F00C48796 /* XBPageDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBPageDragView.m; sourceTree = "<group>"; };
 		5AD947EA1A0F352F00C48796 /* XBSnappingPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBSnappingPoint.h; sourceTree = "<group>"; };
 		5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBSnappingPoint.m; sourceTree = "<group>"; };
+		5AE7F79A1A14738B006E0FDF /* SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVPullToRefresh.h; sourceTree = "<group>"; };
+		5AE7F79B1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVInfiniteScrolling.h"; sourceTree = "<group>"; };
+		5AE7F79C1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
+		5AE7F79D1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
+		5AE7F79E1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
 		5AF4550119EC670F008D97AA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderSongCellView.xib; sourceTree = "<group>"; };
 		5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSongCellView.h; sourceTree = "<group>"; };
@@ -407,6 +414,7 @@
 				5A5B809119CE77EF000A4681 /* MarqueeLabel.m */,
 				5A5B809219CE77EF000A4681 /* TPCircularBuffer.h */,
 				5A5B809319CE77EF000A4681 /* TPCircularBuffer.c */,
+				5AE7F7991A14738B006E0FDF /* SVPullToRefresh */,
 				5AD947D31A0F352F00C48796 /* XBPageCurl */,
 				5A40DE5219F34A350098F37B /* SoundCloud.bundle */,
 			);
@@ -577,6 +585,18 @@
 				5AD947DF1A0F352F00C48796 /* NextPageVertexShader.glsl */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		5AE7F7991A14738B006E0FDF /* SVPullToRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				5AE7F79A1A14738B006E0FDF /* SVPullToRefresh.h */,
+				5AE7F79B1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.h */,
+				5AE7F79C1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m */,
+				5AE7F79D1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.h */,
+				5AE7F79E1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m */,
+			);
+			path = SVPullToRefresh;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -816,6 +836,7 @@
 				5A5B808E19CE77A4000A4681 /* SingleMessage.m in Sources */,
 				5A9F951B19E35AE0009A6D30 /* AnimatedCollectionViewFlowLayout.m in Sources */,
 				5A6006A019D53F240062865A /* PeerTableViewCell.m in Sources */,
+				5AE7F79F1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m in Sources */,
 				5AD947F81A0F352F00C48796 /* XBCurlView.m in Sources */,
 				5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */,
 				5AD947F61A0F352F00C48796 /* XBAnimation.m in Sources */,
@@ -828,6 +849,7 @@
 				5A743C1519CBD9540008C989 /* AppDelegate.m in Sources */,
 				5A5B808B19CE7780000A4681 /* QPSessionManager.m in Sources */,
 				5A5B80A419CF89A7000A4681 /* ArtistTabViewController.m in Sources */,
+				5AE7F7A01A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m in Sources */,
 				5A743C1219CBD9540008C989 /* main.m in Sources */,
 				5A5B807E19CE772E000A4681 /* QPMusicPlayerController.m in Sources */,
 				5AD947FA1A0F352F00C48796 /* XBPageDragView.m in Sources */,

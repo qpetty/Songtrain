@@ -39,7 +39,8 @@
         self.wholeTableView.hidden = YES;
         [self.view addSubview:self.wholeTableView];
         
-        songView = [[SoundCloudSongViewController alloc] initWithTracks:nil];
+        //songView = [[SoundCloudSongViewController alloc] initWithTracks:nil andURL:@"https://api.soundcloud.com/me/favorites.json?offset=0&limit=11"];
+        songView = [[SoundCloudSongViewController alloc] initWithTracks:nil andURL:@"https://api.soundcloud.com/me/favorites.json"];
         [self addChildViewController:songView];
         [self.view addSubview:songView.view];
         
@@ -49,7 +50,6 @@
         if ([SCSoundCloud account] == nil) {
             [self getAuthViewController];
         } else {
-            [self getFavorites];
             [self getPlaylists];
         }
     }
@@ -74,7 +74,6 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.wholeTableView reloadData];
-    [self getFavorites];
     [self getPlaylists];
 }
 
@@ -82,6 +81,11 @@
     [super viewDidLayoutSubviews];
     float topHeight = 64.0;
 
+    login.view.frame = CGRectMake(self.view.frame.origin.x,
+                                  self.view.frame.origin.y + 32.0,
+                                  self.view.frame.size.width,
+                                  self.view.frame.size.height - topHeight - 49.0);
+    
     segmented.frame = CGRectMake(self.view.frame.origin.x,
                                  self.view.frame.origin.y + topHeight,
                                  self.view.frame.size.width,
@@ -91,44 +95,12 @@
     self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
                                            topHeight,
                                            self.view.frame.size.width,
-                                           self.view.frame.size.height);
-    
-    login.view.frame = CGRectMake(self.view.frame.origin.x,
-                                  self.view.frame.origin.y + 32.0,
-                                  self.view.frame.size.width,
-                                  self.view.frame.size.height);
+                                           self.view.frame.size.height - topHeight - 49.0);
     
     songView.view.frame = CGRectMake(self.view.frame.origin.x,
                                      topHeight,
                                      self.view.frame.size.width,
-                                     self.view.frame.size.height);
-}
-
-- (void)getFavorites {
-    NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
-    if ([SCSoundCloud account] != nil) {
-        SCRequestResponseHandler handler;
-        handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
-            NSError *jsonError = nil;
-            NSJSONSerialization *jsonResponse = [NSJSONSerialization
-                                                 JSONObjectWithData:data
-                                                 options:0
-                                                 error:&jsonError];
-            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
-                //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
-                songView.tracks = (NSArray *)jsonResponse;
-                NSLog(@"Updated favorites");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [songView.wholeTableView reloadData];
-                });
-            }
-        };
-        
-        NSString *resourceURL = @"https://api.soundcloud.com/me/favorites.json";
-        [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:resourceURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
-    } else {
-        songView.tracks = nil;
-    }
+                                     self.view.frame.size.height - topHeight - 49.0);
 }
 
 - (void)getPlaylists {
@@ -168,7 +140,6 @@
             NSLog(@"Done!");
             [login removeFromParentViewController];
             [login.view removeFromSuperview];
-            [self getFavorites];
             [self getPlaylists];
         }
     };
@@ -231,7 +202,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SoundCloudSongViewController *songsView = [[SoundCloudSongViewController alloc] initWithTracks:[playlists objectAtIndex:indexPath.row][@"tracks"]];
+    SoundCloudSongViewController *songsView = [[SoundCloudSongViewController alloc] initWithTracks:[playlists objectAtIndex:indexPath.row][@"tracks"] andURL:nil];
     songsView.title = [playlists objectAtIndex:indexPath.row][@"title"];
     songsView.delegate = self.delegate;
     [self.navigationController pushViewController:songsView animated:YES];
