@@ -56,7 +56,9 @@
 {
     [super viewWillAppear:animated];
     //[self.wholeTableView reloadData];
-    [self getFavorites];
+    if (self.location != nil) {
+        [self getFavorites];
+    }
 }
 
 -(void)viewDidLayoutSubviews
@@ -196,6 +198,7 @@
     else {
         [self.delegate addItem:newSong];
     }
+    NSLog(@"delegate: %@", self.delegate);
     [self.wholeTableView reloadData];
 }
 

@@ -305,7 +305,7 @@ OSStatus soundCloudConverterInputCallback(AudioConverterRef inAudioConverter, UI
         NSUInteger length = song->songData.length;
         NSUInteger nextbyte = song->nextByteToRead;
         if (length - nextbyte > sizeof(AudioStreamPacketDescription) &&
-            ((AudioStreamPacketDescription*)(song->songData.bytes + song->nextByteToRead))->mDataByteSize <= song->songData.length - song->nextByteToRead - sizeof(AudioStreamPacketDescription)) {
+            ((AudioStreamPacketDescription*)(song->songData.bytes + nextbyte))->mDataByteSize <= length - nextbyte - sizeof(AudioStreamPacketDescription)) {
             
             memcpy(&song->aspds[i], song->songData.bytes + song->nextByteToRead, sizeof(AudioStreamPacketDescription));
             song->aspds[i].mStartOffset = song->oneCallbackOfData.length;

@@ -73,6 +73,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    songView.delegate = self.delegate;
     [self.wholeTableView reloadData];
     [self getPlaylists];
 }

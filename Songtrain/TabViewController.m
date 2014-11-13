@@ -34,6 +34,10 @@
     [super viewDidLoad];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
     self.navigationItem.rightBarButtonItem = item;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.delegate addButton:self.navigationItem.rightBarButtonItem];
 }
 
