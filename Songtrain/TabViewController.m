@@ -9,7 +9,9 @@
 #import "TabViewController.h"
 #import "HeaderSongCellView.h"
 
-@implementation TabViewController
+@implementation TabViewController {
+    BOOL addedButton;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -24,7 +26,7 @@
 {
     self = [super init];
     if (self) {
-
+        addedButton = NO;
     }
     return self;
 }
@@ -38,7 +40,10 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.delegate addButton:self.navigationItem.rightBarButtonItem];
+    if (addedButton == NO) {
+        [self.delegate addButton:self.navigationItem.rightBarButtonItem];
+        addedButton = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
