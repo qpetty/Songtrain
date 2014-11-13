@@ -9,6 +9,8 @@
 #import "MusicPickerViewController.h"
 #import "Song.h"
 
+#define FINISHED_WITH_ADDING_SONGS @"Add"
+
 @interface MusicPickerViewController (){
     NSMutableArray *allMediaItems, *doneButtons;
     UIBarButtonItem *doneButton1, *doneButton2, *doneButton3;
@@ -98,7 +100,7 @@
 {
     [allMediaItems addObject:item];
     for (UIBarButtonItem *button in doneButtons) {
-        button.title = @"Done";
+        button.title = FINISHED_WITH_ADDING_SONGS;
     }
 }
 
@@ -119,7 +121,7 @@
 
 - (void)addButton:(UIBarButtonItem*)button {
     if (allMediaItems.count) {
-        button.title = @"Done";
+        button.title = FINISHED_WITH_ADDING_SONGS;
     }
     else {
         button.title = @"Cancel";
