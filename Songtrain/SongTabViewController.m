@@ -30,6 +30,7 @@
         self.wholeTableView = [[STMusicPickerTableView alloc] init];
         self.wholeTableView.dataSource = self;
         self.wholeTableView.delegate = self;
+        [self.view addSubview:self.wholeTableView];
         
         if (mediaQuery) {
             query = mediaQuery;
@@ -61,7 +62,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addSubview:self.wholeTableView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -73,10 +73,10 @@
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
-                                           self.view.frame.origin.y,
-                                           self.view.frame.size.width,
-                                           self.view.frame.size.height);
+    self.wholeTableView.frame = CGRectMake(self.view.bounds.origin.x,
+                                           self.view.bounds.origin.y,
+                                           self.view.bounds.size.width,
+                                           self.view.bounds.size.height);
 }
 
 - (void)didReceiveMemoryWarning

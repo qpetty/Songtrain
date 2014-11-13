@@ -11,6 +11,8 @@
 
 @interface SoundCloudSongViewController : TabViewController
 
+@property (setter=updateTracks:) NSArray *tracks;
+
 -(instancetype)initWithTracks:(NSArray*)arrayOfTracks;
 
 @end

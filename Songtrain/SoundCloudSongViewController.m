@@ -13,9 +13,7 @@
 
 @end
 
-@implementation SoundCloudSongViewController {
-    NSArray *tracks;
-}
+@implementation SoundCloudSongViewController
 
 -(instancetype)initWithTracks:(NSArray*)arrayOfTracks {
     self = [super init];
@@ -24,7 +22,7 @@
         self.wholeTableView.dataSource = self;
         self.wholeTableView.delegate = self;
         
-        tracks = arrayOfTracks;
+        _tracks = arrayOfTracks;
     }
     return self;
 }
@@ -44,10 +42,12 @@
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
-                                           self.view.frame.origin.y,
-                                           self.view.frame.size.width,
-                                           self.view.frame.size.height);
+    
+    self.wholeTableView.frame = CGRectMake(self.view.bounds.origin.x,
+                                           self.view.bounds.origin.y,
+                                           self.view.bounds.size.width,
+                                           self.view.bounds.size.height);
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,7 +67,7 @@
 {
     // Return the number of rows in the section.
     
-    return tracks.count;
+    return self.tracks.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,8 +86,8 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
-    cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]] andPeer:[[QPSessionManager sessionManager] pid]];
+    cell.textLabel.text = [self.tracks objectAtIndex:indexPath.row][@"title"];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[self.tracks objectAtIndex:indexPath.row][@"uri"]] andPeer:[[QPSessionManager sessionManager] pid]];
     if ([self.delegate isItemSelected:newSong]) {
         cell.textLabel.textColor = UIColorFromRGBWithAlpha(0x7FA8D7, 1.0);
     }
@@ -97,7 +97,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[tracks objectAtIndex:indexPath.row] andPeer:[[QPSessionManager sessionManager] pid]];
+    SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithSoundCloudDictionary:[self.tracks objectAtIndex:indexPath.row] andPeer:[[QPSessionManager sessionManager] pid]];
     if ([self.delegate isItemSelected:newSong]) {
         [self.delegate removeItem:newSong];
     }

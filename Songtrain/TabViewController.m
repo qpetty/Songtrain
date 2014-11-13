@@ -24,8 +24,7 @@
 {
     self = [super init];
     if (self) {
-        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
-        self.navigationItem.rightBarButtonItem = item;
+
     }
     return self;
 }
@@ -33,6 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
+    self.navigationItem.rightBarButtonItem = item;
     [self.delegate addButton:self.navigationItem.rightBarButtonItem];
 }
 
