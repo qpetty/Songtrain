@@ -24,10 +24,6 @@
 {
     self = [super init];
     if (self) {
-        _wholeTableView = [[STMusicPickerTableView alloc] init];
-        _wholeTableView.dataSource = self;
-        _wholeTableView.delegate = self;
-        
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self.delegate action:@selector(done)];
         self.navigationItem.rightBarButtonItem = item;
     }
@@ -37,23 +33,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addSubview:_wholeTableView];
     [self.delegate addButton:self.navigationItem.rightBarButtonItem];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [_wholeTableView reloadData];
-}
-
--(void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    _wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
-                                      self.view.frame.origin.y,
-                                      self.view.frame.size.width,
-                                      self.view.frame.size.height);
 }
 
 - (void)didReceiveMemoryWarning

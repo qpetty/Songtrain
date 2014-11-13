@@ -27,6 +27,6 @@
 }
 
 @property (weak, nonatomic) id <TabViewControllerDelegate> delegate;
-@property (atomic, retain, readonly) STMusicPickerTableView *wholeTableView;
+@property STMusicPickerTableView *wholeTableView;
 
 @end

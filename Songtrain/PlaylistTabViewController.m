@@ -27,6 +27,10 @@
 {
     self = [super init];
     if (self) {
+        self.wholeTableView = [[STMusicPickerTableView alloc] init];
+        self.wholeTableView.dataSource = self;
+        self.wholeTableView.delegate = self;
+        
         query = [MPMediaQuery playlistsQuery];
         
         [query setGroupingType:MPMediaGroupingPlaylist];
@@ -39,6 +43,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view addSubview:self.wholeTableView];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.wholeTableView reloadData];
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
+                                           self.view.frame.origin.y,
+                                           self.view.frame.size.width,
+                                           self.view.frame.size.height);
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,7 +96,7 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.userInteractionEnabled = YES;
     
-    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 

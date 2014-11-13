@@ -26,6 +26,10 @@
 -(instancetype)init {
     self = [super init];
     if (self) {
+        self.wholeTableView = [[STMusicPickerTableView alloc] init];
+        self.wholeTableView.dataSource = self;
+        self.wholeTableView.delegate = self;
+        
         //[SCSoundCloud removeAccess];
         [self setupSoundCloud];
         
@@ -59,6 +63,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view addSubview:self.wholeTableView];
     [self.view addSubview:segmented];
     [self.view addSubview:playlistTable];
     NSLog(@"self delegate: %@", self.delegate);
@@ -72,12 +77,17 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.wholeTableView reloadData];
     [self getFavorites];
     [self getPlaylists];
 }
 
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
+                                           self.view.frame.origin.y,
+                                           self.view.frame.size.width,
+                                           self.view.frame.size.height);
 
     segmented.frame = CGRectMake(self.view.frame.origin.x,
                                  self.view.frame.origin.y + 64.0,
@@ -231,6 +241,7 @@
     
     if (tableView == playlistTable) {
         cell.textLabel.text = [playlists objectAtIndex:indexPath.row][@"title"];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
         cell.textLabel.text = [tracks objectAtIndex:indexPath.row][@"title"];
         SoundCloudSong *newSong = [[SoundCloudSong alloc] initWithURL:[NSURL URLWithString:[tracks objectAtIndex:indexPath.row][@"uri"]] andPeer:[[QPSessionManager sessionManager] pid]];
