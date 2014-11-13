@@ -56,7 +56,8 @@
 {
     [super viewWillAppear:animated];
     //[self.wholeTableView reloadData];
-    if (self.location != nil) {
+    if (self.tracks == nil) {
+        [self.wholeTableView triggerPullToRefresh];
         [self getFavorites];
     }
 }
@@ -88,18 +89,23 @@
                                                  JSONObjectWithData:data
                                                  options:0
                                                  error:&jsonError];
-            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
+            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]] && ((NSArray *)jsonResponse).count > 0) {
                 //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
                 //[self.tracks removeAllObjects];
                 _tracks = (NSArray *)jsonResponse;
+                NSUInteger numReturned = _tracks.count;
                 NSLog(@"Updated favorites to %lu", ((NSArray *)jsonResponse).count);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.wholeTableView reloadData];
+                    [weakSelf.wholeTableView reloadData];
                     [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
+                    if (numReturned < kSoundCloudSongInitalLoad) {
+                        weakSelf.wholeTableView.showsInfiniteScrolling = NO;
+                    }
                 });
             }
             else {
-                [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
+                [weakSelf.wholeTableView.infiniteScrollingView stopAnimating];
+                weakSelf.wholeTableView.showsInfiniteScrolling = NO;
             }
         };
         
@@ -198,7 +204,6 @@
     else {
         [self.delegate addItem:newSong];
     }
-    NSLog(@"delegate: %@", self.delegate);
     [self.wholeTableView reloadData];
 }
 

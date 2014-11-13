@@ -9,8 +9,8 @@
 #import "TabViewController.h"
 #import "QPSessionManager.h"
 
-static const int kSoundCloudSongInitalLoad = 30;
-static const int kSoundCloudSongNextLoad = 20;
+static const int kSoundCloudSongInitalLoad = 11;
+static const int kSoundCloudSongNextLoad = 5;
 
 @interface SoundCloudSongViewController : TabViewController
 

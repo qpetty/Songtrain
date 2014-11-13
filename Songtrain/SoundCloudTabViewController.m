@@ -203,7 +203,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SoundCloudSongViewController *songsView = [[SoundCloudSongViewController alloc] initWithTracks:[playlists objectAtIndex:indexPath.row][@"tracks"] andURL:nil];
+    NSString *playlistURL = [NSString stringWithFormat:@"https://api.soundcloud.com/playlists/%@.json", [playlists objectAtIndex:indexPath.row][@"id"]];
+    SoundCloudSongViewController *songsView = [[SoundCloudSongViewController alloc] initWithTracks:[playlists objectAtIndex:indexPath.row][@"tracks"] andURL:playlistURL];
+    //NSLog(@"object: %@", [playlists objectAtIndex:indexPath.row]);
     songsView.title = [playlists objectAtIndex:indexPath.row][@"title"];
     songsView.delegate = self.delegate;
     [self.navigationController pushViewController:songsView animated:YES];
