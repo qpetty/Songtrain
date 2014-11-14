@@ -251,7 +251,7 @@ OSStatus converterCallback(AudioConverterRef inAudioConverter, UInt32 *ioNumberD
 
 - (void)submitBytes:(NSData*)bytes
 {
-    NSLog(@"Got %lu bytes here in remote song: %@", bytes.length, self.title);
+    NSLog(@"Got %lu bytes here in remote song: %@", (unsigned long)bytes.length, self.title);
     if (bytes.length == 0) {
         musicRequestSent = NO;
         [self askForPacket];
