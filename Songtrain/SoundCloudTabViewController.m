@@ -110,6 +110,10 @@
         SCRequestResponseHandler handler;
         handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
             NSError *jsonError = nil;
+            if (response == nil) {
+                return;
+            }
+            
             NSJSONSerialization *jsonResponse = [NSJSONSerialization
                                                  JSONObjectWithData:data
                                                  options:0
