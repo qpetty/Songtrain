@@ -209,7 +209,7 @@
     [sessionManager stopBrowsingForTrains];
     [self.browseForOtherTrains setEnabled:NO];
 
-    [UIView animateWithDuration:.2 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+    [UIView animateWithDuration:.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setAlpha:0.0];
     } completion:^(BOOL finished) {
         [nearbyTrainsModal setAlpha:1.0];
