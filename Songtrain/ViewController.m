@@ -207,15 +207,16 @@
 -(void)finishBrowsingForOthers:(BOOL)somethingSelected
 {
     [sessionManager stopBrowsingForTrains];
+    [self.browseForOtherTrains setEnabled:NO];
 
-    [UIView animateWithDuration:.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+    [UIView animateWithDuration:.2 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setAlpha:0.0];
-
     } completion:^(BOOL finished) {
         [nearbyTrainsModal setAlpha:1.0];
         [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         [nearbyTrainsModal removeFromSuperview];
         [nearbyTrainsModal reloadData];
+        [self.browseForOtherTrains setEnabled:YES];
     }];
     
     if (somethingSelected == NO) {
