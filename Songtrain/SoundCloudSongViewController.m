@@ -59,6 +59,8 @@
     if (self.tracks == nil) {
         [self.wholeTableView triggerPullToRefresh];
         [self getFavorites];
+    } else {
+        [self.wholeTableView reloadData];
     }
 }
 
@@ -85,6 +87,11 @@
         SCRequestResponseHandler handler;
         handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
             NSError *jsonError = nil;
+            
+            if (response == nil) {
+                return;
+            }
+            
             NSJSONSerialization *jsonResponse = [NSJSONSerialization
                                                  JSONObjectWithData:data
                                                  options:0
@@ -94,7 +101,7 @@
                 //[self.tracks removeAllObjects];
                 _tracks = (NSArray *)jsonResponse;
                 NSUInteger numReturned = _tracks.count;
-                NSLog(@"Updated favorites to %lu", ((NSArray *)jsonResponse).count);
+                NSLog(@"Updated favorites to %lu", (unsigned long)((NSArray *)jsonResponse).count);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.wholeTableView reloadData];
                     [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
@@ -125,6 +132,10 @@
         SCRequestResponseHandler handler;
         handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
             NSError *jsonError = nil;
+            if (response == nil) {
+                return;
+            }
+            
             NSJSONSerialization *jsonResponse = [NSJSONSerialization
                                                  JSONObjectWithData:data
                                                  options:0
@@ -149,7 +160,7 @@
             }
         };
         
-        NSString *requestURL = [NSString stringWithFormat:@"%@?offset=%lu&limit=%d", self.location, self.tracks.count, kSoundCloudSongNextLoad];
+        NSString *requestURL = [NSString stringWithFormat:@"%@?offset=%lu&limit=%d", self.location, (unsigned long)self.tracks.count, kSoundCloudSongNextLoad];
         
         [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:requestURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
     }

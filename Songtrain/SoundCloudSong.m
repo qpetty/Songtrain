@@ -248,20 +248,20 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
 
 -(NSData *)getNextPacketofMaxBytes:(NSInteger)maxBytes {
     NSUInteger len = MUSIC_PACKET_SIZE;
-    NSLog(@"len = %lu", len);
+    NSLog(@"len = %lu", (unsigned long)len);
     if (len > maxBytes) {
         len = maxBytes;
-        NSLog(@"len(maxBytes) = %lu", len);
+        NSLog(@"len(maxBytes) = %lu", (unsigned long)len);
     }
     if (len > songData.length - nextByteToRead) {
         len = songData.length - nextByteToRead;
-        NSLog(@"len(songData.length) = %lu", len);
+        NSLog(@"len(songData.length) = %lu", (unsigned long)len);
     }
     
-    NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", nextByteToRead, maxBytes, songData.length);
+    NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", (unsigned long)nextByteToRead, maxBytes, songData.length);
     NSRange range = NSMakeRange(nextByteToRead, len);
     nextByteToRead += len;
-    NSLog(@"Sent %lu bytes", len);
+    NSLog(@"Sent %lu bytes", (unsigned long)len);
     
     if (finishedLoading == YES && nextByteToRead == songData.length) {
         self.isFinishedSendingSong = YES;
