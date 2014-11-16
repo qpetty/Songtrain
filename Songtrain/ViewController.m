@@ -545,6 +545,8 @@
     
     if ([cell.peerName.text isEqualToString:sessionManager.server.displayName]) {
         cell.trainImage.image = [UIImage imageNamed:@"train"];
+    } else {
+        cell.trainImage.image = [UIImage imageNamed:@"train_inactive"];
     }
     return cell;
 }
