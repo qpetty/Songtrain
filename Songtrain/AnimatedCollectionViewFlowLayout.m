@@ -7,15 +7,20 @@
 //
 
 #import "AnimatedCollectionViewFlowLayout.h"
+#import "AnimatedCollectionViewCell.h"
 
 @implementation AnimatedCollectionViewFlowLayout
 
 - (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+    if (itemIndexPath.row == 0) {
+        attributes.frame = CGRectMake(0, 18, self.itemSize.width, self.itemSize.height);
+    } else {
+        attributes.frame = [self getCellFrameAtIndex:itemIndexPath];
+        attributes.alpha = 0.0;
+    }
 
-    attributes.frame = CGRectMake(0, (self.itemSize.height * (itemIndexPath.row - 1)) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
-    attributes.alpha = 0.0;
     return attributes;
 }
 
