@@ -221,7 +221,6 @@
     [UIView animateWithDuration:.3 delay:0 usingSpringWithDamping:1 initialSpringVelocity:-2 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setAlpha:0.0];
     } completion:^(BOOL finished) {
-        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
         [nearbyTrainsModal setAlpha:1.0];
         [nearbyTrainsModal removeFromSuperview];
         [nearbyTrainsModal reloadData];
