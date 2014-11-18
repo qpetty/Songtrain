@@ -9,13 +9,15 @@
 #import "AnimatedCollectionViewFlowLayout.h"
 #import "AnimatedCollectionViewCell.h"
 
+#define TRAIN_DROPDOWN_HEIGHT 18
+
 @implementation AnimatedCollectionViewFlowLayout
 
 - (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
     if (itemIndexPath.row == 0) {
-        attributes.frame = CGRectMake(0, 18, self.itemSize.width, self.itemSize.height);
+        attributes.frame = CGRectMake(0, TRAIN_DROPDOWN_HEIGHT, self.itemSize.width, self.itemSize.height);
     } else {
         attributes.frame = [self getCellFrameAtIndex:itemIndexPath];
         attributes.alpha = 0.0;
@@ -67,6 +69,6 @@
 }
 
 - (CGRect)getCellFrameAtIndex:(NSIndexPath *)indexPath {
-    return CGRectMake(0, (self.itemSize.height * indexPath.row) + self.itemSize.height, self.itemSize.width, self.itemSize.height);
+    return CGRectMake(0, (self.itemSize.height * indexPath.row) + self.itemSize.height + TRAIN_DROPDOWN_HEIGHT, self.itemSize.width, self.itemSize.height);
 }
 @end

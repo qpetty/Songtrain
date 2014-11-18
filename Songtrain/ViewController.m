@@ -192,15 +192,24 @@
     
     [self.view addSubview:nearbyTrainBackground];
     [self.view addSubview:nearbyTrainsModal];
-
-    [UIView animateWithDuration:.13 delay:0 options:UIViewAnimationOptionTransitionNone
+    
+    [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+    [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
+    AnimatedCollectionViewCell *cell = (AnimatedCollectionViewCell *)[nearbyTrainsModal cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    cell.peerName.alpha = 0.0;
+    
+    
+    [UIView animateWithDuration:0 delay:.5 options:UIViewAnimationOptionTransitionNone
         animations:^{
-            [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+
+
         }
     completion:^(BOOL finished) {
-        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
-        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]];
-        [sessionManager startBrowsingForTrains];
+        [UIView animateWithDuration:.3 animations:^{
+            [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]];
+            [sessionManager startBrowsingForTrains];
+            cell.peerName.alpha = 1.0;
+        }];
     }];
 }
 
@@ -208,12 +217,12 @@
 {
     [sessionManager stopBrowsingForTrains];
     [self.browseForOtherTrains setEnabled:NO];
-
-    [UIView animateWithDuration:.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:3 options:UIViewAnimationOptionTransitionNone animations:^{
+    
+    [UIView animateWithDuration:.3 delay:0 usingSpringWithDamping:1 initialSpringVelocity:-2 options:UIViewAnimationOptionTransitionNone animations:^{
         [nearbyTrainsModal setAlpha:0.0];
     } completion:^(BOOL finished) {
+        [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
         [nearbyTrainsModal setAlpha:1.0];
-        [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
         [nearbyTrainsModal removeFromSuperview];
         [nearbyTrainsModal reloadData];
         [self.browseForOtherTrains setEnabled:YES];

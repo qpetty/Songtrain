@@ -12,30 +12,38 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                 <subviews>
+                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" restorationIdentifier="train_image" image="train_inactive" translatesAutoresizingMaskIntoConstraints="NO" id="OAK-Rk-7xa">
+                        <rect key="frame" x="8" y="-29" width="89" height="89"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="5" id="IWD-6M-CFa"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="IWD-6M-CFa"/>
+                            </mask>
+                        </variation>
+                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yQ6-Ep-xNd" userLabel="peerName">
-                        <rect key="frame" x="56" y="5" width="536" height="20.5"/>
+                        <rect key="frame" x="104" y="5" width="42" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="train_image" image="train_inactive" translatesAutoresizingMaskIntoConstraints="NO" id="OAK-Rk-7xa">
-                        <rect key="frame" x="8" y="0.0" width="45" height="18"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="18" id="IWD-6M-CFa"/>
-                            <constraint firstAttribute="width" constant="45" id="vqq-g7-kdv"/>
-                        </constraints>
-                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="yQ6-Ep-xNd" secondAttribute="trailing" constant="8" id="9X8-vj-Xkm"/>
-                <constraint firstAttribute="centerY" secondItem="yQ6-Ep-xNd" secondAttribute="centerY" id="EzG-JJ-7bH"/>
-                <constraint firstItem="OAK-Rk-7xa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="OIh-DK-28T"/>
-                <constraint firstAttribute="bottom" secondItem="OAK-Rk-7xa" secondAttribute="bottom" id="PVe-aW-LFj"/>
-                <constraint firstItem="yQ6-Ep-xNd" firstAttribute="leading" secondItem="OAK-Rk-7xa" secondAttribute="trailing" constant="3" id="kPG-z8-ZLS"/>
-                <constraint firstItem="OAK-Rk-7xa" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="piH-MI-EJp"/>
+                <constraint firstItem="yQ6-Ep-xNd" firstAttribute="centerY" secondItem="OAK-Rk-7xa" secondAttribute="centerY" id="590-B9-eRw"/>
+                <constraint firstAttribute="centerX" secondItem="OAK-Rk-7xa" secondAttribute="centerX" id="8LQ-Rt-Jn9"/>
+                <constraint firstAttribute="centerY" secondItem="OAK-Rk-7xa" secondAttribute="centerY" id="f9h-yr-hsD"/>
+                <constraint firstItem="OAK-Rk-7xa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="u8p-O0-5MM"/>
+                <constraint firstItem="yQ6-Ep-xNd" firstAttribute="leading" secondItem="OAK-Rk-7xa" secondAttribute="trailing" constant="8" id="vvF-N2-J2i"/>
             </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="8LQ-Rt-Jn9"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="peerName" destination="yQ6-Ep-xNd" id="l9u-bi-ttg"/>
                 <outlet property="trainImage" destination="OAK-Rk-7xa" id="UVM-90-cjb"/>
