@@ -193,16 +193,14 @@
     [self.view addSubview:nearbyTrainBackground];
     [self.view addSubview:nearbyTrainsModal];
     
-    [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+    [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height + 1)];
     [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
     AnimatedCollectionViewCell *cell = (AnimatedCollectionViewCell *)[nearbyTrainsModal cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     cell.peerName.alpha = 0.0;
     
-    
-    [UIView animateWithDuration:0 delay:.5 options:UIViewAnimationOptionTransitionNone
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionTransitionNone
         animations:^{
-
-
+            [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
         }
     completion:^(BOOL finished) {
         [UIView animateWithDuration:.3 animations:^{
