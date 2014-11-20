@@ -193,22 +193,22 @@
     [self.view addSubview:nearbyTrainBackground];
     [self.view addSubview:nearbyTrainsModal];
     
-    [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height + 1)];
+    [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
     [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]];
     AnimatedCollectionViewCell *cell = (AnimatedCollectionViewCell *)[nearbyTrainsModal cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     cell.peerName.alpha = 0.0;
     
-    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionTransitionNone
-        animations:^{
-            [nearbyTrainsModal setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
-        }
-    completion:^(BOOL finished) {
+    // Delay inserting after first row insert for drop-down animation
+    float delay = .2;
+    dispatch_time_t delaydispatch = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
+    
+    dispatch_after(delaydispatch, dispatch_get_main_queue(), ^(void){
         [UIView animateWithDuration:.3 animations:^{
             [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]];
             [sessionManager startBrowsingForTrains];
             cell.peerName.alpha = 1.0;
         }];
-    }];
+    });
 }
 
 -(void)finishBrowsingForOthers:(BOOL)somethingSelected
