@@ -19,4 +19,6 @@ static const int kSoundCloudSongNextLoad = 30;
 
 -(instancetype)initWithTracks:(NSArray*)arrayOfTracks andURL:(NSString*)url;
 
+-(void)update;
+
 @end

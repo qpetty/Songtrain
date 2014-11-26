@@ -55,10 +55,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //[self.wholeTableView reloadData];
+    [self update];
+    NSLog(@"view will appear");
+}
+
+-(void)update {
     if (self.tracks == nil) {
         [self.wholeTableView triggerPullToRefresh];
-        [self getFavorites];
     } else {
         [self.wholeTableView reloadData];
     }

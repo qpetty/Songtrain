@@ -39,7 +39,6 @@
         self.wholeTableView.hidden = YES;
         [self.view addSubview:self.wholeTableView];
         
-        //songView = [[SoundCloudSongViewController alloc] initWithTracks:nil andURL:@"https://api.soundcloud.com/me/favorites.json?offset=0&limit=11"];
         songView = [[SoundCloudSongViewController alloc] initWithTracks:nil andURL:@"https://api.soundcloud.com/me/favorites.json"];
         [self addChildViewController:songView];
         [self.view addSubview:songView.view];
@@ -145,6 +144,7 @@
             NSLog(@"Done!");
             [login removeFromParentViewController];
             [login.view removeFromSuperview];
+            [songView update];
             [self getPlaylists];
         }
     };
