@@ -605,6 +605,11 @@
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (response == nil) {
+                                   NSLog(@"no returned data in searchiTunesForSong");
+                                   return;
+                               }
+                               
                                if (!error) {
                                    NSError *parseError;
                                    id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
@@ -635,6 +640,11 @@
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (response == nil) {
+                                   NSLog(@"no returned data in searchiTunesForArtist");
+                                   return;
+                               }
+                               
                                if (!error) {
                                    NSError *parseError;
                                    id parse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
