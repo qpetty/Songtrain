@@ -43,7 +43,7 @@
         [self addChildViewController:songView];
         [self.view addSubview:songView.view];
         
-        //[SCSoundCloud removeAccess];
+        [SCSoundCloud removeAccess];
         [self setupSoundCloud];
         
         if ([SCSoundCloud account] == nil) {
@@ -79,28 +79,32 @@
 
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    float topHeight = 64.0;
-
-    login.view.frame = CGRectMake(self.view.frame.origin.x,
-                                  self.view.frame.origin.y + 32.0,
-                                  self.view.frame.size.width,
-                                  self.view.frame.size.height - topHeight - 49.0);
+    self.navigationController.navigationBar.translucent = NO;
     
-    segmented.frame = CGRectMake(self.view.frame.origin.x,
-                                 self.view.frame.origin.y + topHeight,
-                                 self.view.frame.size.width,
+    float topHeight = 0.0;
+    float tabBarHeight = 49.0;
+    
+    login.view.frame = CGRectMake(self.view.bounds.origin.x,
+                                  self.view.bounds.origin.y,
+                                  self.view.bounds.size.width,
+                                  self.view.bounds.size.height - tabBarHeight);
+    
+    segmented.frame = CGRectMake(self.view.bounds.origin.x,
+                                 self.view.bounds.origin.y,
+                                 self.view.bounds.size.width,
                                  28.0);
-    topHeight += segmented.frame.size.height;
     
-    self.wholeTableView.frame = CGRectMake(self.view.frame.origin.x,
+    topHeight += segmented.frame.origin.y + segmented.frame.size.height;
+    
+    self.wholeTableView.frame = CGRectMake(self.view.bounds.origin.x,
                                            topHeight,
-                                           self.view.frame.size.width,
-                                           self.view.frame.size.height - topHeight - 49.0);
+                                           self.view.bounds.size.width,
+                                           self.view.bounds.size.height - topHeight - tabBarHeight);
     
-    songView.view.frame = CGRectMake(self.view.frame.origin.x,
+    songView.view.frame = CGRectMake(self.view.bounds.origin.x,
                                      topHeight,
-                                     self.view.frame.size.width,
-                                     self.view.frame.size.height - topHeight - 49.0);
+                                     self.view.bounds.size.width,
+                                     self.view.bounds.size.height - topHeight - tabBarHeight);
 }
 
 - (void)getPlaylists {

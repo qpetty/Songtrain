@@ -70,12 +70,12 @@
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
+    self.navigationController.navigationBar.translucent = NO;
     
     self.wholeTableView.frame = CGRectMake(self.view.bounds.origin.x,
                                            self.view.bounds.origin.y,
                                            self.view.bounds.size.width,
                                            self.view.bounds.size.height);
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -92,6 +92,7 @@
             NSError *jsonError = nil;
             
             if (response == nil) {
+                NSLog(@"no returned data in getFavorites");
                 return;
             }
             
@@ -114,7 +115,7 @@
                 });
             }
             else {
-                [weakSelf.wholeTableView.infiniteScrollingView stopAnimating];
+                [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
                 weakSelf.wholeTableView.showsInfiniteScrolling = NO;
             }
         };
@@ -136,9 +137,9 @@
         handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
             NSError *jsonError = nil;
             if (response == nil) {
+                NSLog(@"no returned data in extendFavorites");
                 return;
             }
-            
             NSJSONSerialization *jsonResponse = [NSJSONSerialization
                                                  JSONObjectWithData:data
                                                  options:0
