@@ -302,18 +302,33 @@ OSStatus soundCloudConverterInputCallback(AudioConverterRef inAudioConverter, UI
     
     for (int i = 0; i < *ioNumberDataPackets; i++) {
         
+        CFDataRef songData = (__bridge CFDataRef)song->songData;
+        
         NSUInteger length = song->songData.length;
         NSUInteger nextbyte = song->nextByteToRead;
         
-        if (length - nextbyte > sizeof(AudioStreamPacketDescription) &&
-            ((AudioStreamPacketDescription*)(song->songData.bytes + nextbyte))->mDataByteSize <= length - nextbyte - sizeof(AudioStreamPacketDescription)) {
-            
-            memcpy(&song->aspds[i], song->songData.bytes + song->nextByteToRead, sizeof(AudioStreamPacketDescription));
-            song->aspds[i].mStartOffset = song->oneCallbackOfData.length;
-            song->nextByteToRead += sizeof(AudioStreamPacketDescription);
-            [song->oneCallbackOfData appendBytes:song->songData.bytes + song->nextByteToRead length:song->aspds[i].mDataByteSize];
-            song->nextByteToRead += song->aspds[i].mDataByteSize;
+        if (length - nextbyte <= sizeof(AudioStreamPacketDescription)) {
+            break;
         }
+        
+        AudioStreamPacketDescription aspd;
+        CFDataGetBytes(songData, CFRangeMake(nextbyte, sizeof(AudioStreamPacketDescription)), (UInt8*)&aspd);
+        
+        if (aspd.mDataByteSize > length - nextbyte - sizeof(AudioStreamPacketDescription)) {
+            break;
+        }
+        
+        memcpy(&song->aspds[i], &aspd, sizeof(AudioStreamPacketDescription));
+        song->aspds[i].mStartOffset = song->oneCallbackOfData.length;
+        song->nextByteToRead += sizeof(AudioStreamPacketDescription);
+        
+        UInt8 *tempBuff = malloc(aspd.mDataByteSize);
+        CFDataGetBytes(songData, CFRangeMake(song->nextByteToRead, song->aspds[i].mDataByteSize), tempBuff);
+        
+        [song->oneCallbackOfData appendBytes:tempBuff length:song->aspds[i].mDataByteSize];
+        song->nextByteToRead += song->aspds[i].mDataByteSize;
+        
+        free(tempBuff);
     }
     
     ioData->mBuffers[0].mData = (void*)song->oneCallbackOfData.bytes;
