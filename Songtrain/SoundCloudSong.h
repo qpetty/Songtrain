@@ -10,8 +10,8 @@
 
 @interface SoundCloudSong : Song <NSURLConnectionDataDelegate, NSStreamDelegate>
 
-@property (strong, nonatomic) NSURL *musicURL;
-@property (strong, nonatomic) NSURL *artworkURL;
+@property NSURL *musicURL;
+@property NSURL *artworkURL;
 
 -(instancetype)initWithURL:(NSURL *)url andPeer:(MCPeerID*)peer;
 -(instancetype)initWithSoundCloudDictionary:(NSDictionary*)dic andPeer:(MCPeerID*)peer;

@@ -19,13 +19,13 @@ static const int kBufferLength = 32768 * 32;
     UIImage *image;
 }
 
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *artistName;
-@property (strong, nonatomic, getter=getAlbumImage, setter=setAlbumImage:) UIImage *albumImage;
+@property NSString *title;
+@property NSString *artistName;
+@property (getter=getAlbumImage, setter=setAlbumImage:) UIImage *albumImage;
 @property MCPeerID *peer;
 @property (readonly, getter=isRemoteSong) BOOL remoteSong;
 
-@property (strong, nonatomic) NSURL *url;
+@property NSURL *url;
 
 @property (nonatomic) BOOL isFinishedSendingSong;
 @property (nonatomic) BOOL inputASDBIsSet;

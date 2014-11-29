@@ -164,9 +164,11 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak Song *weakSong = musicPlayer.currentSong;
+    
     self.onScreen = YES;
-    [self updateCurrentSong];
-    [self updateImage:musicPlayer.currentSong.albumImage];
+    [self updateCurrentSong:weakSong];
+    [self updateImage:weakSong.albumImage];
 
     [self showPurchaseButton];
 }
@@ -578,21 +580,21 @@
     
 }
 
--(void)updateCurrentSong {
-    if (musicPlayer.currentSong == nil) {
+-(void)updateCurrentSong:(Song*)song {
+    if (song == nil) {
         self.currentSongTitle.text = @" ";
         self.currentSongArtist.text = @" ";
     }
     else {
-        if ([self.currentSongTitle.text isEqualToString:musicPlayer.currentSong.title] == NO ||
-            [self.currentSongArtist.text isEqualToString:musicPlayer.currentSong.artistName] == NO) {
+        if ([self.currentSongTitle.text isEqualToString:song.title] == NO ||
+            [self.currentSongArtist.text isEqualToString:song.artistName] == NO) {
             [self hidePurchaseButton];
             
-            [self searchiTunesForSong:musicPlayer.currentSong.title];
+            [self searchiTunesForSong:song.title];
         }
         
-        self.currentSongTitle.text = musicPlayer.currentSong.title;
-        self.currentSongArtist.text = musicPlayer.currentSong.artistName;
+        self.currentSongTitle.text = song.title;
+        self.currentSongArtist.text = song.artistName;
     }
 }
 
@@ -602,6 +604,8 @@
     NSString *urlString = [NSString stringWithFormat:@"https://itunes.apple.com/search?entity=song&attribute=songTerm&limit=1&term=%@", searchTerm];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    __weak Song *weakSong = musicPlayer.currentSong;
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -620,12 +624,12 @@
                                        [parse[@"results"] count] > 0 &&
                                        [parse[@"results"][0] objectForKey:@"trackId"] != nil) {
                                        
-                                       NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.title);
+                                       //NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.title);
                                        currentSongID = parse[@"results"][0][@"trackId"];
                                        shouldShowPurchaseButton = YES;
                                        [self showPurchaseButton];
                                    } else {
-                                       [self searchiTunesForArtist:musicPlayer.currentSong.artistName];
+                                       [self searchiTunesForArtist:weakSong.artistName];
                                    }
                                }
                            }];
@@ -655,7 +659,7 @@
                                        [parse[@"results"] count] > 0 &&
                                        [parse[@"results"][0] objectForKey:@"artistId"] != nil) {
                                        
-                                       NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.artistName);
+                                       //NSLog(@"Presenting iTunes Search Results for %@", musicPlayer.currentSong.artistName);
                                        currentSongID = parse[@"results"][0][@"artistId"];
                                        shouldShowPurchaseButton = YES;
                                        [self showPurchaseButton];
@@ -732,9 +736,11 @@
 #pragma mark KVO
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    __weak Song *weakSong = musicPlayer.currentSong;
+    
     if ([keyPath isEqualToString:@"currentSong"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self updateCurrentSong];
+            [self updateCurrentSong:weakSong];
         });
     }
     else if ([keyPath isEqualToString:@"currentSongTime"]) {
@@ -762,13 +768,13 @@
     } else if ([keyPath isEqualToString:@"currentSong.albumImage"]) {
         NSLog(@"Updating Image!!!!!!!!!!!!!");
         
-        if ([musicPlayer.currentSong isKindOfClass:[LocalSong class]] == NO && [musicPlayer.currentSong.peer isEqual:sessionManager.pid]) {
+        if ([weakSong isKindOfClass:[LocalSong class]] == NO && [weakSong.peer isEqual:sessionManager.pid]) {
             NSLog(@"Sending artwork to everyone");
-            [sessionManager sendAlbumArtworkToEveryone:musicPlayer.currentSong];
+            [sessionManager sendAlbumArtworkToEveryone:weakSong];
         }
          
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self updateImage:musicPlayer.currentSong.albumImage];
+            [self updateImage:weakSong.albumImage];
         });
     }
 }

@@ -102,7 +102,8 @@
     
     NSLog(@"preparing SoundCloudSong");
     
-    OSStatus error = AudioFileStreamOpen((__bridge void*)self, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP3Type, &filestream);
+    __weak SoundCloudSong *weakSelf = self;
+    OSStatus error = AudioFileStreamOpen((__bridge void*)weakSelf, fileStreamPropertyCallback, fileStreamDataCallback, kAudioFileMP3Type, &filestream);
     if (error) {
         char errorString[7];
         FormatError(errorString, error);
@@ -110,6 +111,7 @@
     }
     
     [self requestSongData];
+    
 }
 
 - (void)requestSongData {
@@ -236,10 +238,8 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
     //NSLog(@"Audio Stream Services Data Callback\n");
    // NSLog(@"should add %d packets to our buffer", inNumberPackets);
     for (int i = 0; i < inNumberPackets; i++) {
-        //inPacketDescriptions[i].mStartOffset += song->songData.length + sizeof(AudioStreamPacketDescription);
         [song->songData appendBytes:&inPacketDescriptions[i] length:sizeof(AudioStreamPacketDescription)];
         [song->songData appendBytes:inInputData + inPacketDescriptions[i].mStartOffset length:inPacketDescriptions[i].mDataByteSize];
-        //addPacketToList(myInfo, inPacketDescriptions[i].mVariableFramesInPacket, inPacketDescriptions[i].mDataByteSize, inInputData + inPacketDescriptions[i].mStartOffset);
     }
     //NSLog(@"songData is now %lu long", (unsigned long)song->songData.length);
 }
@@ -304,6 +304,7 @@ OSStatus soundCloudConverterInputCallback(AudioConverterRef inAudioConverter, UI
         
         NSUInteger length = song->songData.length;
         NSUInteger nextbyte = song->nextByteToRead;
+        
         if (length - nextbyte > sizeof(AudioStreamPacketDescription) &&
             ((AudioStreamPacketDescription*)(song->songData.bytes + nextbyte))->mDataByteSize <= length - nextbyte - sizeof(AudioStreamPacketDescription)) {
             

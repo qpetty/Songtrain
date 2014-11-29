@@ -60,7 +60,6 @@
 }
 
 -(void)layoutSubviews {
-    [super layoutSubviews];
     self.conductorView.frame = self.bounds;
     self.passengerView.frame = self.bounds;
 }

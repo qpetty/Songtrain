@@ -96,6 +96,11 @@
     [allMediaItems removeAllObjects];
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [allMediaItems removeAllObjects];
+}
+
 - (void)addItem:(id)item
 {
     [allMediaItems addObject:item];

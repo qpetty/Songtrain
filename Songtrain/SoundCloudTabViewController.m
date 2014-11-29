@@ -43,7 +43,7 @@
         [self addChildViewController:songView];
         [self.view addSubview:songView.view];
         
-        [SCSoundCloud removeAccess];
+        //[SCSoundCloud removeAccess];
         [self setupSoundCloud];
         
         if ([SCSoundCloud account] == nil) {
