@@ -98,6 +98,8 @@
     self.peerTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     editingTableViews = NO;
+    
+    self.streamingServiceIcon.hidden = YES;
 }
 
 
@@ -595,6 +597,12 @@
         
         self.currentSongTitle.text = song.title;
         self.currentSongArtist.text = song.artistName;
+        
+        if ([song isMemberOfClass:[SoundCloudSong class]]) {
+            self.streamingServiceIcon.hidden = NO;
+        } else {
+            self.streamingServiceIcon.hidden = YES;
+        }
     }
 }
 

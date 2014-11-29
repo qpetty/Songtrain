@@ -25,6 +25,7 @@
 @property (weak) IBOutlet MarqueeLabel *currentSongTitle;
 @property (weak) IBOutlet MarqueeLabel *currentSongArtist;
 @property (weak) IBOutlet UIImageView *currentAlbumArtwork;
+@property (weak) IBOutlet UIImageView *streamingServiceIcon;
 
 @property (weak) IBOutlet UIButton *browseForOtherTrains;
 @property (weak) IBOutlet UIButton *editTableViews;
