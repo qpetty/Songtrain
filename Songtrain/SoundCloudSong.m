@@ -48,8 +48,12 @@
         self.musicURL = [NSURL URLWithString:dic[@"stream_url"]];
         
         NSString *artwork = dic[@"artwork_url"];
-        if ([artwork isMemberOfClass:[NSNull class]] == NO) {
+        
+        if ([artwork isKindOfClass:[NSString class]] == YES) {
             artwork = [artwork stringByReplacingOccurrencesOfString:@"large" withString:@"t500x500"];
+            self.artworkURL = [NSURL URLWithString:artwork];
+        } else if ([dic[@"user"][@"avatar_url"] isKindOfClass:[NSString class]] == YES) {
+            artwork = [dic[@"user"][@"avatar_url"] stringByReplacingOccurrencesOfString:@"large" withString:@"t500x500"];
             self.artworkURL = [NSURL URLWithString:artwork];
         }
         
