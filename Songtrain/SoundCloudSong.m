@@ -46,8 +46,12 @@
         self.artistName = dic[@"user"][@"username"];
         self.songLength = [dic[@"duration"] floatValue] / 1000.0;
         self.musicURL = [NSURL URLWithString:dic[@"stream_url"]];
-        NSString *artwork = [((NSString*)dic[@"artwork_url"]) stringByReplacingOccurrencesOfString:@"large" withString:@"t500x500"];
-        self.artworkURL = [NSURL URLWithString:artwork];
+        
+        NSString *artwork = dic[@"artwork_url"];
+        if ([artwork isMemberOfClass:[NSNull class]] == NO) {
+            artwork = [artwork stringByReplacingOccurrencesOfString:@"large" withString:@"t500x500"];
+            self.artworkURL = [NSURL URLWithString:artwork];
+        }
         
         NSLog(@"Creating SoundCloudSong from: %@", dic);
     }
