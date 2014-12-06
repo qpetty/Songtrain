@@ -71,6 +71,7 @@
 		5AF4550219EC670F008D97AA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF4550119EC670F008D97AA /* StoreKit.framework */; };
 		5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */; };
 		5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */; };
+		CA51ECEA1A33B9C600EAB7A1 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CA51ECE91A33B9C600EAB7A1 /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -294,6 +295,7 @@
 		5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderSongCellView.xib; sourceTree = "<group>"; };
 		5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSongCellView.h; sourceTree = "<group>"; };
 		5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderSongCellView.m; sourceTree = "<group>"; };
+		CA51ECE91A33B9C600EAB7A1 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -480,6 +482,7 @@
 		5A743C0319CBD9540008C989 = {
 			isa = PBXGroup;
 			children = (
+				CA51ECE91A33B9C600EAB7A1 /* Settings.bundle */,
 				5A40DE3619F33F530098F37B /* JSONKit.xcodeproj */,
 				5A40DE3019F33F390098F37B /* OHAttributedLabel.xcodeproj */,
 				5A40DE2419F33E8B0098F37B /* SoundCloudUI.xcodeproj */,
@@ -657,12 +660,12 @@
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = JX9WQKUYGV;
+						DevelopmentTeam = 8TCDK8463J;
 						TestTargetID = 5A743C0B19CBD9540008C989;
 					};
 				};
 			};
-			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */;
+			buildConfigurationList = 5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -793,6 +796,7 @@
 				5A96041219D3E69F002D2B29 /* TrainCellView.xib in Resources */,
 				5AD947F51A0F352F00C48796 /* NextPageVertexShader.glsl in Resources */,
 				5AD947F31A0F352F00C48796 /* NextPageNoTextureFragmentShader.glsl in Resources */,
+				CA51ECEA1A33B9C600EAB7A1 /* Settings.bundle in Resources */,
 				5A6006A119D53F240062865A /* PeerTableViewCell.xib in Resources */,
 				5A743C1B19CBD9540008C989 /* Main.storyboard in Resources */,
 				5A743C2019CBD9540008C989 /* LaunchScreen.xib in Resources */,
@@ -1002,7 +1006,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = (
@@ -1017,7 +1021,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a3b4d4ec-b1ec-4e1a-a130-e43c9f06bc74";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1027,7 +1031,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1046,7 +1050,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a3b4d4ec-b1ec-4e1a-a130-e43c9f06bc74";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1088,7 +1092,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "Songtrain" */ = {
+		5A743C0719CBD9540008C989 /* Build configuration list for PBXProject "SongTrain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5A743C2D19CBD9540008C989 /* Debug */,

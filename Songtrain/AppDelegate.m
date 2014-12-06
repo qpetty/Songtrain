@@ -38,6 +38,12 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     ((ViewController*)self.window.rootViewController).onScreen = YES;
+    NSUserDefaults *userSettings = [NSUserDefaults standardUserDefaults];
+    BOOL sclogout = [userSettings boolForKey:@"sclogout"];
+    if (sclogout) {
+        [SCSoundCloud removeAccess];
+        [userSettings setBool:NO forKey:@"sclogout"];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

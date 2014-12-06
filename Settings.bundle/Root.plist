@@ -5,32 +5,6 @@
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>About</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-			<key>Title</key>
-			<string>Help &amp; Support</string>
-			<key>Key</key>
-			<string>helpandsupport</string>
-			<key>File</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-			<key>Title</key>
-			<string>Legal</string>
-			<key>Key</key>
-			<string>legal</string>
-			<key>File</key>
-			<string></string>
-		</dict>
-		<dict>
 			<key>Title</key>
 			<string>SoundCloud</string>
 			<key>Type</key>
