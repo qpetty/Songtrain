@@ -657,7 +657,7 @@
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = JX9WQKUYGV;
+						DevelopmentTeam = 8TCDK8463J;
 						TestTargetID = 5A743C0B19CBD9540008C989;
 					};
 				};
@@ -1002,7 +1002,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = (
@@ -1017,7 +1017,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a3b4d4ec-b1ec-4e1a-a130-e43c9f06bc74";
+				PROVISIONING_PROFILE = "aaef48a9-8e46-4c16-aef6-faf324d47721";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1027,7 +1027,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Songtrain/Songtrain-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1046,7 +1046,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a3b4d4ec-b1ec-4e1a-a130-e43c9f06bc74";
+				PROVISIONING_PROFILE = "aaef48a9-8e46-4c16-aef6-faf324d47721";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
