@@ -19,6 +19,9 @@
         if (self.message == AddSong) {
             self.song = [aDecoder decodeObjectForKey:@"song"];
         }
+        else if (self.message == RequestToRemoveSong) {
+            self.song = [aDecoder decodeObjectForKey:@"song"];
+        }
         else if (self.message == RemoveSong) {
             self.firstIndex = [aDecoder decodeIntForKey:@"1ndx"];
         }
@@ -66,6 +69,9 @@
     
     
     if (self.message == AddSong) {
+        [aCoder encodeObject:self.song forKey:@"song"];
+    }
+    else if (self.message == RequestToRemoveSong) {
         [aCoder encodeObject:self.song forKey:@"song"];
     }
     else if (self.message == RemoveSong) {

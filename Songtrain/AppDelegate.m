@@ -43,6 +43,30 @@
     if (sclogout) {
         [SCSoundCloud removeAccess];
         [userSettings setBool:NO forKey:@"sclogout"];
+        [userSettings synchronize];
+        [self removeSongs:[SoundCloudSong class]];
+    }
+}
+
+- (void)removeSongs:(Class)type {
+    
+    /*
+    [[QPMusicPlayerController sharedMusicPlayer].playlist enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:type] && [((Song*)obj).peer isEqual:[[QPSessionManager sessionManager] pid]]) {
+            //[songsToRemove addIndex:idx];
+            [[QPSessionManager sessionManager] requestToRemoveSong:obj];
+        }
+    }];
+     */
+    
+    NSArray *playlist = [QPMusicPlayerController sharedMusicPlayer].playlist;
+    Song *singleSong;
+    
+    for (NSUInteger i = playlist.count; i > 0; i--) {
+        singleSong = [playlist objectAtIndex:i - 1];
+        if ([singleSong isKindOfClass:type] && [singleSong.peer isEqual:[[QPSessionManager sessionManager] pid]]) {
+            [[QPSessionManager sessionManager] requestToRemoveSong:singleSong];
+        }
     }
 }
 

@@ -21,6 +21,8 @@
     UISegmentedControl *segmented;
     
     SoundCloudSongViewController *songView;
+    
+    BOOL attempingSignIn;
 }
 
 -(instancetype)init {
@@ -43,14 +45,7 @@
         [self addChildViewController:songView];
         [self.view addSubview:songView.view];
         
-        //[SCSoundCloud removeAccess];
         [self setupSoundCloud];
-        
-        if ([SCSoundCloud account] == nil) {
-            [self getAuthViewController];
-        } else {
-            [self getPlaylists];
-        }
     }
     return self;
 }
@@ -74,7 +69,22 @@
     [super viewWillAppear:animated];
     songView.delegate = self.delegate;
     [self.wholeTableView reloadData];
-    [self getPlaylists];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(figureOutIfLogInPageShouldBeDisplayed) name:UIApplicationDidBecomeActiveNotification object:[UIApplication sharedApplication]];
+    
+    [self figureOutIfLogInPageShouldBeDisplayed];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)figureOutIfLogInPageShouldBeDisplayed {
+    if ([SCSoundCloud account] == nil && attempingSignIn == NO) {
+        [self getAuthViewController];
+    } else {
+        [self getPlaylists];
+    }
 }
 
 -(void)viewDidLayoutSubviews {
@@ -139,7 +149,10 @@
 }
 
 -(void)getAuthViewController {
+    attempingSignIn = YES;
     SCLoginViewControllerCompletionHandler handler = ^(NSError *error) {
+        
+        attempingSignIn = NO;
         if (SC_CANCELED(error)) {
             NSLog(@"Canceled!");
         } else if (error) {

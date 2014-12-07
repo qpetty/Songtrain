@@ -11,6 +11,7 @@
 
 enum MessageTypes : NSInteger {
     AddSong = 1,
+    RequestToRemoveSong,
     RemoveSong,
     SwitchSong,
     SkipSong,

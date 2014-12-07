@@ -205,6 +205,15 @@
             NSLog(@"Skip song");
             [[QPMusicPlayerController sharedMusicPlayer] nextSong];
         }
+        else if (mess.message == RequestToRemoveSong && _currentRole == ServerConnection) {
+            NSLog(@"Remove song at index: %ld, from %@\n", (long)mess.firstIndex, peerID.displayName);
+            Song *oneSong = [self findSong:mess.song];
+            if (oneSong) {
+                NSUInteger ndx = [[QPMusicPlayerController sharedMusicPlayer].playlist indexOfObject:oneSong];
+                [[QPMusicPlayerController sharedMusicPlayer] removeSongFromPlaylist:ndx];
+                [self removeSongFromAllPeersAtIndex:ndx];
+            }
+        }
         else if (mess.message == RemoveSong && _currentRole == ClientConnection) {
             NSLog(@"Remove song at index: %ld, from %@\n", (long)mess.firstIndex, peerID.displayName);
             [[QPMusicPlayerController sharedMusicPlayer] removeSongFromPlaylist:mess.firstIndex];
@@ -423,6 +432,15 @@
     message.song = song;
     [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
 }
+
+- (void)requestToRemoveSong:(Song*)song
+{
+    SingleMessage *message = [[SingleMessage alloc] init];
+    message.message = RequestToRemoveSong;
+    message.song = song;
+    [self sendDataToAllPeers:[NSKeyedArchiver archivedDataWithRootObject:message]];
+}
+
 
 - (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx
 {

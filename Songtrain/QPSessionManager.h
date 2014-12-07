@@ -62,6 +62,8 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 - (void)addSongToServer:(Song*)song;
 - (void)addSong:(Song*)song toPeer:(MCPeerID*)peer;
 - (void)addSongToAllPeers:(Song*)song;
+
+- (void)requestToRemoveSong:(Song*)song;
 - (void)removeSongFromAllPeersAtIndex:(NSUInteger)ndx;
 - (void)switchSongFrom:(NSUInteger)x to:(NSUInteger)y;
 - (void)requestAlbumArtwork:(Song*)song;
