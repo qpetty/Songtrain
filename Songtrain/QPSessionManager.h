@@ -56,6 +56,7 @@ static NSString *kSongtrainPeerID = @"SongtrainPeerID";
 - (void)stopBrowsingForTrains;
 
 - (void)connectToPeer:(MCPeerID*)peerID;
+- (void)stopConnectingToSession;
 - (void)restartSession;
 
 - (void)nextSong:(Song*)song;

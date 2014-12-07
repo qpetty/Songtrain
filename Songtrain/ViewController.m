@@ -74,7 +74,7 @@
     [nearbyTrainCancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [nearbyTrainCancelButton setTitleColor:UIColorFromRGBWithAlpha(0x7FA8D7, 1.0) forState:UIControlStateNormal];
     nearbyTrainCancelButton.frame = CGRectMake(self.view.frame.size.width/2.0 - 30, (self.view.frame.size.height * 2)/3.0, 60, 20);
-    [nearbyTrainCancelButton addTarget:self action:@selector(cancelBrowsingForOthersTap:) forControlEvents:UIControlEventTouchUpInside];
+    [nearbyTrainCancelButton addTarget:self action:@selector(cancelConnectingToOtherTrain:) forControlEvents:UIControlEventTouchUpInside];
     loadingIcon = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [nearbyTrainBackground addSubview:loadingIcon];
     
@@ -109,6 +109,10 @@
     self.streamingServiceIcon.hidden = YES;
 }
 
+- (void)cancelConnectingToOtherTrain:(id)sender {
+    [sessionManager stopConnectingToSession];
+    [self finishBrowsingForOthers:NO];
+}
 
 - (void)cancelBrowsingForOthersTap:(id)sender {
     [self finishBrowsingForOthers:NO];

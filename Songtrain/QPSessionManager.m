@@ -125,6 +125,13 @@
     [self createServer];
 }
 
+- (void)stopConnectingToSession {
+    [mainSession cancelConnectPeer:self.server];
+    mainSession = [[MCSession alloc] initWithPeer:self.pid];
+    mainSession.delegate = self;
+    [self createServer];
+}
+
 -(void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
 {
     if (state == MCSessionStateConnecting) {
