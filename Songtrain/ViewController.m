@@ -65,6 +65,7 @@
     
 
     backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
+    backgroundImage.contentMode = UIViewContentModeScaleAspectFill;
     backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
     nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
@@ -118,12 +119,14 @@
 -(UIImage *)blurImage:(UIImage *)image
 {
     CIImage *imageToBlur = [CIImage imageWithCGImage:image.CGImage];
-    CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
-    [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
-    [gaussianBlurFilter setValue:[NSNumber numberWithFloat: 1] forKey: @"inputRadius"];
-    CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+    CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur" keysAndValues:kCIInputImageKey, imageToBlur, @"inputRadius", @(3), nil];
+    CIImage *outputImage = filter.outputImage;
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef resultImage = [context createCGImage:outputImage fromRect:[outputImage extent]];
+    UIImage *finalImage = [UIImage imageWithCGImage:resultImage];
+    CFRelease(resultImage);
     
-    return [[UIImage alloc] initWithCIImage:resultImage];
+    return finalImage;
 }
 
 - (UIImage*)cropAlbumImage:(UIImage*)image withScreenRect:(CGRect)screenSize
@@ -141,8 +144,7 @@
     [self.view addSubview:backgroundOverlay];
     [self.view sendSubviewToBack:backgroundOverlay];
     
-    [backgroundImage setFrame:CGRectMake(self.view.frame.origin.x - 10, self.view.frame.origin.y - 10, self.view.frame.size.width + 20, self.view.frame.size.height + 20)];
-    backgroundImage.image = [self blurImage: [self cropAlbumImage:self.currentAlbumArtwork.image withScreenRect:self.view.frame]];
+    backgroundImage.image = [self blurImage:self.currentAlbumArtwork.image];
 
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
