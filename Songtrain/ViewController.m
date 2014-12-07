@@ -36,6 +36,7 @@
     
     UICollectionView *nearbyTrainsModal;
     UIView *nearbyTrainBackground;
+    UIButton *nearbyTrainCancelButton;
     SKStoreProductViewController *storeController;
     NSString *currentSongID;
     
@@ -69,6 +70,11 @@
     backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
     nearbyTrainBackground.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
+    nearbyTrainCancelButton = [[UIButton alloc] init];
+    [nearbyTrainCancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    [nearbyTrainCancelButton setTitleColor:UIColorFromRGBWithAlpha(0x7FA8D7, 1.0) forState:UIControlStateNormal];
+    nearbyTrainCancelButton.frame = CGRectMake(self.view.frame.size.width/2.0 - 30, (self.view.frame.size.height * 2)/3.0, 60, 20);
+    [nearbyTrainCancelButton addTarget:self action:@selector(cancelBrowsingForOthersTap:) forControlEvents:UIControlEventTouchUpInside];
     loadingIcon = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [nearbyTrainBackground addSubview:loadingIcon];
     
@@ -242,6 +248,7 @@
     } else {
         loadingIcon.center = nearbyTrainBackground.center;
         [loadingIcon startAnimating];
+        [nearbyTrainBackground addSubview:nearbyTrainCancelButton];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     }
 
@@ -249,6 +256,7 @@
 
 -(void)removeLoadingScreen {
     [loadingIcon stopAnimating];
+    [nearbyTrainCancelButton removeFromSuperview];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [nearbyTrainBackground removeFromSuperview];
 }
