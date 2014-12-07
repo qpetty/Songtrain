@@ -266,7 +266,7 @@ void fileStreamDataCallback(void *inClientData, UInt32 inNumberBytes, UInt32 inN
         NSLog(@"len(songData.length) = %lu", (unsigned long)len);
     }
     
-    NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", (unsigned long)nextByteToRead, maxBytes, songData.length);
+    NSLog(@"Next byte %lu maxBytes: %lu songData.length: %lu", (unsigned long)nextByteToRead, (long)maxBytes, (unsigned long)songData.length);
     NSRange range = NSMakeRange(nextByteToRead, len);
     nextByteToRead += len;
     NSLog(@"Sent %lu bytes", (unsigned long)len);
