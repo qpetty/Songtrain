@@ -17,7 +17,7 @@
 
 #define ITUNES_SEARCH_API_AFFILIATE_TOKEN @"11lMLF"
 #define ITUNES_SEARCH_API_CAMPAIGN_TOKEN @""
-#define STATIC_NEARBY_TRAIN_CELLS 2
+#define STATIC_NEARBY_TRAIN_CELLS 1
 
 @interface ViewController ()
 
@@ -208,9 +208,8 @@
     
     dispatch_after(delaydispatch, dispatch_get_main_queue(), ^(void){
         [UIView animateWithDuration:.3 animations:^{
-            [nearbyTrainsModal reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]];
-            [sessionManager startBrowsingForTrains];
             cell.peerName.alpha = 1.0;
+            [sessionManager startBrowsingForTrains];
         }];
     });
 }
@@ -547,8 +546,6 @@
     AnimatedCollectionViewCell *cell = [nearbyTrainsModal dequeueReusableCellWithReuseIdentifier:@"AnimatedPeerCell" forIndexPath:indexPath];
     
     if (indexPath.row == 0) {
-        cell.peerName.text = @"Settings";
-    } else if (indexPath.row == 1) {
         cell.peerName.text = sessionManager.pid.displayName;
     } else {
         cell.peerName.text = [[sessionManager.peerArray objectAtIndex:indexPath.row - STATIC_NEARBY_TRAIN_CELLS] displayName];
@@ -565,8 +562,6 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == 0) {
-        
-    } else if (indexPath.row == 1) {
         if (![sessionManager.server isEqual:sessionManager.pid]) {
             NSLog(@"restarting my session");
             [sessionManager restartSession];
