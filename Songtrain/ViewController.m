@@ -44,6 +44,8 @@
     XBCurlView *curlView;
     UIView *transparent;
     BOOL shouldShowPurchaseButton, curled;
+    
+    CIContext *context;
 }
 
 - (void)viewDidLoad {
@@ -114,6 +116,8 @@
     editingTableViews = NO;
     
     self.streamingServiceIcon.hidden = YES;
+    
+    context = [CIContext contextWithOptions:nil];
 }
 
 - (void)cancelConnectingToOtherTrain:(id)sender {
@@ -138,7 +142,6 @@
     CIImage *imageToBlur = [CIImage imageWithCGImage:image.CGImage];
     CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur" keysAndValues:kCIInputImageKey, imageToBlur, @"inputRadius", @(3), nil];
     CIImage *outputImage = filter.outputImage;
-    CIContext *context = [CIContext contextWithOptions:nil];
     CGImageRef resultImage = [context createCGImage:outputImage fromRect:[outputImage extent]];
     UIImage *finalImage = [UIImage imageWithCGImage:resultImage];
     CFRelease(resultImage);
