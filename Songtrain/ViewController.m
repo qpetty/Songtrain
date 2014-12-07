@@ -72,6 +72,7 @@
     
 
     backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
+    backgroundImage.frame = CGRectMake(backgroundImage.frame.origin.x, backgroundImage.frame.origin.y - 20, backgroundImage.frame.size.width, backgroundImage.frame.size.height + 20);
     backgroundImage.contentMode = UIViewContentModeScaleAspectFill;
     backgroundOverlay = [[UIImageView alloc] initWithFrame:self.view.frame];
     nearbyTrainBackground = [[UIView alloc] initWithFrame:self.view.frame];
@@ -145,13 +146,6 @@
     return finalImage;
 }
 
-- (UIImage*)cropAlbumImage:(UIImage*)image withScreenRect:(CGRect)screenSize
-{
-    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake((image.size.width - screenSize.size.width) / 2, 0, screenSize.size.width, screenSize.size.height));
-    UIImage *imageToRet = [UIImage imageWithCGImage:imageRef];
-    CFRelease(imageRef);
-    return imageToRet;
-}
 
 -(void)viewDidLayoutSubviews {
     self.addHelper.frame = CGRectMake(self.controlBar.conductorView.addButton.frame.origin.x + self.controlBar.conductorView.addButton.frame.size.width / 2.0,
