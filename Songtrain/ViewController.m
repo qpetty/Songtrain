@@ -37,6 +37,7 @@
     UICollectionView *nearbyTrainsModal;
     UIView *nearbyTrainBackground;
     UIButton *nearbyTrainCancelButton;
+    UILabel *bestResults;
     SKStoreProductViewController *storeController;
     NSString *currentSongID;
     
@@ -63,6 +64,11 @@
     nearbyTrainsModal.backgroundView = [[UIView alloc] initWithFrame:nearbyTrainsModal.frame];
     UITapGestureRecognizer *cancelBrowsingTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelBrowsingForOthersTap:)];
     nearbyTrainsModal.backgroundView.gestureRecognizers = @[cancelBrowsingTap];
+    bestResults = [[UILabel alloc] init];
+    bestResults.text = @"For best results, turn on Bluetooth and Wi-Fi";
+    [bestResults setFont:[UIFont systemFontOfSize:14]];
+    [bestResults setTextColor:UIColorFromRGBWithAlpha(0xC5D1DE, 1.0)];
+    [nearbyTrainsModal addSubview:bestResults];
     
 
     backgroundImage = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -221,6 +227,8 @@
     AnimatedCollectionViewCell *cell = (AnimatedCollectionViewCell *)[nearbyTrainsModal cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     cell.peerName.alpha = 0.0;
     
+    bestResults.frame = CGRectMake(nearbyTrainsModal.frame.size.width/2.0 - 150, nearbyTrainsModal.frame.size.height - 53, 300, 50);
+    bestResults.textAlignment = NSTextAlignmentCenter;
     // Delay inserting after first row insert for drop-down animation
     float delay = .2;
     dispatch_time_t delaydispatch = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
