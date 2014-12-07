@@ -31,6 +31,12 @@
 - (id)init {
     if (self = [super init]) {
         _audioFormat = malloc(sizeof(AudioStreamBasicDescription));
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(audioSessionInterupt:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object:nil];
+        
         [self initOutputDescription];
         [self initAudioGraph];
         
@@ -83,6 +89,21 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     AUGraphStart(graph);
 }
+
+#pragma mark AVAudioSession Interupt
+
+- (void)audioSessionInterupt:(NSNotification*)notification {
+    NSLog(@"Phone Call!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    
+    NSDictionary *interruptionDictionary = [notification userInfo];
+    NSNumber *interruptionType = (NSNumber *)[interruptionDictionary valueForKey:AVAudioSessionInterruptionTypeKey];
+    
+    if ([interruptionType intValue] == AVAudioSessionInterruptionTypeBegan && _currentlyPlaying == YES) {
+        [self play];
+    }
+}
+
+#pragma mark Playlist Methods
 
 - (void)addSongToPlaylist:(Song*)song
 {
@@ -463,6 +484,8 @@ static char *FormatError(char *str, OSStatus error)
         free(_audioFormat);
         _audioFormat = NULL;
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
