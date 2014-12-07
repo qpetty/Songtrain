@@ -138,6 +138,11 @@
 }
 
 -(void)viewDidLayoutSubviews {
+    self.addHelper.frame = CGRectMake(self.controlBar.conductorView.addButton.frame.origin.x + self.controlBar.conductorView.addButton.frame.size.width / 2.0,
+                                      self.view.frame.size.height - self.addHelper.frame.size.height - self.controlBar.frame.size.height,
+                                      self.addHelper.frame.size.width,
+                                      self.addHelper.frame.size.height);
+    
     [backgroundOverlay setFrame:self.view.frame];
     backgroundOverlay.backgroundColor = UIColorFromRGBWithAlpha(0x111111, .8);
     
@@ -163,6 +168,7 @@
     [musicPlayer addObserver:self forKeyPath:@"currentSong" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSongTime" options:NSKeyValueObservingOptionNew context:nil];
     [musicPlayer addObserver:self forKeyPath:@"currentSong.albumImage" options:NSKeyValueObservingOptionNew context:nil];
+    [musicPlayer addObserver:self forKeyPath:@"playlist" options:NSKeyValueObservingOptionNew context:nil];
     [self updatePlayOrPauseImage];
 }
 
@@ -189,6 +195,7 @@
     [musicPlayer removeObserver:self forKeyPath:@"currentSong"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSongTime"];
     [musicPlayer removeObserver:self forKeyPath:@"currentSong.albumImage"];
+    [musicPlayer removeObserver:self forKeyPath:@"playlist"];
 }
 
 #pragma mark Browsing Popup
@@ -429,7 +436,7 @@
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == self.songTableView && editingStyle == UITableViewCellEditingStyleDelete) {
-        [musicPlayer.playlist removeObjectAtIndex:[indexPath row]];
+        [musicPlayer removeSongFromPlaylist:[indexPath row]];
         if (musicPlayer.playlist.count > 0) {
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         } else {
@@ -781,6 +788,12 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateImage:weakSong.albumImage];
         });
+    } else if ([keyPath isEqualToString:@"playlist"]) {
+        if (musicPlayer.playlist.count == 0) {
+            self.addHelper.hidden = NO;
+        } else {
+            self.addHelper.hidden = YES;
+        }
     }
 }
 

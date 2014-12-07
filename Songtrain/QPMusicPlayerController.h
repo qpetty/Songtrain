@@ -30,7 +30,7 @@
 @property (atomic, assign, readonly) NSRange currentSongTime;
 @property (atomic, assign, readonly) BOOL currentlyPlaying;
 
-@property (nonatomic, retain) NSMutableArray *playlist;
+@property NSMutableArray *playlist;
 
 @property (nonatomic, readonly) AudioStreamBasicDescription *audioFormat;
 

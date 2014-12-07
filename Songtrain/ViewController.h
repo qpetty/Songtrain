@@ -35,6 +35,8 @@
 @property (weak) IBOutlet UIProgressView *progressBar;
 @property (weak) IBOutlet ControlPanelView *controlBar;
 
+@property (weak) IBOutlet UIImageView *addHelper;
+
 @property BOOL onScreen;
 
 -(void)updatePlayOrPauseImage;

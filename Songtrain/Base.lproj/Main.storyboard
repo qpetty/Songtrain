@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="FM8-D0-d6n">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="FM8-D0-d6n">
                                 <rect key="frame" x="16" y="194" width="568" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="g0t-En-nHy"/>
@@ -32,7 +32,7 @@
                                     <action selector="switchTableView:" destination="BYZ-38-t0r" eventType="valueChanged" id="3Bb-A6-TV4"/>
                                 </connections>
                             </segmentedControl>
-                            <tableView opaque="NO" clipsSubviews="YES" alpha="0.79999999999999982" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UEy-Lb-6G7">
+                            <tableView opaque="NO" clipsSubviews="YES" alpha="0.79999999999999982" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UEy-Lb-6G7">
                                 <rect key="frame" x="0.0" y="230" width="600" height="310"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -82,14 +82,14 @@
                                     <rect key="frame" x="185" y="33" width="33" height="21"/>
                                 </variation>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="cart" translatesAutoresizingMaskIntoConstraints="NO" id="8jM-4t-gFb">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart" translatesAutoresizingMaskIntoConstraints="NO" id="8jM-4t-gFb">
                                 <rect key="frame" x="79" y="93" width="22" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="22" id="CrY-is-dLJ"/>
                                     <constraint firstAttribute="width" secondItem="8jM-4t-gFb" secondAttribute="height" multiplier="1:1" id="sxm-rJ-f4I"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="albumart_default" translatesAutoresizingMaskIntoConstraints="NO" id="UGe-gO-CiS">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="albumart_default" translatesAutoresizingMaskIntoConstraints="NO" id="UGe-gO-CiS">
                                 <rect key="frame" x="16" y="93" width="85" height="85"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="85" id="YUM-Qz-67f"/>
@@ -219,6 +219,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="addHelper" destination="mzw-0T-aaz" id="rXh-WQ-LMy"/>
                         <outlet property="browseForOtherTrains" destination="1qp-hg-bK3" id="mNk-sd-IcS"/>
                         <outlet property="controlBar" destination="JL0-VU-Pra" id="4wH-Dj-sRc"/>
                         <outlet property="currentAlbumArtwork" destination="UGe-gO-CiS" id="z9v-tQ-OW5"/>
