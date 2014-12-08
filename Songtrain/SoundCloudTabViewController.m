@@ -114,7 +114,7 @@
     songView.view.frame = CGRectMake(self.view.bounds.origin.x,
                                      topHeight,
                                      self.view.bounds.size.width,
-                                     self.view.bounds.size.height - topHeight - tabBarHeight);
+                                     self.view.bounds.size.height - topHeight);
 }
 
 - (void)getPlaylists {
