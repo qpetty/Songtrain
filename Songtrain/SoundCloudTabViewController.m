@@ -11,6 +11,8 @@
 #import "SoundCloudSong.h"
 #import "SoundCloudSongViewController.h"
 
+#import "SVPullToRefresh.h"
+
 @interface SoundCloudTabViewController ()
 
 @end
@@ -40,6 +42,19 @@
         self.wholeTableView.delegate = self;
         self.wholeTableView.hidden = YES;
         [self.view addSubview:self.wholeTableView];
+        
+        //SVPullToRefresh
+        
+        __weak SoundCloudTabViewController *weakSelf = self;
+        // setup pull-to-refresh
+        [self.wholeTableView addPullToRefreshWithActionHandler:^{
+            [weakSelf getPlaylists];
+        }];
+        
+        // setup infinite scrolling
+        [self.wholeTableView addInfiniteScrollingWithActionHandler:^{
+            [weakSelf extendPlaylists];
+        }];
         
         songView = [[SoundCloudSongViewController alloc] initWithTracks:nil andURL:@"https://api.soundcloud.com/me/favorites.json"];
         [self addChildViewController:songView];
@@ -118,6 +133,8 @@
 }
 
 - (void)getPlaylists {
+    __weak SoundCloudTabViewController *weakSelf = self;
+    
     NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
     if ([SCSoundCloud account] != nil) {
         SCRequestResponseHandler handler;
@@ -134,17 +151,66 @@
             if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]]) {
                 //NSLog(@"Json response: %@", (NSArray *)jsonResponse);
                 playlists = (NSArray *)jsonResponse;
+                NSUInteger numReturned = playlists.count;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.wholeTableView reloadData];
+                    [weakSelf.wholeTableView reloadData];
+                    [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
+                    if (numReturned < kSoundCloudSongInitalLoad) {
+                        weakSelf.wholeTableView.showsInfiniteScrolling = NO;
+                    }
                     NSLog(@"Updated playlists");
                 });
             }
+            else {
+                [weakSelf.wholeTableView.pullToRefreshView stopAnimating];
+                weakSelf.wholeTableView.showsInfiniteScrolling = NO;
+            }
         };
         
-        NSString *resourceURL = @"https://api.soundcloud.com/me/playlists.json";
+        self.wholeTableView.showsInfiniteScrolling = YES;
+        NSString *resourceURL = [NSString stringWithFormat:@"https://api.soundcloud.com/me/playlists.json?offset=0&limit=%d", kSoundCloudSongInitalLoad];
         [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:resourceURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
     } else {
         playlists = nil;
+    }
+}
+
+- (void)extendPlaylists {
+    __weak SoundCloudTabViewController *weakSelf = self;
+    
+    NSLog(@"Soundcloud account: %@", [SCSoundCloud account]);
+    if ([SCSoundCloud account] != nil) {
+        SCRequestResponseHandler handler;
+        handler = ^(NSURLResponse *response, NSData *data, NSError *error) {
+            NSError *jsonError = nil;
+            if (response == nil) {
+                return;
+            }
+            
+            NSJSONSerialization *jsonResponse = [NSJSONSerialization
+                                                 JSONObjectWithData:data
+                                                 options:0
+                                                 error:&jsonError];
+            if (!jsonError && [jsonResponse isKindOfClass:[NSArray class]] && ((NSArray *)jsonResponse).count > 0) {
+                NSUInteger numReturned = ((NSArray *)jsonResponse).count;
+                
+                playlists = [playlists arrayByAddingObjectsFromArray:(NSArray *)jsonResponse];
+                NSLog(@"Added %lu to end of playlist", (unsigned long)numReturned);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.wholeTableView reloadData];
+                    [weakSelf.wholeTableView.infiniteScrollingView stopAnimating];
+                    if (numReturned < kSoundCloudSongNextLoad) {
+                        weakSelf.wholeTableView.showsInfiniteScrolling = NO;
+                    }
+                });
+            } else {
+                [weakSelf.wholeTableView.infiniteScrollingView stopAnimating];
+                weakSelf.wholeTableView.showsInfiniteScrolling = NO;
+            }
+        };
+        NSString *resourceURL = [NSString stringWithFormat:@"https://api.soundcloud.com/me/playlists.json?offset=%lu&limit=%d", (unsigned long)playlists.count, kSoundCloudSongNextLoad];
+        
+        [SCRequest performMethod:SCRequestMethodGET onResource:[NSURL URLWithString:resourceURL] usingParameters:nil withAccount:[SCSoundCloud account] sendingProgressHandler:nil responseHandler:handler];
     }
 }
 
