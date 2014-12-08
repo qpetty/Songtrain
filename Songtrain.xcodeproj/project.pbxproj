@@ -68,7 +68,6 @@
 		5AD947FB1A0F352F00C48796 /* XBSnappingPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD947EB1A0F352F00C48796 /* XBSnappingPoint.m */; };
 		5AE7F79F1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE7F79C1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m */; };
 		5AE7F7A01A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE7F79E1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m */; };
-		5AF4550219EC670F008D97AA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF4550119EC670F008D97AA /* StoreKit.framework */; };
 		5AF5282A19E0DC1B00E107F2 /* HeaderSongCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */; };
 		5AF5282D19E0DD8900E107F2 /* HeaderSongCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */; };
 		CA51ECEA1A33B9C600EAB7A1 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CA51ECE91A33B9C600EAB7A1 /* Settings.bundle */; };
@@ -291,7 +290,6 @@
 		5AE7F79C1A14738B006E0FDF /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
 		5AE7F79D1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		5AE7F79E1A14738B006E0FDF /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
-		5AF4550119EC670F008D97AA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5AF5282919E0DC1B00E107F2 /* HeaderSongCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderSongCellView.xib; sourceTree = "<group>"; };
 		5AF5282B19E0DD8900E107F2 /* HeaderSongCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderSongCellView.h; sourceTree = "<group>"; };
 		5AF5282C19E0DD8900E107F2 /* HeaderSongCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderSongCellView.m; sourceTree = "<group>"; };
@@ -308,7 +306,6 @@
 				5A40DE4B19F344EB0098F37B /* libOAuth2Client.a in Frameworks */,
 				5A40DE3F19F33F5A0098F37B /* libJSONKit.a in Frameworks */,
 				5A40DE4019F33F5A0098F37B /* libOHAttributedLabel.a in Frameworks */,
-				5AF4550219EC670F008D97AA /* StoreKit.framework in Frameworks */,
 				5A5B80B419CFABA5000A4681 /* AVFoundation.framework in Frameworks */,
 				5A5B80AB19CF8C2B000A4681 /* MediaPlayer.framework in Frameworks */,
 			);
@@ -450,7 +447,6 @@
 		5A5B80AC19CF98C1000A4681 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5AF4550119EC670F008D97AA /* StoreKit.framework */,
 				5A5B80B319CFABA5000A4681 /* AVFoundation.framework */,
 				5A5B80AA19CF8C2B000A4681 /* MediaPlayer.framework */,
 			);
@@ -657,6 +653,11 @@
 					5A743C0B19CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 8TCDK8463J;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 					5A743C2419CBD9540008C989 = {
 						CreatedOnToolsVersion = 6.0.1;
