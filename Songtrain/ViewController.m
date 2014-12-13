@@ -454,11 +454,6 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == self.songTableView && editingStyle == UITableViewCellEditingStyleDelete) {
         [musicPlayer removeSongFromPlaylist:[indexPath row]];
-        if (musicPlayer.playlist.count > 0) {
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-        } else {
-            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-        }
         [sessionManager removeSongFromAllPeersAtIndex:[indexPath row]];
     } else if (tableView == self.peerTableView && editingStyle == UITableViewCellEditingStyleDelete) {
         //Remove peer from connectedpeerarray
