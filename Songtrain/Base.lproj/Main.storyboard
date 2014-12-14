@@ -54,6 +54,9 @@
                                         <exclude reference="Meb-c6-GZ8"/>
                                     </mask>
                                 </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="304" y="-2" width="88" height="89"/>
+                                </variation>
                                 <connections>
                                     <action selector="editAllTableViews:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wzq-AS-51d"/>
                                 </connections>
@@ -192,7 +195,9 @@
                             <constraint firstItem="wmX-yx-Jqm" firstAttribute="top" secondItem="rQ9-ue-0ah" secondAttribute="bottom" id="di5-kn-IM9"/>
                             <constraint firstItem="dMg-xP-bWc" firstAttribute="top" secondItem="UGe-gO-CiS" secondAttribute="top" id="e16-d7-gJ9"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="top" secondItem="1qp-hg-bK3" secondAttribute="bottom" constant="6" id="eiW-nk-7IP"/>
-                            <constraint firstItem="vM5-hv-Zed" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="f7D-cW-Ea3"/>
+                            <constraint firstItem="vM5-hv-Zed" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="f7D-cW-Ea3">
+                                <variation key="widthClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstItem="vM5-hv-Zed" firstAttribute="top" secondItem="5mu-8i-uAv" secondAttribute="bottom" constant="12" id="fSP-xE-BkS"/>
                             <constraint firstItem="awa-AC-RSY" firstAttribute="centerY" secondItem="1qp-hg-bK3" secondAttribute="centerY" id="fXd-LQ-ljn"/>
                             <constraint firstItem="awa-AC-RSY" firstAttribute="leading" secondItem="1qp-hg-bK3" secondAttribute="trailing" constant="8" id="g5q-Lz-pjh"/>
@@ -202,7 +207,9 @@
                             <constraint firstItem="wco-2X-hgb" firstAttribute="top" secondItem="dMg-xP-bWc" secondAttribute="bottom" constant="2" id="nZ9-Hb-hgw"/>
                             <constraint firstItem="5mu-8i-uAv" firstAttribute="leading" secondItem="UGe-gO-CiS" secondAttribute="trailing" constant="17" id="oJi-Fe-iI1"/>
                             <constraint firstItem="UGe-gO-CiS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="oWX-1s-kCI"/>
-                            <constraint firstAttribute="trailing" secondItem="vM5-hv-Zed" secondAttribute="trailing" constant="16" id="ph3-DC-uSO"/>
+                            <constraint firstAttribute="trailing" secondItem="vM5-hv-Zed" secondAttribute="trailing" constant="16" id="ph3-DC-uSO">
+                                <variation key="widthClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstItem="JL0-VU-Pra" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uef-RJ-EIy"/>
                             <constraint firstItem="wmX-yx-Jqm" firstAttribute="top" secondItem="UEy-Lb-6G7" secondAttribute="bottom" id="vn1-JL-oHk"/>
                             <constraint firstAttribute="trailing" secondItem="JL0-VU-Pra" secondAttribute="trailing" id="w18-bd-JHN"/>
